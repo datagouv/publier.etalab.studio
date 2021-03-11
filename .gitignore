@@ -9,6 +9,7 @@ node_modules
 .env.secret
 .env
 .env.production
+.env.production.old
 
 # Log files
 npm-debug.log*
