@@ -111,7 +111,7 @@ export default {
     },
     buildFormData() {
       const formData = new FormData();
-      const blob = new Blob([`\uFEFF${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      const blob = new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
       formData.append('file', blob, 'data.csv');
       formData.append('schema', this.schemaMeta.schema_url);
       return formData;

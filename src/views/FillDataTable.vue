@@ -46,6 +46,14 @@
       <div  class="rf-container">
           <button
             style="margin-right: 20px"
+            @click="addEmptyRow()"
+            type="submit"
+            class="rf-btn"
+          >
+            Ajouter une ligne
+          </button>
+          <button
+            style="margin-right: 20px"
             @click="submit()"
             type="submit"
             class="rf-btn"
@@ -156,8 +164,12 @@ import PublishRessources from '../mixins/PublishResources.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-export const defaultDateFormat = 'YYYY/mm/dd';
-export const defaultDateTimeFormat = 'YYYY/mm/dd';
+const selectOptions = [
+  { value: '', text: 'Select' },
+  { value: 'green', text: 'green' },
+  { value: 'blue', text: 'blue' },
+  { value: 'brown', text: 'brown' }
+]
 
 export default {
   name: 'fillDataTable',
@@ -259,6 +271,7 @@ export default {
             if (field.format) {
               dateFormat = field.format.replace('%Y','yyyy').replace('%m','MM').replace('%d','dd')
             }
+            console.log(dateFormat);
             myobj.format = dateFormat;
             this.emptyRow[field.name] = null;
             this.emptyRowInfo[field.name] = null;
@@ -309,7 +322,7 @@ export default {
       return finalcsv;
     },
     csvLinkData() {
-      const blob = new Blob([`\uFEFF${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      const blob = new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
       const a = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       a.href = url;
@@ -317,7 +330,7 @@ export default {
       a.click();
     },
     getCSVBlob() {
-      return new Blob([`\uFEFF${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      return new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
     },
     addField(field) {
       const hasEnum = field.constraints && field.constraints.enum;
@@ -465,7 +478,9 @@ export default {
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
           myobj.type = 'date';
-          //myobj.format = defaultDateTimeFormat;
+          console.log('uu')
+          console.log(myobj)
+          
           myobj[field.name] = null;
           myobjInfo.type = 'date';
           //myobjInfo.format = defaultDateTimeFormat;
@@ -579,8 +594,6 @@ export default {
     publishDataset() {
       // Get structured publish form content
       const publishContent = this.dataToPublish;
-      console.log('test')
-      console.log(publishContent)
       // Si resource id : on modifie resource
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource

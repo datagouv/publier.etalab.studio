@@ -1,4 +1,5 @@
 import { parse, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
 export const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 export const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -24,6 +25,56 @@ export const checkFocus = (element, func) => {
     }
   });
 };
+
+
+
+export const cellValueParser = (column, row, value, fromInput) => {
+  if (column.formatter) {
+    return column.formatter({ value, row, column, fromInput, reverse: true });
+  }
+  if (!value && value !== 0 && value !== false) {
+    return value;
+  }
+  if (!column.type || column.type === 'text') {
+    return value;
+  }
+  if (column.type === 'date') {
+    if (fromInput) {
+      // eslint-disable-next-line no-param-reassign
+      console.log(value)
+      var valueDate = parse(value, 'yyyy-MM-dd', new Date());
+      if(column.format) {
+        value = format(valueDate, column.format);
+      } else {
+        value = valueDate;
+      }
+    }
+  } else if (column.type === 'datetime') {
+    if (fromInput) {
+      // eslint-disable-next-line no-param-reassign
+      value = parseISO(value);
+    }
+  } else if (column.type === 'boolean') {
+    // eslint-disable-next-line no-param-reassign
+    value = ['y', 'yes', 'true', 't', 'si', 's', '1'].indexOf(value.toLowerCase()) >= 0;
+  } else if (column.type === 'currency' || column.type === 'numeric' || column.type === 'percent') {
+    const separators = currencyFormatter.format(111111.11).replace(/1/g, '').split('').reverse();
+    const decimalSepparator = separators[0];
+    // eslint-disable-next-line no-restricted-globals
+    const clearValue = +value.split('').filter(val => !isNaN(+val) || val === decimalSepparator).join('');
+    // eslint-disable-next-line no-param-reassign
+    value = value.startsWith('-') ? clearValue * -1 : clearValue;
+  }
+  // eslint-disable-next-line no-restricted-globals
+  /*if (isNaN(value)) {
+    console.log('nnnnn')
+    console.log(value);
+    throw new Error('Invalid value');
+  }*/
+  console.log(value);
+  return value;
+};
+
 
 export const parseCellDateTime = (value, column, format) => {
   // eslint-disable-next-line no-param-reassign

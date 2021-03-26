@@ -39,6 +39,7 @@ import Vue from 'vue';
 import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
+import { cellValueParser } from './helpers';
 
 export default {
   filters: {
@@ -141,8 +142,10 @@ export default {
       return value;
     },
     setEditableValue($event) {
-      //const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
-      const value = this.$refs.input.value;
+      const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
+      console.log('dd')
+      console.log(this.$refs.input.value)
+      //const value = this.$refs.input.value;
       this.editPending = false;
       let valueChanged = true;
       if (value === this.rowValue) valueChanged = false;

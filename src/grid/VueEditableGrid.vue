@@ -55,20 +55,15 @@ div.vue-editable-grid
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
             )
-        div(:style=' { "min-height": `${itemHeight}px` }')
-          button.btnAdd(
-            :style='{ } '
-            type="button"
-            @click='testButton()'
-          ) +
     textarea.hidde(ref='tmp')
 </template>
 
 <script>
 /* eslint no-use-before-define: 0 */
 
+
 import filterAndSort from './filter-and-sort';
-import { checkFocus } from './helpers';
+import { checkFocus, cellValueParser } from './helpers';
 import { cellFormatter } from './vue-filters';
 import { initResize } from './header-resize';
 import Paginate from './Paginate.vue';
@@ -170,10 +165,7 @@ export default {
           if (sRowIndex === eRowIndex && sColIndex === eColIndex) {
             let rowIndex = null;
             let columnIndex = null;
-            console.log(arrayPasted);
-            console.log(this.rowData);
             let cell = this.getCell();
-            console.log(cell);
             if(arrayPasted.length > (this.rowData.length - cell.rowIndex)) {
               this.addMultRows(cell.rowIndex-this.rowData.length+arrayPasted.length);
               console.log('add rows')
@@ -186,14 +178,14 @@ export default {
                   rowIndex = sRowIndex + rIdx;
                   columnIndex = sColIndex + cIdx;
                   this.setCellError(rowIndex, columnIndex, false);
-                  /*try {
+                  try {
                     // eslint-disable-next-line no-param-reassign
                     value = cellValueParser(column, row, value, false);
                   } catch (error) {
                     this.setCellError(rowIndex, columnIndex, error);
                     // eslint-disable-next-line no-param-reassign
                     value = null;
-                  }*/
+                  }
                   this.setEditableValue(row, column, rowIndex, columnIndex, value, true, null);
                 }
               });
@@ -277,7 +269,7 @@ export default {
     addMultRows(val) {
       this.$emit('add-multiple-rows', { rowsToAdd: val });
     },
-    testButton() {
+    addEmptyRow() {
       this.$emit('add-empty-row');
     },
     emitRowSelected() {
@@ -535,6 +527,8 @@ export default {
       return this.rowData.map((row) => {
         return this.columnDefs.reduce((rowFormatted, column) => {
           rowFormatted[column.field] = cellFormatter(row[column.field], column)
+          console.log('jj')
+          console.log(rowFormatted)
           return rowFormatted;
         }, {})
       });
@@ -777,10 +771,13 @@ th:hover .resize-handle {
   color: #ffffff;
   text-align: left;
   background-color: #ebebeb;
-  width: 100%;
+  width: 150px;
   border: 0px;
+  text-align: center;
+  color: #555555;
 }
 .btnAdd:hover {
   background-color: #bbbbbb;
+  color: white;
 }
 </style>
