@@ -55,7 +55,7 @@ div.vue-editable-grid
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
             )
-        div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
+        div(:style=' { "min-height": `${itemHeight}px` }')
           button.btnAdd(
             :style='{ } '
             type="button"

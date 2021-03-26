@@ -123,19 +123,8 @@ export default {
             input.focus();
             return;
           }
-          if (this.column.type === 'datetime' || this.column.type === 'date') {
-            /*const formattedDate = this.column.type === 'datetime'
-              ? `${format(this.value, 'yyyy-MM-dd')}T${format(this.value, 'HH:mm')}`
-              : `${format(this.value, 'yyyy-MM-dd')}`;
-            setTimeout(() => {
-              input.value = formattedDate;
-              input.focus();
-            }, 50);*/
-            console.log('date')
-          } else {
-            input.value = this.value;
-            input.focus();
-          }
+          input.value = this.value;
+          input.focus();
         });
       }
     },
