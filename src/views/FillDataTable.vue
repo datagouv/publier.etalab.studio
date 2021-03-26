@@ -1,48 +1,6 @@
 <template>
 <div>
     <div v-if="!publicationReady" ref="test">
-      <div  class="rf-container rf-pb-1w rf-pt-2w">
-          <h3>Saisir vos données via un tableur</h3>
-          <br />
-          <div
-            style="min-height: 270px;"
-            class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w"
-          >
-            <p>{{ messageInfo }}</p>
-            <p>{{ exempleInfo }}</p>
-            <p v-if="warningInfo != ''" class='warningInfo'>{{ warningInfo }}</p>
-            <p
-              v-if="errorInfo != null & errorInfo != ''"
-              class='errorInfo'
-            >
-              Message d'erreur : {{ errorInfo }}
-            </p>
-          </div>
-      </div>
-      <div style="padding-left: 3%; padding-right: 3%;">
-          <vue-editable-grid
-              class="grid"
-              ref="grid"
-              id="mygrid"
-              :column-defs="columnDefs"
-              :row-data="rows"
-              :row-data-color="rowsColor"
-              :field-names="fieldNames"
-              row-data-key='id'
-              @cell-updated="cellUpdated"
-              @row-selected="rowSelected"
-              @link-clicked="linkClicked"
-              @context-menu="contextMenu"
-              @add-empty-row='addEmptyRow'
-              @maybe-add-row='maybeAddRow'
-              @add-multiple-rows='addMultipleRows'
-              >
-              <template v-slot:header-r>
-                  Nombre de lignes : {{ rows.length }}
-              </template>
-          </vue-editable-grid>
-      </div>
-      <br />
       <div  class="rf-container">
           <button
             style="margin-right: 20px"
@@ -76,6 +34,47 @@
           >
             Publier sur data.gouv.fr
           </button>
+      </div>
+      <div style="overflow-y: scroll; height:500px;">
+          <vue-editable-grid
+              class="grid"
+              ref="grid"
+              id="mygrid"
+              :column-defs="columnDefs"
+              :row-data="rows"
+              :row-data-color="rowsColor"
+              :field-names="fieldNames"
+              row-data-key='id'
+              @cell-updated="cellUpdated"
+              @row-selected="rowSelected"
+              @link-clicked="linkClicked"
+              @context-menu="contextMenu"
+              @add-empty-row='addEmptyRow'
+              @maybe-add-row='maybeAddRow'
+              @add-multiple-rows='addMultipleRows'
+              >
+              <template v-slot:header-r>
+                <div style="padding-right: 30px;">
+                  Nombre de lignes : {{ rows.length }}
+                </div>
+              </template>
+          </vue-editable-grid>
+      </div>
+      <div>
+          <div
+            style="min-height: 180px;"
+            class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w"
+          >
+            <p>{{ messageInfo }}</p>
+            <p>{{ exempleInfo }}</p>
+            <p v-if="warningInfo != ''" class='warningInfo'>{{ warningInfo }}</p>
+            <p
+              v-if="errorInfo != null & errorInfo != ''"
+              class='errorInfo'
+            >
+              Message d'erreur : {{ errorInfo }}
+            </p>
+          </div>
       </div>
     </div>
 
@@ -232,9 +231,6 @@ export default {
   },
   methods: {
     maybeAddRow($event){
-      console.log('test');
-      console.log($event);
-      console.log(this.rows)
       if ($event.rowIndex === (this.rows.length - 1)) {
         this.addEmptyRow()
       }
@@ -264,20 +260,17 @@ export default {
             this.emptyRowInfo[field.name] = '';
             this.emptyRowError[field.name] = '';
             if(field.constraints && field.constraints.enum) {
-              console.log(field.constraints.enum)
               myobj.type = 'stringEnum';
               myobj.enumList = field.constraints.enum;
             }
           } else if (field.type === 'date') {
             
             myobj.type = 'date';
-            console.log(field);
             //myobj.format = defaultDateTimeFormat;
             var dateFormat = 'yyyy-MM-dd'
             if (field.format) {
               dateFormat = field.format.replace('%Y','yyyy').replace('%m','MM').replace('%d','dd')
             }
-            console.log(dateFormat);
             myobj.format = dateFormat;
             this.emptyRow[field.name] = null;
             this.emptyRowInfo[field.name] = null;
@@ -300,31 +293,53 @@ export default {
         this.emptyRowInfo.idRowVEG = uniqueid;
         this.emptyRowError.idRowVEG = uniqueid;
         this.emptyRowColor.idRowVEG = '#ebebeb';
+
+        for(var i = 0; i<25; i++){
+          this.addEmptyRow()
+        }
+
       }).catch((_) => _)
         .finally(() => {
         loader.hide();
       });
     },
     buildLine(line) {
+      console.log('test')
       let linecsv = '';
       let cpt = 0;
+      var notEmpty = false;
       this.fieldNames.forEach((field) => {
-        if (cpt === 0) {
-          linecsv = `"${line[field]}"`;
-          cpt = 1;
-        } else {
-          linecsv = `${linecsv},"${line[field]}"`;
+        if(line[field] != "" && line[field] != null){
+          notEmpty = true;
+          console.log(line[field])
         }
       });
+      if(notEmpty) {
+        this.fieldNames.forEach((field) => {
+          if (cpt === 0) {
+            linecsv = `"${line[field]}"`;
+            cpt = 1;
+          } else {
+            linecsv = `${linecsv},"${line[field]}"`;
+          }
+        });
+      }
       return linecsv;
     },
     buildCurrentCsvContent() {
       let finalcsv = '';
+      var stopBuilding = false;
       finalcsv = this.buildHeaderLine();
       this.rows.forEach((row) => {
-        finalcsv = `${finalcsv}\r\n`;
-        finalcsv += this.buildLine(row);
+        var currentLine = this.buildLine(row);
+        if(currentLine != '' && stopBuilding == false) { 
+          finalcsv = `${finalcsv}\r\n`;
+          finalcsv += currentLine;
+        } else{
+          stopBuilding = true;
+        }
       });
+      console.log(finalcsv)
       return finalcsv;
     },
     csvLinkData() {
@@ -484,8 +499,6 @@ export default {
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
           myobj.type = 'date';
-          console.log('uu')
-          console.log(myobj)
           
           myobj[field.name] = null;
           myobjInfo.type = 'date';

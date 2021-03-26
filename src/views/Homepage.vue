@@ -17,12 +17,11 @@
             </div>
             <br/><br />
             <p>
-                Cet outil vous permet de saisir, valider et publier des données obéissant à un schéma de données sur la plateforme ouverte des données publiques françaises  <a href="http://www.data.gouv.fr/">data.gouv.fr</a>.</p>
-                <p>Les schémas proposés sont référencés sur la plateforme <a href="http://schema.data.gouv.fr">schema.data.gouv.fr</a>.
+                Cet outil vous permet de saisir, valider et publier des données structurées sur la plateforme ouverte des données publiques françaises  <a href="http://www.data.gouv.fr/">data.gouv.fr</a>.</p>
+                <p>Les types de données aujourd'hui proposés sont référencés sur la plateforme <a href="http://schema.data.gouv.fr">schema.data.gouv.fr</a>.
             </p>
-            <br />
+            <br /><!--
             <vsa-list>
-                <!-- Here you can use v-for to loop through items  -->
                 <vsa-item>
                     <vsa-heading>
                         <p>Qu'est-ce qu'un schéma de données ?</p>
@@ -79,7 +78,7 @@
                         </ul>
                     </vsa-content>
                 </vsa-item>
-            </vsa-list>
+            </vsa-list>-->
 
         </div>
         <div class="rf-container-fluid rf-bg--alt rf-centered rf-pb-6w rf-pt-2w">
@@ -122,12 +121,12 @@
 
         <div class="rf-container rf-pb-6w rf-pt-2w">
             <br />
-            <h3>Sélectionner votre schéma</h3>
-            <br />
+            <h3>Sélectionner un type de jeu de données</h3>
+            <!--<br />
             <p>
-                Les schémas ci-dessous sont issues du référentiel de schéma de
+                Les types de jeux de données ci-dessous sont issues du référentiel de schéma de
                 la plateforme schema.data.gouv.fr.
-            </p>
+            </p>-->
             <br />
             <div class="rf-search-bar" id="header-search">
                 <label class="rf-label" for="header-search-input">
@@ -137,13 +136,13 @@
                     v-model="searchText"
                     v-on:input="filterSchema()"
                     class="rf-input"
-                    placeholder="Rechercher un schéma"
+                    placeholder="Rechercher un type de jeu de données"
                     type="search" id="header-search-input"
                     name="header-search-input"
                 >
-                <button class="rf-btn" title="Rechercher un schéma">
+                <button class="rf-btn" title="Rechercher un type de jeu de données">
                     <span>
-                        Rechercher un schéma
+                        Rechercher un type de jeu de données
                     </span>
                 </button>
             </div>

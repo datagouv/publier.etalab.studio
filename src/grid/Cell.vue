@@ -19,9 +19,10 @@ td.cell.noselectx(
     v-if='column.enumList && row[column.field] == ""'
   )
     select(
-      :style='{width: `100%`}'
+      :style='{width: `100%`, border: `0px`}'
       @change='toto($event,row,column.field)'
     )
+      option 
       option(
         v-for='obj in column.enumList'
         value=obj

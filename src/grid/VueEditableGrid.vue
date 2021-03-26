@@ -671,7 +671,7 @@ th {
 th {
   position: sticky;
   top: 0;
-  border-bottom: solid 1px #dadada;
+  border-bottom: solid 1px #ebebeb;
   text-align: left;
   font-weight: normal;
   position: relative;
@@ -682,7 +682,9 @@ th {
 
   &.sortable {
     cursor: pointer;
-
+    border-right: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    background-color: #fcfcfc;
     &::after {
       position: absolute;
       right: 0;
@@ -770,7 +772,7 @@ th:hover .resize-handle {
 .btnAdd {
   color: #ffffff;
   text-align: left;
-  background-color: #ebebeb;
+  background-color: #f7f5f5;
   width: 150px;
   border: 0px;
   text-align: center;
