@@ -34,6 +34,14 @@
           >
             Publier sur data.gouv.fr
           </button>
+          <button
+            style="margin-right: 20px"
+            @click="saveRows()"
+            type="submit"
+            class="rf-btn"
+          >
+            Sauvegarder
+          </button>
       </div>
       <div style="overflow-y: scroll; height:500px;">
           <vue-editable-grid
@@ -163,12 +171,6 @@ import PublishRessources from '../mixins/PublishResources.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-const selectOptions = [
-  { value: '', text: 'Select' },
-  { value: 'green', text: 'green' },
-  { value: 'blue', text: 'blue' },
-  { value: 'brown', text: 'brown' }
-]
 
 export default {
   name: 'fillDataTable',
@@ -228,6 +230,9 @@ export default {
     this.rowsColor.push({ ...this.emptyRowColor });
   },
   computed: {
+    ongoingData() {
+      return this.$store.state.data;
+    },
   },
   methods: {
     maybeAddRow($event){
@@ -243,6 +248,7 @@ export default {
     },
     buildForm() {
       const loader = this.$loading.show();
+
       fetch(this.schemaMeta.schema_url).then((r) => r.json()).then((data) => {
         this.schema = data;
 
@@ -296,6 +302,15 @@ export default {
 
         for(var i = 0; i<25; i++){
           this.addEmptyRow()
+        }
+
+        if(this.ongoingData) {
+          console.log(this.ongoingData.schema)
+          console.log(this.schemaMeta.name)
+          if(this.ongoingData.schema === this.schemaMeta.name) {
+            console.log('yes')
+            this.rows = this.ongoingData.rows;
+          }
         }
 
       }).catch((_) => _)
@@ -634,6 +649,11 @@ export default {
         this.createDatasetCreateResource(publishContent, this.getCSVBlob());
       }
     },
+    saveRows(){
+      console.log('save')
+      this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
+      this.$store.dispatch('data/fillSchemaRowsData', this.rows)
+    }
   },
 };
 </script>
