@@ -33,7 +33,7 @@ div.vue-editable-grid
           tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
             cell(
               v-for='(column, columnIndex) in columnDefs'
-              :style='{ "background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
+              :style='{"background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
               :ref='`cell`'
               :key='columnIndex'
               :column='column'

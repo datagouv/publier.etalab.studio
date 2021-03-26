@@ -263,7 +263,13 @@ export default {
             this.emptyRow[field.name] = '';
             this.emptyRowInfo[field.name] = '';
             this.emptyRowError[field.name] = '';
+            if(field.constraints && field.constraints.enum) {
+              console.log(field.constraints.enum)
+              myobj.type = 'stringEnum';
+              myobj.enumList = field.constraints.enum;
+            }
           } else if (field.type === 'date') {
+            
             myobj.type = 'date';
             console.log(field);
             //myobj.format = defaultDateTimeFormat;
@@ -472,7 +478,7 @@ export default {
       const myobjColor = {};
 
       this.schema.fields.forEach((field) => {
-        if (field.type === 'string') {
+        if (field.type === 'string' || field.type === 'stringEnum') {
           myobj[field.name] = '';
           myobjInfo[field.name] = '';
           myobjError[field.name] = '';

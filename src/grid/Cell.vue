@@ -15,9 +15,21 @@ td.cell.noselectx(
 )
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
+  span(
+    v-if='column.enumList && row[column.field] == ""'
+  )
+    select(
+      :style='{width: `100%`}'
+      @change='toto($event,row,column.field)'
+    )
+      option(
+        v-for='obj in column.enumList'
+        value=obj
+      ) {{ obj }}
+  
   span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
     input(
-      :type='inputType'
+      :type='inputType == null'
       ref='input'
       @keyup.enter='setEditableValue'
       @keydown.tab='setEditableValue'
@@ -40,6 +52,18 @@ import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
+
+/* 
+    input(
+      :type='inputType'
+      ref='input'
+      @keyup.enter='setEditableValue'
+      @keydown.tab='setEditableValue'
+      @keyup.esc='editCancelled'
+      @focus='editPending = true'
+      @blur='leaved'
+    )
+*/
 
 export default {
   filters: {
@@ -131,6 +155,14 @@ export default {
     },
   },
   methods: {
+    toto(event){
+      console.log(event.target.value)
+      console.log(this.row);
+      var value = event.target.value;
+      let valueChanged = true;
+      const { row, column, rowIndex, columnIndex } = this;
+      this.$emit('edited', { row, column, rowIndex, columnIndex, event, value, valueChanged });
+    },
     getEditableValue(value) {
       /*if (this.column.type === 'datetime' || this.column.type === 'date') {
         if (typeof value === 'string') {
