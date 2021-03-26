@@ -37,7 +37,6 @@ td.cell.noselectx(
 <script>
 import Vue from 'vue';
 import { format } from 'date-fns';
-import { cellValueParser, sameDates } from './helpers';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 
@@ -125,13 +124,14 @@ export default {
             return;
           }
           if (this.column.type === 'datetime' || this.column.type === 'date') {
-            const formattedDate = this.column.type === 'datetime'
+            /*const formattedDate = this.column.type === 'datetime'
               ? `${format(this.value, 'yyyy-MM-dd')}T${format(this.value, 'HH:mm')}`
               : `${format(this.value, 'yyyy-MM-dd')}`;
             setTimeout(() => {
               input.value = formattedDate;
               input.focus();
-            }, 50);
+            }, 50);*/
+            console.log('date')
           } else {
             input.value = this.value;
             input.focus();
@@ -142,23 +142,24 @@ export default {
   },
   methods: {
     getEditableValue(value) {
-      if (this.column.type === 'datetime' || this.column.type === 'date') {
+      /*if (this.column.type === 'datetime' || this.column.type === 'date') {
         if (typeof value === 'string') {
           const parsedDate = new Date(value);
           // eslint-disable-next-line no-restricted-globals
           return isNaN(parsedDate) ? null : parsedDate;
         }
-      }
+      }*/
       return value;
     },
     setEditableValue($event) {
-      const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
+      //const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
+      const value = this.$refs.input.value;
       this.editPending = false;
       let valueChanged = true;
       if (value === this.rowValue) valueChanged = false;
-      else if (value && (this.column.type === 'date' || this.column.type === 'datetime')) {
+      /*else if (value && (this.column.type === 'date' || this.column.type === 'datetime')) {
         if (sameDates(value, this.rowValue)) valueChanged = false;
-      }
+      }*/
       const { row, column, rowIndex, columnIndex } = this;
       this.$emit('edited', { row, column, rowIndex, columnIndex, $event, value, valueChanged });
     },

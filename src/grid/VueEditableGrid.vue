@@ -68,7 +68,7 @@ div.vue-editable-grid
 /* eslint no-use-before-define: 0 */
 
 import filterAndSort from './filter-and-sort';
-import { checkFocus, cellValueParser } from './helpers';
+import { checkFocus } from './helpers';
 import { cellFormatter } from './vue-filters';
 import { initResize } from './header-resize';
 import Paginate from './Paginate.vue';
@@ -186,14 +186,14 @@ export default {
                   rowIndex = sRowIndex + rIdx;
                   columnIndex = sColIndex + cIdx;
                   this.setCellError(rowIndex, columnIndex, false);
-                  try {
+                  /*try {
                     // eslint-disable-next-line no-param-reassign
                     value = cellValueParser(column, row, value, false);
                   } catch (error) {
                     this.setCellError(rowIndex, columnIndex, error);
                     // eslint-disable-next-line no-param-reassign
                     value = null;
-                  }
+                  }*/
                   this.setEditableValue(row, column, rowIndex, columnIndex, value, true, null);
                 }
               });

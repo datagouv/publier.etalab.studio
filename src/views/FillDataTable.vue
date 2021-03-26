@@ -156,8 +156,8 @@ import PublishRessources from '../mixins/PublishResources.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-export const defaultDateFormat = 'MMM dd, yyyy';
-export const defaultDateTimeFormat = 'YYYY-mm-dd';
+export const defaultDateFormat = 'YYYY/mm/dd';
+export const defaultDateTimeFormat = 'YYYY/mm/dd';
 
 export default {
   name: 'fillDataTable',
@@ -253,7 +253,13 @@ export default {
             this.emptyRowError[field.name] = '';
           } else if (field.type === 'date') {
             myobj.type = 'date';
-            myobj.format = defaultDateTimeFormat;
+            console.log(field);
+            //myobj.format = defaultDateTimeFormat;
+            var dateFormat = 'yyyy-MM-dd'
+            if (field.format) {
+              dateFormat = field.format.replace('%Y','yyyy').replace('%m','MM').replace('%d','dd')
+            }
+            myobj.format = dateFormat;
             this.emptyRow[field.name] = null;
             this.emptyRowInfo[field.name] = null;
             this.emptyRowError[field.name] = null;
@@ -459,13 +465,13 @@ export default {
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
           myobj.type = 'date';
-          myobj.format = defaultDateTimeFormat;
+          //myobj.format = defaultDateTimeFormat;
           myobj[field.name] = null;
           myobjInfo.type = 'date';
-          myobjInfo.format = defaultDateTimeFormat;
+          //myobjInfo.format = defaultDateTimeFormat;
           myobjInfo[field.name] = null;
           myobjError.type = 'date';
-          myobjError.format = defaultDateTimeFormat;
+          //myobjError.format = defaultDateTimeFormat;
           myobjError[field.name] = null;
         } else if (field.type === 'number') {
           myobj.type = 'numeric';
@@ -573,6 +579,8 @@ export default {
     publishDataset() {
       // Get structured publish form content
       const publishContent = this.dataToPublish;
+      console.log('test')
+      console.log(publishContent)
       // Si resource id : on modifie resource
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
