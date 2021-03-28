@@ -73,7 +73,10 @@
                 </vsa-list>
             </div>
             <br/><br/>
-            <span v-if="this.file">
+            <div v-if="wrongFormat">
+              <p>Le fichier soumis n'est pas au format attendu.</p>
+            </div>
+            <span v-if="this.schema.schema_type == 'tableschema' && this.file && !this.wrongFormat">
               <button
                 type="submit"
                 style="margin-right: 20px"
@@ -224,6 +227,7 @@ export default {
       linkDgv: '',
       contentFile: '',
       ext: '',
+      wrongFormat:false,
     };
   },
   computed: {
@@ -232,18 +236,23 @@ export default {
   },
   methods: {
     handleFileUpload() {
-      if (this.schema.schema_type == 'tableschema') {
+      this.wrongFormat = false;
+      this.file = this.$refs.file.files[0];
+      this.report = null;
+      this.reportJson = []
+      this.reportValidStatus = null;
+      this.badgeUrl = null;
+      this.publication = false;
+      this.publicationMessage = null;
+
+      this.reportValidStatus = null;
+      this.reportStructureErrors = [];
+      this.reportContentErrors = [];
+      this.reportRecos = [];
+      this.reportErrorInfo = null;
+
+      if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['type'].includes('csv')) {
         // eslint-disable-next-line prefer-destructuring
-        this.file = this.$refs.file.files[0];
-        this.report = null;
-        this.reportValidStatus = null;
-        this.reportStructureErrors = [];
-        this.reportContentErrors = [];
-        this.reportRecos = [];
-        this.badgeUrl = null;
-        this.reportErrorInfo = null;
-        this.publication = false;
-        this.publicationMessage = null;
         const formData = new FormData();
         formData.append('file', this.file);
         formData.append('schema', `https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`);
@@ -296,15 +305,8 @@ export default {
           // eslint-disable-next-line no-console
           console.log('finally');
         });
-      } else if (this.schema.schema_type == 'jsonschema') {
+      } else if (this.schema.schema_type == 'jsonschema' && this.$refs.file.files[0]['type'].includes('json')) {
 
-        this.file = this.$refs.file.files[0];
-        this.report = null;
-        this.reportJson = []
-        this.reportValidStatus = null;
-        this.badgeUrl = null;
-        this.publication = false;
-        this.publicationMessage = null;
 
         var reader = new FileReader();
         reader.onloadend = () => {
@@ -336,6 +338,8 @@ export default {
         }
         reader.readAsText(this.$refs.file.files[0]);
         
+      } else {
+        this.wrongFormat = true;
       }
     },
     publicationForm() {
