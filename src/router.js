@@ -30,7 +30,7 @@ export default new Router({
     },
     {
       path: '/form',
-      name: 'home_schema',
+      name: 'form',
       component: FillDataForm,
     },
     {
