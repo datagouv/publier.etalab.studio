@@ -392,7 +392,6 @@ export default {
     contextMenu(row, column, rowIndex, columnIndex, $event) {
       this.isSelecting = false;
       const isInside = rowIndex >= this.selStart[0] && rowIndex <= this.selEnd[0] && columnIndex >= this.selStart[1] && columnIndex <= this.selEnd[1];
-      console.log("ii")
       if (!isInside) this.selectCell(this.offsetRows + rowIndex, columnIndex, $event);
       this.$emit('context-menu', { row, column, rowIndex, columnIndex, $event });
     },
@@ -512,7 +511,6 @@ export default {
       console.log(sum);
       let [row, col] = this.selStart;
       row += sum;
-      console.log('6')
       this.selectCell(row, col);
     },
     removeFilter(field) {
@@ -527,8 +525,6 @@ export default {
       return this.rowData.map((row) => {
         return this.columnDefs.reduce((rowFormatted, column) => {
           rowFormatted[column.field] = cellFormatter(row[column.field], column)
-          console.log('jj')
-          console.log(rowFormatted)
           return rowFormatted;
         }, {})
       });

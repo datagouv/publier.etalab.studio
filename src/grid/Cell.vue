@@ -157,8 +157,6 @@ export default {
   },
   methods: {
     toto(event){
-      console.log(event.target.value)
-      console.log(this.row);
       var value = event.target.value;
       let valueChanged = true;
       const { row, column, rowIndex, columnIndex } = this;
@@ -176,8 +174,6 @@ export default {
     },
     setEditableValue($event) {
       const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
-      console.log('dd')
-      console.log(this.$refs.input.value)
       //const value = this.$refs.input.value;
       this.editPending = false;
       let valueChanged = true;

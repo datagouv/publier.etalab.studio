@@ -2,13 +2,28 @@
 <div>
     <div v-if="!publicationReady" ref="test">
       <div  class="rf-container">
-          <button
+          <!--<button
             style="margin-right: 20px"
             @click="addEmptyRow()"
             type="submit"
-            class="rf-btn"
+            class="rf-btn-light"
           >
             Ajouter une ligne
+          </button>-->
+          <button
+            style="margin-right: 20px"
+            @click="showModal2()"
+            type="submit"
+            class="rf-btn-light"
+          >
+            Ajouter une colonne
+          </button>
+          <button
+            style="margin-right: 20px"
+            class="rf-btn-light"
+            @click="csvLinkData"
+          >
+            Télécharger le CSV
           </button>
           <button
             style="margin-right: 20px"
@@ -22,25 +37,9 @@
             style="margin-right: 20px"
             class="rf-btn"
             v-if="publicationButtons"
-            @click="csvLinkData"
-          >
-            Télécharger le CSV
-          </button>
-          <button
-            style="margin-right: 20px"
-            class="rf-btn"
-            v-if="publicationButtons"
             @click="showPublishForm()"
           >
             Publier sur data.gouv.fr
-          </button>
-          <button
-            style="margin-right: 20px"
-            @click="saveRows()"
-            type="submit"
-            class="rf-btn"
-          >
-            Sauvegarder
           </button>
       </div>
       <div style="overflow-y: scroll; height:500px;">
@@ -152,6 +151,40 @@
             </div>
           </div>
     </b-modal>
+
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modal2"
+      id="modal2"
+      hide-footer
+      title="Ajouter une colonne"
+    >
+      <div>
+        <p>Attention, ajouter une colonne sur un type de donnée bien défini aura pour conséquence de ne pas avoir un fichier parfaitement conforme en terme de qualité. Cependant, l'ajout de colonnes supplémentaires est toléré.</p>
+
+        <p>Si vous souhaitez toujours ajouter une colonne, merci de renseigner son nom ici :</p>
+
+        <input
+          v-model="newFieldName"
+          class="rf-input"
+          placeholder="Entrer le nom du champs"
+          type="search" id="new-fieldname-input"
+          name="new-fieldname-input"
+        >
+        <br/>
+        <div style="text-align: center;">
+          <button
+            style="margin-right: 20px;"
+            @click="addNewField()"
+            type="submit"
+            class="rf-btn"
+          >
+            Ajouter une colonne
+          </button>
+        </div>
+      </div>
+    </b-modal>
     </div>
 </template>
 
@@ -215,6 +248,7 @@ export default {
       publicationButtons: false,
       publicationOK: false,
       dataToPublish: {},
+      newFieldName: '',
     };
   },
   watch: {
@@ -228,6 +262,11 @@ export default {
     this.rowsInfo.push({ ...this.emptyRowInfo });
     this.rowsError.push({ ...this.emptyRowError });
     this.rowsColor.push({ ...this.emptyRowColor });
+
+    window.setInterval(() => {
+        this.saveRows()
+      }, 5000)
+
   },
   computed: {
     ongoingData() {
@@ -241,10 +280,28 @@ export default {
       }
     },
     addMultipleRows($event) {
-      console.log($event)
       for(let i = 0;i<$event.rowsToAdd;i++) {
         this.addEmptyRow()
       }
+    },
+    addNewField() {
+        this.fieldNames.push(this.newFieldName);
+        const myobj = {};
+        myobj.sortable = true;
+        myobj.filter = true;
+        myobj.field = this.newFieldName;
+        myobj.headerName = this.newFieldName;
+        myobj.editable = true;
+
+        this.emptyRow[this.newFieldName] = '';
+        this.emptyRowInfo[this.newFieldName] = '';
+        this.emptyRowError[this.newFieldName] = '';
+
+        this.columnDefs.push(myobj);
+
+        this.hideModal2();
+        this.newFieldName = '';
+
     },
     buildForm() {
       const loader = this.$loading.show();
@@ -305,11 +362,37 @@ export default {
         }
 
         if(this.ongoingData) {
-          console.log(this.ongoingData.schema)
-          console.log(this.schemaMeta.name)
           if(this.ongoingData.schema === this.schemaMeta.name) {
-            console.log('yes')
-            this.rows = this.ongoingData.rows;
+            if(this.fromFile == 'yes'){
+              //var diff = this.ongoingData.fileHeader.filter(x => !this.fieldNames.includes(x));
+              this.ongoingData.fileHeader.forEach((header) => {
+                if(!this.fieldNames.includes(header)){
+                  this.newFieldName = header;
+                  this.addNewField();
+                }
+              });
+              var rowNb = 0;
+              let nbrows = this.ongoingData.fileNbRows
+              console.log(typeof(nbrows));
+              if(this.ongoingData.fileNbRows > 25){
+                for(var k = 0; k < 2431; k++) {
+                  this.addEmptyRow()
+                }
+              }
+              this.ongoingData.fileRows.forEach((row) => {
+                console.log(rowNb);
+                for(var col in row) {
+                  this.rows[rowNb][col] = row[col]; 
+                }
+                rowNb++;
+              });
+              this.submit();
+              
+            }
+            else {
+              this.columnDefs = this.ongoingData.columnDefs;
+              this.rows = this.ongoingData.rows;
+            }
           }
         }
 
@@ -319,14 +402,12 @@ export default {
       });
     },
     buildLine(line) {
-      console.log('test')
       let linecsv = '';
       let cpt = 0;
       var notEmpty = false;
       this.fieldNames.forEach((field) => {
         if(line[field] != "" && line[field] != null){
           notEmpty = true;
-          console.log(line[field])
         }
       });
       if(notEmpty) {
@@ -354,7 +435,6 @@ export default {
           stopBuilding = true;
         }
       });
-      console.log(finalcsv)
       return finalcsv;
     },
     csvLinkData() {
@@ -650,10 +730,16 @@ export default {
       }
     },
     saveRows(){
-      console.log('save')
       this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
       this.$store.dispatch('data/fillSchemaRowsData', this.rows)
-    }
+      this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
+    },
+    showModal2() {
+      this.$refs.modal2.show();
+    },
+    hideModal2() {
+      this.$refs.modal2.hide();
+    },
   },
 };
 </script>

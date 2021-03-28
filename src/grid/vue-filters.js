@@ -10,7 +10,6 @@ import {
 // eslint-disable-next-line import/prefer-default-export
 export const cellFormatter = function (value, column, row) {
   if (column.formatter) {
-    console.log('oui')
     return column.formatter({ value, column, row, reverse: false });
   }
   if (!value && value !== false && value !== 0) {
@@ -18,14 +17,10 @@ export const cellFormatter = function (value, column, row) {
   }
   switch (column.type) {
     case 'date': {
-      console.log('icici')
-      console.log(column)
       // eslint-disable-next-line no-param-reassign
       if (typeof value === 'string') {
-        console.log('string')
         value = new Date(value);
       }
-      console.log(format(value, column.format));
       return format(value, column.format); //format(value, column.format); // || defaultDateFormat);
     }
     case 'datetime': {

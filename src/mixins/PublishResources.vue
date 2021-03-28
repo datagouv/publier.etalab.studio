@@ -22,6 +22,7 @@ export default {
       hasValues: false,
       publicationIntro: 'Publiez vos données au format CSV dans un nouveau jeu de données',
       publishButtonDisabled: true,
+      fromFile: this.$route.query.fromFile,
     };
   },
   mounted() {

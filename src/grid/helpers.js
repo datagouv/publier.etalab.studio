@@ -41,7 +41,6 @@ export const cellValueParser = (column, row, value, fromInput) => {
   if (column.type === 'date') {
     if (fromInput) {
       // eslint-disable-next-line no-param-reassign
-      console.log(value)
       var valueDate = parse(value, 'yyyy-MM-dd', new Date());
       if(column.format) {
         value = format(valueDate, column.format);
@@ -71,7 +70,6 @@ export const cellValueParser = (column, row, value, fromInput) => {
     console.log(value);
     throw new Error('Invalid value');
   }*/
-  console.log(value);
   return value;
 };
 

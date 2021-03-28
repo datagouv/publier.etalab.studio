@@ -73,16 +73,28 @@
                 </vsa-list>
             </div>
             <br/><br/>
-            <div v-if="publication">
+            <span v-if="this.file">
+              <button
+                type="submit"
+                style="margin-right: 20px"
+                class="rf-btn-light"
+                title="Editer le fichier"
+                @click="editFile()"
+              >
+                Editer ce fichier
+              </button>
+            </span>
+            <span v-if="publication">
                 <button
                   type="submit"
+                  style="margin-right: 20px"
                   class="rf-btn"
                   title="Publier sur datagouv"
                   @click="publicationForm()"
                 >
                   {{ publicationMessage }}
                 </button>
-            </div>
+            </span>
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
@@ -306,7 +318,6 @@ export default {
           })
           .then((r) => r.json())
           .then((data) => {
-            console.log(data);
             this.report = data;
             this.reportJson = data.errors
             if(data.errors.length > 0) {
@@ -345,6 +356,45 @@ export default {
         this.createDatasetCreateResource(publishContent,this.file,this.ext);
       }
     },
+    editFile(){
+      
+      console.log('begin');
+      const Papa = require('papaparse');
+
+      var reader = new FileReader();
+      reader.onloadend = () => {
+        var content = reader.result;
+        var csvdata = Papa.parse(content);
+
+        var prepareRows = []
+        var prepareHeaders = []
+        var isHeader = true;
+        csvdata.data.forEach((row) => {
+          if(!isHeader) {
+            var obj = {}
+            for(var itemData in row) {
+              obj[prepareHeaders[itemData]] = row[itemData];
+            }
+            prepareRows.push(obj);
+          } else {
+            for(var itemHeader in row) {
+              prepareHeaders.push(row[itemHeader])
+            }
+            isHeader = false;
+          }
+        });
+
+        this.$store.dispatch('data/fillSchemaNameData', this.schemaName)
+        this.$store.dispatch('data/fillFileHeaderData', prepareHeaders)
+        this.$store.dispatch('data/fillFileRowsData', prepareRows)
+        this.$store.dispatch('data/fillFileNbRowsData', prepareRows.length)
+
+        this.$router.push(`table?schema=${this.schemaName}&fromFile=yes`);
+        
+      }
+      reader.readAsText(this.$refs.file.files[0]);
+
+    }
   },
   mounted() {
     fetch(`https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`).then((r) => r.json()).then((data) => {
