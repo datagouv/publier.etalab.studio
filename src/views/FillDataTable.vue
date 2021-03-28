@@ -593,28 +593,28 @@ export default {
           myobjInfo[field.name] = '';
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
-          myobj.type = 'date';
+          //myobj.type = 'date';
           
           myobj[field.name] = null;
-          myobjInfo.type = 'date';
+          //myobjInfo.type = 'date';
           //myobjInfo.format = defaultDateTimeFormat;
           myobjInfo[field.name] = null;
-          myobjError.type = 'date';
+          //myobjError.type = 'date';
           //myobjError.format = defaultDateTimeFormat;
           myobjError[field.name] = null;
         } else if (field.type === 'number') {
-          myobj.type = 'numeric';
+          //myobj.type = 'numeric';
           myobj[field.name] = null;
-          myobjInfo.type = 'numeric';
+          //myobjInfo.type = 'numeric';
           myobjInfo[field.name] = null;
-          myobjError.type = 'numeric';
+          //myobjError.type = 'numeric';
           myobjError[field.name] = null;
         } else if (field.type === 'integer') {
-          myobj.type = 'numeric';
+          //myobj.type = 'numeric';
           myobj[field.name] = null;
-          myobjInfo.type = 'numeric';
+          //myobjInfo.type = 'numeric';
           myobjInfo[field.name] = null;
-          myobjError.type = 'numeric';
+          //myobjError.type = 'numeric';
           myobjError[field.name] = null;
         }
       });
@@ -624,6 +624,7 @@ export default {
       myobjError.idRowVEG = uniqueid;
       myobjColor.idRowVEG = '#ebebeb';
       this.rows.push(myobj);
+      //console.log(myobj);
       this.rowsInfo.push(myobjInfo);
       this.rowsError.push(myobjError);
       this.rowsColor.push(myobjColor);

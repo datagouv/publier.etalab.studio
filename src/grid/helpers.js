@@ -29,6 +29,7 @@ export const checkFocus = (element, func) => {
 
 
 export const cellValueParser = (column, row, value, fromInput) => {
+  //console.log(column, row, value, fromInput)
   if (column.formatter) {
     return column.formatter({ value, row, column, fromInput, reverse: true });
   }
