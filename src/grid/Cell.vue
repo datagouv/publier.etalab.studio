@@ -30,7 +30,7 @@ td.cell.noselectx(
   
   span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
     input(
-      :type='inputType == null'
+      :type='inputType'
       ref='input'
       @keyup.enter='setEditableValue'
       @keydown.tab='setEditableValue'
@@ -53,18 +53,6 @@ import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
-
-/* 
-    input(
-      :type='inputType'
-      ref='input'
-      @keyup.enter='setEditableValue'
-      @keydown.tab='setEditableValue'
-      @keyup.esc='editCancelled'
-      @focus='editPending = true'
-      @blur='leaved'
-    )
-*/
 
 export default {
   filters: {

@@ -255,7 +255,7 @@ export default {
         // eslint-disable-next-line prefer-destructuring
         const formData = new FormData();
         formData.append('file', this.file);
-        formData.append('schema', `https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`);
+        formData.append('schema', this.schema.schema_url);
 
         fetch(`${VALIDATA_API_URL}/validate`, {
           method: 'POST',
@@ -401,7 +401,7 @@ export default {
     }
   },
   mounted() {
-    fetch(`https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`).then((r) => r.json()).then((data) => {
+    fetch(this.schema.schema_url).then((r) => r.json()).then((data) => {
       this.schemaObject = data;
     });
   },
