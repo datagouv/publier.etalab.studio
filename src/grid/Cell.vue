@@ -19,7 +19,7 @@ td.cell.noselectx(
     v-if='column.enumList && row[column.field] == ""'
   )
     select(
-      :style='{width: `100%`, border: `0px`}'
+      :style='{width: `100%`, border: `0px`, textAlign: `right`}'
       @change='toto($event,row,column.field)'
     )
       option 
