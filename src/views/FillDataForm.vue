@@ -241,7 +241,7 @@ export default {
       const lines = this.lines.map((l) => this.buildLine(l));
       const csv = [this.buildHeaderLine(), ...lines].join('\r\n');
       // Forcing UTF-8 encoding. See https://stackoverflow.com/questions/17879198
-      return new Blob([`\uFEFF${csv}`], { type: 'text/csv' });
+      return new Blob([`${csv}`], { type: 'text/csv' });
     },
     csvLink() {
       return window.URL.createObjectURL(this.csvBlob);

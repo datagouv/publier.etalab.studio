@@ -33,7 +33,7 @@ div.vue-editable-grid
           tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
             cell(
               v-for='(column, columnIndex) in columnDefs'
-              :style='{ "background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
+              :style='{"background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
               :ref='`cell`'
               :key='columnIndex'
               :column='column'
@@ -55,17 +55,12 @@ div.vue-editable-grid
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
             )
-        div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
-          button.btnAdd(
-            :style='{ } '
-            type="button"
-            @click='testButton()'
-          ) +
     textarea.hidde(ref='tmp')
 </template>
 
 <script>
 /* eslint no-use-before-define: 0 */
+
 
 import filterAndSort from './filter-and-sort';
 import { checkFocus, cellValueParser } from './helpers';
@@ -170,10 +165,7 @@ export default {
           if (sRowIndex === eRowIndex && sColIndex === eColIndex) {
             let rowIndex = null;
             let columnIndex = null;
-            console.log(arrayPasted);
-            console.log(this.rowData);
             let cell = this.getCell();
-            console.log(cell);
             if(arrayPasted.length > (this.rowData.length - cell.rowIndex)) {
               this.addMultRows(cell.rowIndex-this.rowData.length+arrayPasted.length);
               console.log('add rows')
@@ -277,7 +269,7 @@ export default {
     addMultRows(val) {
       this.$emit('add-multiple-rows', { rowsToAdd: val });
     },
-    testButton() {
+    addEmptyRow() {
       this.$emit('add-empty-row');
     },
     emitRowSelected() {
@@ -400,7 +392,6 @@ export default {
     contextMenu(row, column, rowIndex, columnIndex, $event) {
       this.isSelecting = false;
       const isInside = rowIndex >= this.selStart[0] && rowIndex <= this.selEnd[0] && columnIndex >= this.selStart[1] && columnIndex <= this.selEnd[1];
-      console.log("ii")
       if (!isInside) this.selectCell(this.offsetRows + rowIndex, columnIndex, $event);
       this.$emit('context-menu', { row, column, rowIndex, columnIndex, $event });
     },
@@ -520,7 +511,6 @@ export default {
       console.log(sum);
       let [row, col] = this.selStart;
       row += sum;
-      console.log('6')
       this.selectCell(row, col);
     },
     removeFilter(field) {
@@ -677,7 +667,7 @@ th {
 th {
   position: sticky;
   top: 0;
-  border-bottom: solid 1px #dadada;
+  border-bottom: solid 1px #ebebeb;
   text-align: left;
   font-weight: normal;
   position: relative;
@@ -688,7 +678,9 @@ th {
 
   &.sortable {
     cursor: pointer;
-
+    border-right: 1px solid #ebebeb;
+    border-top: 1px solid #ebebeb;
+    background-color: #fcfcfc;
     &::after {
       position: absolute;
       right: 0;
@@ -776,11 +768,14 @@ th:hover .resize-handle {
 .btnAdd {
   color: #ffffff;
   text-align: left;
-  background-color: #ebebeb;
-  width: 100%;
+  background-color: #f7f5f5;
+  width: 150px;
   border: 0px;
+  text-align: center;
+  color: #555555;
 }
 .btnAdd:hover {
   background-color: #bbbbbb;
+  color: white;
 }
 </style>

@@ -8,6 +8,7 @@ const module = {
         loggedIn: false,
         token: '',
         data: {},
+        lastPage: '/',
       },
     };
   },
@@ -30,6 +31,10 @@ const mutations = {
     // eslint-disable-next-line no-param-reassign
     state.user.data = data;
   },
+  setLastPage(state, data) {
+    // eslint-disable-next-line no-param-reassign
+    state.user.lastPage = data;
+  },
 };
 
 const actions = {
@@ -49,6 +54,9 @@ const actions = {
     commit('unsetLoggedIn');
     commit('setToken', '');
     commit('setUserData', {});
+  },
+  fillLastPage({ commit }, data) {
+    commit('setLastPage', data);
   },
 };
 

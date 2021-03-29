@@ -1,25 +1,48 @@
 <template>
 <div>
     <div v-if="!publicationReady" ref="test">
-      <div  class="rf-container rf-pb-1w rf-pt-2w">
-          <h3>Saisir vos données via un tableur</h3>
-          <br />
-          <div
-            style="min-height: 270px;"
-            class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w"
+      <div  class="rf-container">
+          <!--<button
+            style="margin-right: 20px"
+            @click="addEmptyRow()"
+            type="submit"
+            class="rf-btn-light"
           >
-            <p>{{ messageInfo }}</p>
-            <p>{{ exempleInfo }}</p>
-            <p v-if="warningInfo != ''" class='warningInfo'>{{ warningInfo }}</p>
-            <p
-              v-if="errorInfo != null & errorInfo != ''"
-              class='errorInfo'
-            >
-              Message d'erreur : {{ errorInfo }}
-            </p>
-          </div>
+            Ajouter une ligne
+          </button>-->
+          <button
+            style="margin-right: 20px"
+            @click="showModal2()"
+            type="submit"
+            class="rf-btn-light"
+          >
+            Ajouter une colonne
+          </button>
+          <button
+            style="margin-right: 20px"
+            class="rf-btn-light"
+            @click="csvLinkData"
+          >
+            Télécharger le CSV
+          </button>
+          <button
+            style="margin-right: 20px"
+            @click="submit()"
+            type="submit"
+            class="rf-btn"
+          >
+            Valider le fichier
+          </button>
+          <button
+            style="margin-right: 20px"
+            class="rf-btn"
+            v-if="publicationButtons"
+            @click="showPublishForm()"
+          >
+            Publier sur data.gouv.fr
+          </button>
       </div>
-      <div style="padding-left: 3%; padding-right: 3%;">
+      <div style="overflow-y: scroll; height:500px;">
           <vue-editable-grid
               class="grid"
               ref="grid"
@@ -38,36 +61,27 @@
               @add-multiple-rows='addMultipleRows'
               >
               <template v-slot:header-r>
+                <div style="padding-right: 30px;">
                   Nombre de lignes : {{ rows.length }}
+                </div>
               </template>
           </vue-editable-grid>
       </div>
-      <br />
-      <div  class="rf-container">
-          <button
-            style="margin-right: 20px"
-            @click="submit()"
-            type="submit"
-            class="rf-btn"
+      <div>
+          <div
+            style="min-height: 180px;"
+            class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w"
           >
-            Valider le fichier
-          </button>
-          <button
-            style="margin-right: 20px"
-            class="rf-btn"
-            v-if="publicationButtons"
-            @click="csvLinkData"
-          >
-            Télécharger le CSV
-          </button>
-          <button
-            style="margin-right: 20px"
-            class="rf-btn"
-            v-if="publicationButtons"
-            @click="showPublishForm()"
-          >
-            Publier sur data.gouv.fr
-          </button>
+            <p>{{ messageInfo }}</p>
+            <p>{{ exempleInfo }}</p>
+            <p v-if="warningInfo != ''" class='warningInfo'>{{ warningInfo }}</p>
+            <p
+              v-if="errorInfo != null & errorInfo != ''"
+              class='errorInfo'
+            >
+              Message d'erreur : {{ errorInfo }}
+            </p>
+          </div>
       </div>
     </div>
 
@@ -137,6 +151,40 @@
             </div>
           </div>
     </b-modal>
+
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modal2"
+      id="modal2"
+      hide-footer
+      title="Ajouter une colonne"
+    >
+      <div>
+        <p>Attention, ajouter une colonne sur un type de donnée bien défini aura pour conséquence de ne pas avoir un fichier parfaitement conforme en terme de qualité. Cependant, l'ajout de colonnes supplémentaires est toléré.</p>
+
+        <p>Si vous souhaitez toujours ajouter une colonne, merci de renseigner son nom ici :</p>
+
+        <input
+          v-model="newFieldName"
+          class="rf-input"
+          placeholder="Entrer le nom du champs"
+          type="search" id="new-fieldname-input"
+          name="new-fieldname-input"
+        >
+        <br/>
+        <div style="text-align: center;">
+          <button
+            style="margin-right: 20px;"
+            @click="addNewField()"
+            type="submit"
+            class="rf-btn"
+          >
+            Ajouter une colonne
+          </button>
+        </div>
+      </div>
+    </b-modal>
     </div>
 </template>
 
@@ -156,8 +204,6 @@ import PublishRessources from '../mixins/PublishResources.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-export const defaultDateFormat = 'MMM dd, yyyy';
-export const defaultDateTimeFormat = 'YYYY-mm-dd';
 
 export default {
   name: 'fillDataTable',
@@ -202,6 +248,7 @@ export default {
       publicationButtons: false,
       publicationOK: false,
       dataToPublish: {},
+      newFieldName: '',
     };
   },
   watch: {
@@ -215,26 +262,50 @@ export default {
     this.rowsInfo.push({ ...this.emptyRowInfo });
     this.rowsError.push({ ...this.emptyRowError });
     this.rowsColor.push({ ...this.emptyRowColor });
+
+    window.setInterval(() => {
+        this.saveRows()
+      }, 5000)
+
   },
   computed: {
+    ongoingData() {
+      return this.$store.state.data;
+    },
   },
   methods: {
     maybeAddRow($event){
-      console.log('test');
-      console.log($event);
-      console.log(this.rows)
       if ($event.rowIndex === (this.rows.length - 1)) {
         this.addEmptyRow()
       }
     },
     addMultipleRows($event) {
-      console.log($event)
       for(let i = 0;i<$event.rowsToAdd;i++) {
         this.addEmptyRow()
       }
     },
+    addNewField() {
+        this.fieldNames.push(this.newFieldName);
+        const myobj = {};
+        myobj.sortable = true;
+        myobj.filter = true;
+        myobj.field = this.newFieldName;
+        myobj.headerName = this.newFieldName;
+        myobj.editable = true;
+
+        this.emptyRow[this.newFieldName] = '';
+        this.emptyRowInfo[this.newFieldName] = '';
+        this.emptyRowError[this.newFieldName] = '';
+
+        this.columnDefs.push(myobj);
+
+        this.hideModal2();
+        this.newFieldName = '';
+
+    },
     buildForm() {
       const loader = this.$loading.show();
+
       fetch(this.schemaMeta.schema_url).then((r) => r.json()).then((data) => {
         this.schema = data;
 
@@ -251,9 +322,19 @@ export default {
             this.emptyRow[field.name] = '';
             this.emptyRowInfo[field.name] = '';
             this.emptyRowError[field.name] = '';
+            if(field.constraints && field.constraints.enum) {
+              myobj.type = 'stringEnum';
+              myobj.enumList = field.constraints.enum;
+            }
           } else if (field.type === 'date') {
+            
             myobj.type = 'date';
-            myobj.format = defaultDateTimeFormat;
+            //myobj.format = defaultDateTimeFormat;
+            var dateFormat = 'yyyy-MM-dd'
+            if (field.format) {
+              dateFormat = field.format.replace('%Y','yyyy').replace('%m','MM').replace('%d','dd')
+            }
+            myobj.format = dateFormat;
             this.emptyRow[field.name] = null;
             this.emptyRowInfo[field.name] = null;
             this.emptyRowError[field.name] = null;
@@ -275,6 +356,46 @@ export default {
         this.emptyRowInfo.idRowVEG = uniqueid;
         this.emptyRowError.idRowVEG = uniqueid;
         this.emptyRowColor.idRowVEG = '#ebebeb';
+
+        for(var i = 0; i<25; i++){
+          this.addEmptyRow()
+        }
+
+        if(this.ongoingData) {
+          if(this.ongoingData.schema === this.schemaMeta.name) {
+            if(this.fromFile == 'yes'){
+              //var diff = this.ongoingData.fileHeader.filter(x => !this.fieldNames.includes(x));
+              this.ongoingData.fileHeader.forEach((header) => {
+                if(!this.fieldNames.includes(header)){
+                  this.newFieldName = header;
+                  this.addNewField();
+                }
+              });
+              var rowNb = 0;
+              let nbrows = this.ongoingData.fileNbRows
+              console.log(typeof(nbrows));
+              if(this.ongoingData.fileNbRows > 25){
+                for(var k = 0; k < 2431; k++) {
+                  this.addEmptyRow()
+                }
+              }
+              this.ongoingData.fileRows.forEach((row) => {
+                console.log(rowNb);
+                for(var col in row) {
+                  this.rows[rowNb][col] = row[col]; 
+                }
+                rowNb++;
+              });
+              this.submit();
+              
+            }
+            else {
+              this.columnDefs = this.ongoingData.columnDefs;
+              this.rows = this.ongoingData.rows;
+            }
+          }
+        }
+
       }).catch((_) => _)
         .finally(() => {
         loader.hide();
@@ -283,27 +404,41 @@ export default {
     buildLine(line) {
       let linecsv = '';
       let cpt = 0;
+      var notEmpty = false;
       this.fieldNames.forEach((field) => {
-        if (cpt === 0) {
-          linecsv = `"${line[field]}"`;
-          cpt = 1;
-        } else {
-          linecsv = `${linecsv},"${line[field]}"`;
+        if(line[field] != "" && line[field] != null){
+          notEmpty = true;
         }
       });
+      if(notEmpty) {
+        this.fieldNames.forEach((field) => {
+          if (cpt === 0) {
+            linecsv = `"${line[field]}"`;
+            cpt = 1;
+          } else {
+            linecsv = `${linecsv},"${line[field]}"`;
+          }
+        });
+      }
       return linecsv;
     },
     buildCurrentCsvContent() {
       let finalcsv = '';
+      var stopBuilding = false;
       finalcsv = this.buildHeaderLine();
       this.rows.forEach((row) => {
-        finalcsv = `${finalcsv}\r\n`;
-        finalcsv += this.buildLine(row);
+        var currentLine = this.buildLine(row);
+        if(currentLine != '' && stopBuilding == false) { 
+          finalcsv = `${finalcsv}\r\n`;
+          finalcsv += currentLine;
+        } else{
+          stopBuilding = true;
+        }
       });
       return finalcsv;
     },
     csvLinkData() {
-      const blob = new Blob([`\uFEFF${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      const blob = new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
       const a = document.createElement('a');
       const url = window.URL.createObjectURL(blob);
       a.href = url;
@@ -311,7 +446,7 @@ export default {
       a.click();
     },
     getCSVBlob() {
-      return new Blob([`\uFEFF${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      return new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
     },
     addField(field) {
       const hasEnum = field.constraints && field.constraints.enum;
@@ -453,33 +588,33 @@ export default {
       const myobjColor = {};
 
       this.schema.fields.forEach((field) => {
-        if (field.type === 'string') {
+        if (field.type === 'string' || field.type === 'stringEnum') {
           myobj[field.name] = '';
           myobjInfo[field.name] = '';
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
-          myobj.type = 'date';
-          myobj.format = defaultDateTimeFormat;
+          //myobj.type = 'date';
+          
           myobj[field.name] = null;
-          myobjInfo.type = 'date';
-          myobjInfo.format = defaultDateTimeFormat;
+          //myobjInfo.type = 'date';
+          //myobjInfo.format = defaultDateTimeFormat;
           myobjInfo[field.name] = null;
-          myobjError.type = 'date';
-          myobjError.format = defaultDateTimeFormat;
+          //myobjError.type = 'date';
+          //myobjError.format = defaultDateTimeFormat;
           myobjError[field.name] = null;
         } else if (field.type === 'number') {
-          myobj.type = 'numeric';
+          //myobj.type = 'numeric';
           myobj[field.name] = null;
-          myobjInfo.type = 'numeric';
+          //myobjInfo.type = 'numeric';
           myobjInfo[field.name] = null;
-          myobjError.type = 'numeric';
+          //myobjError.type = 'numeric';
           myobjError[field.name] = null;
         } else if (field.type === 'integer') {
-          myobj.type = 'numeric';
+          //myobj.type = 'numeric';
           myobj[field.name] = null;
-          myobjInfo.type = 'numeric';
+          //myobjInfo.type = 'numeric';
           myobjInfo[field.name] = null;
-          myobjError.type = 'numeric';
+          //myobjError.type = 'numeric';
           myobjError[field.name] = null;
         }
       });
@@ -489,6 +624,7 @@ export default {
       myobjError.idRowVEG = uniqueid;
       myobjColor.idRowVEG = '#ebebeb';
       this.rows.push(myobj);
+      //console.log(myobj);
       this.rowsInfo.push(myobjInfo);
       this.rowsError.push(myobjError);
       this.rowsColor.push(myobjColor);
@@ -593,6 +729,17 @@ export default {
         // modification métadonnées
         this.createDatasetCreateResource(publishContent, this.getCSVBlob());
       }
+    },
+    saveRows(){
+      this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
+      this.$store.dispatch('data/fillSchemaRowsData', this.rows)
+      this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
+    },
+    showModal2() {
+      this.$refs.modal2.show();
+    },
+    hideModal2() {
+      this.$refs.modal2.hide();
     },
   },
 };

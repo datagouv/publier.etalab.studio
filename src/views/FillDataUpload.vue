@@ -73,16 +73,31 @@
                 </vsa-list>
             </div>
             <br/><br/>
-            <div v-if="publication">
+            <div v-if="wrongFormat">
+              <p>Le fichier soumis n'est pas au format attendu.</p>
+            </div>
+            <span v-if="this.schema.schema_type == 'tableschema' && this.file && !this.wrongFormat">
+              <button
+                type="submit"
+                style="margin-right: 20px"
+                class="rf-btn-light"
+                title="Editer le fichier"
+                @click="editFile()"
+              >
+                Editer ce fichier
+              </button>
+            </span>
+            <span v-if="publication">
                 <button
                   type="submit"
+                  style="margin-right: 20px"
                   class="rf-btn"
                   title="Publier sur datagouv"
                   @click="publicationForm()"
                 >
                   {{ publicationMessage }}
                 </button>
-            </div>
+            </span>
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
@@ -212,6 +227,7 @@ export default {
       linkDgv: '',
       contentFile: '',
       ext: '',
+      wrongFormat:false,
     };
   },
   computed: {
@@ -220,21 +236,26 @@ export default {
   },
   methods: {
     handleFileUpload() {
-      if (this.schema.schema_type == 'tableschema') {
+      this.wrongFormat = false;
+      this.file = this.$refs.file.files[0];
+      this.report = null;
+      this.reportJson = []
+      this.reportValidStatus = null;
+      this.badgeUrl = null;
+      this.publication = false;
+      this.publicationMessage = null;
+
+      this.reportValidStatus = null;
+      this.reportStructureErrors = [];
+      this.reportContentErrors = [];
+      this.reportRecos = [];
+      this.reportErrorInfo = null;
+
+      if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['type'].includes('csv')) {
         // eslint-disable-next-line prefer-destructuring
-        this.file = this.$refs.file.files[0];
-        this.report = null;
-        this.reportValidStatus = null;
-        this.reportStructureErrors = [];
-        this.reportContentErrors = [];
-        this.reportRecos = [];
-        this.badgeUrl = null;
-        this.reportErrorInfo = null;
-        this.publication = false;
-        this.publicationMessage = null;
         const formData = new FormData();
         formData.append('file', this.file);
-        formData.append('schema', `https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`);
+        formData.append('schema', this.schema.schema_url);
 
         fetch(`${VALIDATA_API_URL}/validate`, {
           method: 'POST',
@@ -284,15 +305,8 @@ export default {
           // eslint-disable-next-line no-console
           console.log('finally');
         });
-      } else if (this.schema.schema_type == 'jsonschema') {
+      } else if (this.schema.schema_type == 'jsonschema' && this.$refs.file.files[0]['type'].includes('json')) {
 
-        this.file = this.$refs.file.files[0];
-        this.report = null;
-        this.reportJson = []
-        this.reportValidStatus = null;
-        this.badgeUrl = null;
-        this.publication = false;
-        this.publicationMessage = null;
 
         var reader = new FileReader();
         reader.onloadend = () => {
@@ -306,7 +320,6 @@ export default {
           })
           .then((r) => r.json())
           .then((data) => {
-            console.log(data);
             this.report = data;
             this.reportJson = data.errors
             if(data.errors.length > 0) {
@@ -325,6 +338,8 @@ export default {
         }
         reader.readAsText(this.$refs.file.files[0]);
         
+      } else {
+        this.wrongFormat = true;
       }
     },
     publicationForm() {
@@ -345,9 +360,48 @@ export default {
         this.createDatasetCreateResource(publishContent,this.file,this.ext);
       }
     },
+    editFile(){
+      
+      console.log('begin');
+      const Papa = require('papaparse');
+
+      var reader = new FileReader();
+      reader.onloadend = () => {
+        var content = reader.result;
+        var csvdata = Papa.parse(content);
+
+        var prepareRows = []
+        var prepareHeaders = []
+        var isHeader = true;
+        csvdata.data.forEach((row) => {
+          if(!isHeader) {
+            var obj = {}
+            for(var itemData in row) {
+              obj[prepareHeaders[itemData]] = row[itemData];
+            }
+            prepareRows.push(obj);
+          } else {
+            for(var itemHeader in row) {
+              prepareHeaders.push(row[itemHeader])
+            }
+            isHeader = false;
+          }
+        });
+
+        this.$store.dispatch('data/fillSchemaNameData', this.schemaName)
+        this.$store.dispatch('data/fillFileHeaderData', prepareHeaders)
+        this.$store.dispatch('data/fillFileRowsData', prepareRows)
+        this.$store.dispatch('data/fillFileNbRowsData', prepareRows.length)
+
+        this.$router.push(`table?schema=${this.schemaName}&fromFile=yes`);
+        
+      }
+      reader.readAsText(this.$refs.file.files[0]);
+
+    }
   },
   mounted() {
-    fetch(`https://schema.data.gouv.fr/schemas/${this.schemaName}/latest/schema.json`).then((r) => r.json()).then((data) => {
+    fetch(this.schema.schema_url).then((r) => r.json()).then((data) => {
       this.schemaObject = data;
     });
   },

@@ -40,6 +40,7 @@ export default {
     getUserConnections() {
     },
     submitLogin(evt) {
+      this.$store.dispatch('auth/fillLastPage',this.$route.name+'?schema='+this.$route.query.schema)
       evt.preventDefault();
       window.location = $auth.authUrl();
     },

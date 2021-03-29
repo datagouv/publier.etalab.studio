@@ -15,6 +15,19 @@ td.cell.noselectx(
 )
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
+  span(
+    v-if='column.enumList && row[column.field] == ""'
+  )
+    select(
+      :style='{width: `100%`, border: `0px`, textAlign: `right`}'
+      @change='toto($event,row,column.field)'
+    )
+      option 
+      option(
+        v-for='obj in column.enumList'
+        value=obj
+      ) {{ obj }}
+  
   span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
     input(
       :type='inputType'
@@ -37,9 +50,9 @@ td.cell.noselectx(
 <script>
 import Vue from 'vue';
 import { format } from 'date-fns';
-import { cellValueParser, sameDates } from './helpers';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
+import { cellValueParser } from './helpers';
 
 export default {
   filters: {
@@ -124,41 +137,38 @@ export default {
             input.focus();
             return;
           }
-          if (this.column.type === 'datetime' || this.column.type === 'date') {
-            const formattedDate = this.column.type === 'datetime'
-              ? `${format(this.value, 'yyyy-MM-dd')}T${format(this.value, 'HH:mm')}`
-              : `${format(this.value, 'yyyy-MM-dd')}`;
-            setTimeout(() => {
-              input.value = formattedDate;
-              input.focus();
-            }, 50);
-          } else {
-            input.value = this.value;
-            input.focus();
-          }
+          input.value = this.value;
+          input.focus();
         });
       }
     },
   },
   methods: {
+    toto(event){
+      var value = event.target.value;
+      let valueChanged = true;
+      const { row, column, rowIndex, columnIndex } = this;
+      this.$emit('edited', { row, column, rowIndex, columnIndex, event, value, valueChanged });
+    },
     getEditableValue(value) {
-      if (this.column.type === 'datetime' || this.column.type === 'date') {
+      /*if (this.column.type === 'datetime' || this.column.type === 'date') {
         if (typeof value === 'string') {
           const parsedDate = new Date(value);
           // eslint-disable-next-line no-restricted-globals
           return isNaN(parsedDate) ? null : parsedDate;
         }
-      }
+      }*/
       return value;
     },
     setEditableValue($event) {
       const value = cellValueParser(this.column, this.row, this.$refs.input.value, true);
+      //const value = this.$refs.input.value;
       this.editPending = false;
       let valueChanged = true;
       if (value === this.rowValue) valueChanged = false;
-      else if (value && (this.column.type === 'date' || this.column.type === 'datetime')) {
+      /*else if (value && (this.column.type === 'date' || this.column.type === 'datetime')) {
         if (sameDates(value, this.rowValue)) valueChanged = false;
-      }
+      }*/
       const { row, column, rowIndex, columnIndex } = this;
       this.$emit('edited', { row, column, rowIndex, columnIndex, $event, value, valueChanged });
     },

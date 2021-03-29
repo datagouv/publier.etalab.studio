@@ -16,6 +16,11 @@ export default {
       token: undefined,
     };
   },
+  computed: {
+    user() {
+      return this.$store.state.auth.user;
+    },
+  },
   async mounted() {
     if (!this.$store.state.auth.user.loggedIn) {
       try {
@@ -30,7 +35,7 @@ export default {
             this.$store
               .dispatch('auth/fillUserData', response.data)
               .then(() => {
-                this.$router.push('/');
+                this.$router.push(this.user.lastPage);
               });
           },
           (err) => {
@@ -41,7 +46,7 @@ export default {
       });
     } else {
       // console.log("Logged in", this.$store.state.auth.user)
-      this.$router.push('/');
+      this.$router.push(this.user.lastPage);
     }
   },
   methods: {

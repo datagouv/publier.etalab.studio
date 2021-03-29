@@ -1,7 +1,6 @@
 import { parse, parseISO } from 'date-fns';
+import { format } from 'date-fns';
 
-export const defaultDateTimeFormat = 'yyyy-MM-dd HH:mm:ss';
-export const defaultDateFormat = 'yyyy-MM-dd';
 export const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
 export const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export const numericFormatter = new Intl.NumberFormat('en-US', {});
@@ -27,17 +26,10 @@ export const checkFocus = (element, func) => {
   });
 };
 
-export const parseCellDateTime = (value, column, format) => {
-  // eslint-disable-next-line no-param-reassign
-  value = parse(value, column.format || format, new Date());
-  // eslint-disable-next-line no-restricted-globals
-  if (isNaN(value)) {
-    throw new Error(`Invalid date format ${format}`);
-  }
-  return value;
-};
+
 
 export const cellValueParser = (column, row, value, fromInput) => {
+  //console.log(column, row, value, fromInput)
   if (column.formatter) {
     return column.formatter({ value, row, column, fromInput, reverse: true });
   }
@@ -50,18 +42,17 @@ export const cellValueParser = (column, row, value, fromInput) => {
   if (column.type === 'date') {
     if (fromInput) {
       // eslint-disable-next-line no-param-reassign
-      value = parse(value, 'yyyy-MM-dd', new Date());
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      value = parseCellDateTime(value, column, defaultDateFormat);
+      var valueDate = parse(value, 'yyyy-MM-dd', new Date());
+      if(column.format) {
+        value = format(valueDate, column.format);
+      } else {
+        value = valueDate;
+      }
     }
   } else if (column.type === 'datetime') {
     if (fromInput) {
       // eslint-disable-next-line no-param-reassign
       value = parseISO(value);
-    } else {
-      // eslint-disable-next-line no-param-reassign
-      value = parseCellDateTime(value, column, defaultDateTimeFormat);
     }
   } else if (column.type === 'boolean') {
     // eslint-disable-next-line no-param-reassign
@@ -75,8 +66,21 @@ export const cellValueParser = (column, row, value, fromInput) => {
     value = value.startsWith('-') ? clearValue * -1 : clearValue;
   }
   // eslint-disable-next-line no-restricted-globals
-  if (isNaN(value)) {
+  /*if (isNaN(value)) {
+    console.log('nnnnn')
+    console.log(value);
     throw new Error('Invalid value');
+  }*/
+  return value;
+};
+
+
+export const parseCellDateTime = (value, column, format) => {
+  // eslint-disable-next-line no-param-reassign
+  value = parse(value, column.format || format, new Date());
+  // eslint-disable-next-line no-restricted-globals
+  if (isNaN(value)) {
+    throw new Error(`Invalid date format ${format}`);
   }
   return value;
 };

@@ -10,7 +10,7 @@
                 <ul>
                     <li>
                         <a href="" @click="btnDocClick()">
-                            Voir la documentation du schéma
+                            Voir la documentation technique de ce type de données
                         </a>
                     </li>
                     <li>
@@ -51,7 +51,7 @@
                         <img src="../static/images/bullet-form.png" width="30" height="30"/>
                     </div>
                     <div class="box-content">
-                        Générez-moi un formulaire adapté au schéma de données pour
+                        Générez-moi un formulaire adapté pour
                         que je puisse saisir mes données.
                     </div>
                 </div>
@@ -63,7 +63,7 @@
                         <img src="../static/images/table.png" width="30" height="30"/>
                     </div>
                     <div class="box-content">
-                        Générez-moi un tableur adapté au schéma de données pour
+                        Générez-moi un tableur adapté pour
                         que je puisse saisir mes données.
                     </div>
                 </div>
