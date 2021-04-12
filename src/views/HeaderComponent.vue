@@ -18,7 +18,7 @@
                     <div class="rf-header__navbar">
                         <div class="rf-service">
                             <a class="rf-service__title" href="/" title="<%= appName %>">
-                            publier.data.gouv.fr
+                            publier.etalab.studio
                             </a>
                             <p class="rf-service__tagline">
                             <i>Pour la publication de données de qualité</i>
