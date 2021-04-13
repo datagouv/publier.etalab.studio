@@ -16,7 +16,7 @@
                 <p class="rf-footer__content-desc">
                     Le code source est ouvert et les contributions sont bienvenues.
                     <a title="Voir le code source"
-                    href="https://github.com/etalab/csv-gg"
+                    href="https://github.com/etalab/publier.etalab.studio"
                     target="_blank"
                     rel="noopener"
                     >Voir le code source</a>
