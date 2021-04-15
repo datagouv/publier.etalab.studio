@@ -40,7 +40,13 @@ export default {
     getUserConnections() {
     },
     submitLogin(evt) {
-      this.$store.dispatch('auth/fillLastPage',this.$route.name+'?schema='+this.$route.query.schema)
+      if ((this.$route.name != 'login') & (this.$route.name != 'home')) {
+        this.$store.dispatch('auth/fillLastPage',this.$route.name+'?schema='+this.$route.query.schema)
+        console.log(this.$route.name)
+      } else {
+        console.log('b')
+        this.$store.dispatch('auth/fillLastPage','/')
+      }
       evt.preventDefault();
       window.location = $auth.authUrl();
     },
