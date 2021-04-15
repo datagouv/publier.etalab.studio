@@ -508,7 +508,7 @@ export default {
         const cell = this.getCell();
         this.$emit('maybe-add-row', cell);
       }
-      console.log(sum);
+
       let [row, col] = this.selStart;
       row += sum;
       this.selectCell(row, col);

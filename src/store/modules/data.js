@@ -3,7 +3,7 @@ const module = {
   state() {
     return {
       rows: [],
-      schema: "etalab/schema-hautes-remunerations",
+      schema: "",
       columnDefs: [
         {
           field: 'selectCol',
@@ -46,7 +46,7 @@ const mutations = {
   },
   reinitData(state) {      
     state.rows = [];
-    state.schema = "etalab/schema-hautes-remunerations";
+    state.schema = "";
     state.columnDefs =  [
       {
         field: 'selectCol',

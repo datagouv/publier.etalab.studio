@@ -1,7 +1,7 @@
 <template>
 <div>
     <div v-if="!publicationReady" ref="test">
-      <div  class="rf-container">
+      <div style="margin-left: 20px">
           <!--<button
             style="margin-right: 20px"
             @click="addEmptyRow()"
@@ -284,6 +284,10 @@ export default {
     maybeAddRow($event){
       if ($event.rowIndex === (this.rows.length - 1)) {
         this.addEmptyRow()
+      } else {
+       if($event.colData.field in this.rowsColor[$event.rowIndex]) {
+         delete this.rowsColor[$event.rowIndex][$event.colData.field];
+       }
       }
     },
     addMultipleRows($event) {
