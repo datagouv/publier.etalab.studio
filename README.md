@@ -11,6 +11,8 @@ Les types de données aujourd'hui proposés sont référencés sur la plateforme
 
 publier.etalab.studio est une application développé en vue.js
 
+Vous pouvez configurer l'application avec les variables contenues dans le fichier.env.example à modifier en .env.production
+
 ```
 npm run build
 # les sources se trouvent alors dans le répertoire dist
