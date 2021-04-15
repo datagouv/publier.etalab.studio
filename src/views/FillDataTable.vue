@@ -61,8 +61,14 @@
               @add-multiple-rows='addMultipleRows'
               >
               <template v-slot:header-r>
-                <div style="padding-right: 30px;">
-                  Nombre de lignes : {{ rows.length }}
+                <div style="padding-right: 5px;">
+                  <button class="table-buttons" @click="addEmptyRow()">Ajouter une ligne</button>
+                </div>
+                <div style="padding-right: 5px;">
+                  <button class="table-buttons" @click="reinitRows()">Réinitialiser le tableur</button>
+                </div>
+                <div style="padding-right: 5px;">
+                 <span class="table-buttons">Nombre de lignes : {{ rows.length }}</span>
                 </div>
               </template>
           </vue-editable-grid>
@@ -734,6 +740,15 @@ export default {
       this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
       this.$store.dispatch('data/fillSchemaRowsData', this.rows)
       this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
+    },
+    reinitRows(){
+      this.rows = [];
+      this.rowsInfo = [];
+      this.rowsError = [];
+      this.rowsColor = [];
+      for(var i = 0; i<25; i++){
+        this.addEmptyRow()
+      }
     },
     showModal2() {
       this.$refs.modal2.show();
