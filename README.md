@@ -1,39 +1,42 @@
-![](./public/assets/csvgg.gif)
+# Publier.etalab.studio
 
-This app dynamically generates a form based on a [TableSchema](https://frictionlessdata.io/specs/table-schema/) specification for a CSV file. It then uses a [Validata](https://git.opendatafrance.net/validata/) API to validate each row. The resulting CSV can be downloaded afterwards.
+Cet outil vous permet de saisir, valider et publier des données structurées sur la plateforme ouverte des données publiques françaises data.gouv.fr.
 
 ![](./screenshot.png)
 
-## Project setup
-```
-npm install
-```
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Les types de données aujourd'hui proposés sont référencés sur la plateforme schema.data.gouv.fr.
 
-### Compiles and minifies for production
+## Déploiement
+
+publier.etalab.studio est une application développé en vue.js
+
 ```
 npm run build
+# les sources se trouvent alors dans le répertoire dist
 ```
 
-### Run your tests
-```
-npm run test
-```
+publier.etalab.studio est uniquement un frontend mais se sert de plusieurs sources externes pour fonctionner :
 
-### Lints and fixes files
-```
-npm run lint
-```
+### Catalogue des schémas schema.data.gouv.fr
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+publier.etalab.studio permet d'afficher des informations et de saisir des données auprès de schémas déjà référencés sur [schema.data.gouv.fr](https://github.com/etalab/schema.data.gouv.fr). 
 
-## License
+Le catalogue des schémas référencés est disponible ici : https://schema.data.gouv.fr/schemas/schemas.json
 
-This repository is authored by DINSIC/Etalab.
+### Validata
 
-The source code is available under the [MIT License](LICENSE).
+publier.etalab.studio exploite le rapport de validation de l'outil [Validata](https://git.opendatafrance.net/validata), initiative d'Opendatafrance développé par Jailbreak, pour les schémas tableschema.
+
+### Json-schema-validator
+
+publier.etalab.studio exploite le rapport de validation de l'outil [json-schema-validator](https://github.com/geoffreyaldebert/json-schema-validator) pour les schémas jsonschema
+
+### Datagouv
+
+publier.etalab.studio offre la possibilité de se connecter sur la plateforme data.gouv.fr via SSO. 
+
+
+### CSV-GG
+
+publier.etalab.studio est une évolution de l'outil [CSV-GG](https://github.com/etalab/csv-gg) développé par Etalab en 2019.
