@@ -12,14 +12,6 @@
           </button>-->
           <button
             style="margin-right: 20px"
-            @click="showModal2()"
-            type="submit"
-            class="rf-btn-light"
-          >
-            Ajouter une colonne
-          </button>
-          <button
-            style="margin-right: 20px"
             class="rf-btn-light"
             @click="csvLinkData"
           >
@@ -42,6 +34,7 @@
             Publier sur data.gouv.fr
           </button>
       </div>
+      <br />
       <div style="overflow-y: scroll; height:500px;">
           <vue-editable-grid
               class="grid"
@@ -65,10 +58,18 @@
                   <button class="table-buttons" @click="addEmptyRow()">Ajouter une ligne</button>
                 </div>
                 <div style="padding-right: 5px;">
+                  <button
+                    @click="showModal2()"
+                    class="table-buttons"
+                  >
+                    Ajouter une colonne
+                  </button>
+                </div>
+                <div style="padding-right: 5px;">
                   <button class="table-buttons" @click="reinitRows()">Réinitialiser le tableur</button>
                 </div>
                 <div style="padding-right: 5px;">
-                 <span class="table-buttons">Nombre de lignes : {{ rows.length }}</span>
+                 <button class="table-buttons">Nombre de lignes : {{ rows.length }}</button>
                 </div>
               </template>
           </vue-editable-grid>
