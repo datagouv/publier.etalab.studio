@@ -184,7 +184,10 @@ import StringField from '../components/StringField.vue';
 import SelectField from '../components/SelectField.vue';
 import RadioField from '../components/RadioField.vue';
 import AddressField from '../components/AddressField.vue';
+import GeoPointField from '@/components/GeoPointField.vue'
+
 import PublishFormUpload from '../components/PublishFormUpload.vue';
+
 import { EventBus } from '../event-bus.js';
 
 import PublishRessources from '../mixins/PublishResources.vue';
@@ -284,6 +287,7 @@ export default {
     addField(field) {
       const hasEnum = field.constraints && field.constraints.enum;
       const isBoolean = field.type === 'boolean';
+      const isGeoPoint = field.type === "geopoint"
       // eslint-disable-next-line no-shadow
       const factory = (klass, field) => {
         const className = Vue.extend(klass);
@@ -297,6 +301,9 @@ export default {
       }
       if (isBoolean) {
         return factory(RadioField, field);
+      } 
+      if (isGeoPoint) {
+        return factory(GeoPointField, field)
       }
       if (this.isAddressField(field)) {
         return factory(AddressField, field);
