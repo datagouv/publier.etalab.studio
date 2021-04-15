@@ -44,6 +44,21 @@ const mutations = {
     // eslint-disable-next-line no-param-reassign
     state.fileNbRows = data;
   },
+  reinitData(state) {      
+    state.rows = [];
+    state.schema = "etalab/schema-hautes-remunerations";
+    state.columnDefs =  [
+      {
+        field: 'selectCol',
+        headerName: '',
+        size: '40px',
+        type: 'supp',
+      },
+    ];
+    state.fileHeader = [];
+    state.fileRows = [];
+    state.fileNbRows = 0;
+  },
 };
 
 const actions = {
@@ -64,6 +79,9 @@ const actions = {
   },
   fillFileNbRowsData({ commit }, data) {
     commit('setFileNbRowsData', data);
+  },
+  reinitStateData({ commit }) {
+    commit('reinitData');
   },
 };
 
