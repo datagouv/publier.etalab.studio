@@ -2,6 +2,8 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import BootstrapVue from 'bootstrap-vue';
 import Loading from 'vue-loading-overlay';
+import { Icon } from 'leaflet'
+import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet'
 import VueSimpleSuggest from 'vue-simple-suggest';
 
 import axios from 'axios';
@@ -12,15 +14,21 @@ import App from './App.vue';
 import store from './store';
 
 import 'vue-loading-overlay/dist/vue-loading.css';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue-simple-suggest/dist/styles.css';
+import 'leaflet/dist/leaflet.css'
 
-// eslint-disable-next-line import/extensions
 import '@gouvfr/all/dist/js/all.js';
 import '@gouvfr/all/dist/css/all.css';
 import './static/css/custom.css';
+
+delete Icon.Default.prototype._getIconUrl
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require('leaflet/dist/images/marker-icon-2x.png'),
+  iconUrl: require('leaflet/dist/images/marker-icon.png'),
+  shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
+})
 
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
@@ -29,6 +37,11 @@ Vue.use(Loading);
 Vue.use(Vuex);
 
 Vue.component('vue-simple-suggest', VueSimpleSuggest);
+
+Vue.component('l-map', LMap)
+Vue.component('l-tile-layer', LTileLayer)
+Vue.component('l-marker', LMarker)
+Vue.component('l-tooltip', LTooltip)
 
 new Vue({
   router,
