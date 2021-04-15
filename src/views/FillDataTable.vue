@@ -293,7 +293,7 @@ export default {
     addNewField() {
         this.fieldNames.push(this.newFieldName);
         const myobj = {};
-        myobj.sortable = true;
+        myobj.sortable = false;
         myobj.filter = true;
         myobj.field = this.newFieldName;
         myobj.headerName = this.newFieldName;
@@ -318,7 +318,7 @@ export default {
         this.schema.fields.forEach((field) => {
           this.fieldNames.push(field.name);
           const myobj = {};
-          myobj.sortable = true;
+          myobj.sortable = false;
           myobj.filter = true;
           myobj.field = field.name;
           myobj.headerName = field.name;
@@ -378,15 +378,12 @@ export default {
                 }
               });
               var rowNb = 0;
-              let nbrows = this.ongoingData.fileNbRows
-              console.log(typeof(nbrows));
               if(this.ongoingData.fileNbRows > 25){
                 for(var k = 0; k < 2431; k++) {
                   this.addEmptyRow()
                 }
               }
               this.ongoingData.fileRows.forEach((row) => {
-                console.log(rowNb);
                 for(var col in row) {
                   this.rows[rowNb][col] = row[col]; 
                 }
@@ -742,13 +739,20 @@ export default {
       this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
     },
     reinitRows(){
+      this.$store.dispatch('data/reinitStateData');
+      this.columnDefs = [
+        {
+          field: 'selectCol',
+          headerName: '',
+          size: '40px',
+          type: 'supp',
+        },
+      ];
       this.rows = [];
       this.rowsInfo = [];
       this.rowsError = [];
       this.rowsColor = [];
-      for(var i = 0; i<25; i++){
-        this.addEmptyRow()
-      }
+      this.buildForm();
     },
     showModal2() {
       this.$refs.modal2.show();
