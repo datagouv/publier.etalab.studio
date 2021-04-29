@@ -251,6 +251,8 @@ export default {
       this.reportRecos = [];
       this.reportErrorInfo = null;
 
+      console.log(this.$refs.file.files)
+
       if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['type'].includes('csv')) {
         // eslint-disable-next-line prefer-destructuring
         const formData = new FormData();
