@@ -251,9 +251,7 @@ export default {
       this.reportRecos = [];
       this.reportErrorInfo = null;
 
-      console.log(this.$refs.file.files)
-
-      if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['type'].includes('csv')) {
+      if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['name'].includes('.csv')) {
         // eslint-disable-next-line prefer-destructuring
         const formData = new FormData();
         formData.append('file', this.file);
@@ -307,7 +305,7 @@ export default {
           // eslint-disable-next-line no-console
           console.log('finally');
         });
-      } else if (this.schema.schema_type == 'jsonschema' && this.$refs.file.files[0]['type'].includes('json')) {
+      } else if (this.schema.schema_type == 'jsonschema' && this.$refs.file.files[0]['name'].includes('json')) {
 
 
         var reader = new FileReader();
