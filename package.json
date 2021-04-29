@@ -12,7 +12,7 @@
     "now-build": "vue-cli-service build"
   },
   "dependencies": {
-    "@gouvfr/all": "^0.4.0",
+    "@gouvfr/all": "^0.5.3",
     "axios": "^0.21.1",
     "babel-runtime": "^6.26.0",
     "bootstrap-vue": "^2.0.0-rc.15",
