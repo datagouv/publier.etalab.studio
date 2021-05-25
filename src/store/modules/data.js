@@ -15,6 +15,7 @@ const module = {
       fileHeader: [],
       fileRows: [],
       fileNbRows: 0,
+      realRowsIds: [],
     };
   },
 };
@@ -43,6 +44,10 @@ const mutations = {
   setFileNbRowsData(state, data) {
     // eslint-disable-next-line no-param-reassign
     state.fileNbRows = data;
+  },
+  setRealRowsIdsData(state, data) {
+    // eslint-disable-next-line no-param-reassign
+    state.realRowsIds = data;
   },
   reinitData(state) {      
     state.rows = [];
@@ -79,6 +84,9 @@ const actions = {
   },
   fillFileNbRowsData({ commit }, data) {
     commit('setFileNbRowsData', data);
+  },
+  fillRealRowsIds({ commit }, data) {
+    commit('setRealRowsIdsData', data);
   },
   reinitStateData({ commit }) {
     commit('reinitData');
