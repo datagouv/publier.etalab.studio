@@ -69,7 +69,7 @@
                   <button class="table-buttons" @click="reinitRows()">Réinitialiser le tableur</button>
                 </div>
                 <div style="padding-right: 5px;">
-                 <button class="table-buttons">Nombre de lignes : {{ rows.length }}</button>
+                 <button class="table-buttons">Nombre de lignes : {{ realRowsIds.length }}</button>
                 </div>
               </template>
           </vue-editable-grid>
@@ -256,6 +256,7 @@ export default {
       publicationOK: false,
       dataToPublish: {},
       newFieldName: '',
+      realRowsIds: [],
     };
   },
   watch: {
@@ -380,7 +381,11 @@ export default {
               });
               var rowNb = 0;
               if(this.ongoingData.fileNbRows > 25){
-                for(var k = 0; k < 2431; k++) {
+                var max = 2500
+                if (this.ongoingData.fileNbRows < 2500) {
+                  max = this.ongoingData.fileNbRows
+                }
+                for(var k = 0; k < max; k++) {
                   this.addEmptyRow()
                 }
               }
@@ -390,12 +395,19 @@ export default {
                 }
                 rowNb++;
               });
-              this.submit();
               
+              for(var k = 0; k < this.ongoingData.fileRows.length ; k++) {
+                this.realRowsIds.push(this.rows[k]['idRowVEG'])
+                this.realRowsIds = [...new Set(this.realRowsIds)];
+              }
+
+              this.submit();
             }
             else {
               this.columnDefs = this.ongoingData.columnDefs;
               this.rows = this.ongoingData.rows;
+              console.log(this.ongoingData)
+              this.realRowsIds = this.ongoingData.realRowsIds;
             }
           }
         }
@@ -541,11 +553,33 @@ export default {
         row.$rowStyle = { color: 'blue' };
       }
     },
+    countLines(){
+      var cpt = 0;
+      var property;
+      var empty = true;
+      this.rows.forEach((row) => {
+        for (property in row) {
+          console.log(property)
+          if (property != 'idRowVEG' && row[property] && row[property] != "") {
+            empty = false;
+          }
+        }
+        if (!empty) {
+          cpt = cpt + 1;
+          empty = true;
+        }
+      });
+      return cpt;
+    },
     cellUpdated($event) {
       // Reinit color once change
       if($event.column.field in this.rowsColor[$event.rowIndex]) {
         delete this.rowsColor[$event.rowIndex][$event.column.field];
       }
+      console.log('edit')
+      
+      this.realRowsIds.push(this.rows[$event.rowIndex]['idRowVEG'])
+      this.realRowsIds = [...new Set(this.realRowsIds)];
 
 
       if ($event.column.field.toLowerCase().includes('insee')) {
@@ -587,6 +621,8 @@ export default {
     linkClicked() {
     },
     removeCurrentRow() {
+      console.log('remove')
+      this.realRowsIds = this.realRowsIds.filter(e => e !== this.selectedRow.idRowVEG);
       this.rows = this.rows.filter((row) => row.idRowVEG !== this.selectedRow.idRowVEG);
     },
     contextMenu() {
@@ -744,6 +780,7 @@ export default {
       this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
       this.$store.dispatch('data/fillSchemaRowsData', this.rows)
       this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
+      this.$store.dispatch('data/fillRealRowsIds', this.realRowsIds)
     },
     reinitRows(){
       this.$store.dispatch('data/reinitStateData');
