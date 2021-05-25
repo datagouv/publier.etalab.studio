@@ -168,7 +168,7 @@ export default {
             let cell = this.getCell();
             if(arrayPasted.length > (this.rowData.length - cell.rowIndex)) {
               this.addMultRows(cell.rowIndex-this.rowData.length+arrayPasted.length);
-              console.log('add rows')
+              console.log('add rows');
             }
             arrayPasted.forEach((rowsData, rIdx) => {
               rowsData.forEach((value, cIdx) => {
@@ -324,7 +324,6 @@ export default {
       this.setGridColumnTemplate();
     },
     async selectCell(rowIndex, colIndex, $event) {
-      console.log($event);
       if (changePending) {
         return;
       }
