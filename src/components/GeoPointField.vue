@@ -84,7 +84,7 @@ export default {
       // marker location
       this.markerLocation = latLng
       // formatted value: "lon, lat"
-      const value = this.formatLatLng(latLng)
+      const value =  this.formatLatLng(latLng, this.field.format)
       // update text input
       this.value = value
       // Hey! value has changed
@@ -97,9 +97,15 @@ export default {
       this.center = latLng
     },
     // Format longLat object to string
-    formatLatLng(lngLat) {
+    formatLatLng(lngLat, format) {
       const fp = this.floatPrecision
       const { lat, lng } = lngLat
+      if (format == "array") {
+        return `[${lng.toFixed(fp)},${lat.toFixed(fp)}]`
+      }
+      if (format == "object") {
+        return `{"lon": ${lng.toFixed(fp)}, "lat": ${lat.toFixed(fp)}}`
+      }
       return `${lng.toFixed(fp)},${lat.toFixed(fp)}`
     },
     // Extract latLng object from string
