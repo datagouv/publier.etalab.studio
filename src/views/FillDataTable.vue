@@ -284,10 +284,6 @@ export default {
     maybeAddRow($event){
       if ($event.rowIndex === (this.rows.length - 1)) {
         this.addEmptyRow()
-      } else {
-       if($event.colData.field in this.rowsColor[$event.rowIndex]) {
-         delete this.rowsColor[$event.rowIndex][$event.colData.field];
-       }
       }
     },
     addMultipleRows($event) {
@@ -546,6 +542,12 @@ export default {
       }
     },
     cellUpdated($event) {
+      // Reinit color once change
+      if($event.column.field in this.rowsColor[$event.rowIndex]) {
+        delete this.rowsColor[$event.rowIndex][$event.column.field];
+      }
+
+
       if ($event.column.field.toLowerCase().includes('insee')) {
         this.handleInseeInput($event);
       }
