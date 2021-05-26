@@ -173,6 +173,7 @@
     >
       <div>
         <error-report
+          style="margin-left: 20px"
           :report="report"
           :reportValidStatus="reportValidStatus"
           :badgeUrl="badgeUrl"
@@ -1042,7 +1043,7 @@ export default {
 
 
 div.modal-dialog.modal-md {
-  max-width: 80%;
+  max-width: 70%;
 }
 
 
