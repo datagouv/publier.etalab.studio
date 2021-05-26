@@ -97,6 +97,7 @@
 </style>
 
 <script>
+import latinize from 'latinize';
 
 import {
   VsaList,
@@ -150,7 +151,7 @@ export default {
       if (this.searchText !== '') {
         const obj = [];
         this.schemas.forEach((schema) => {
-          if (schema.title.toLowerCase().includes(this.searchText.toLowerCase())) {
+          if (latinize(schema.title.toLowerCase()).includes(latinize(this.searchText.toLowerCase()))) {
             obj.push(schema);
           }
         });
