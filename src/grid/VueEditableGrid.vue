@@ -31,7 +31,7 @@ div.vue-editable-grid
                 :style='{ width: `15px`, border: `0px`, textAlign: `right`}'
                 @change='columnOperation($event,column.field)'
               )
-                option(disabled selected value)
+                option(value="default")
                 option(value="renommer") {{ "Renommer" }}
                 option(value="supprimer") {{ "Supprimer" }}
               span {{ column.headerName }} 
@@ -571,6 +571,7 @@ export default {
       document.execCommand('copy');
     },
     columnOperation(event,column){
+      console.log(event);
       this.$emit('column-operation', event.target.value, column);
     },
   },

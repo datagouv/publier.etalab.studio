@@ -86,19 +86,6 @@
       </div>
     </div>
 
-    <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
-        <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
-        <br/><br/><br/>
-        <div style="text-align: center;">
-            <button
-              @click="btnClick()"
-              class="rf-btn"
-              title="Voir le jeu de données sur Datagouv"
-            >
-              Voir le jeu de données sur Datagouv
-            </button>
-        </div>
-    </div>
 
     <b-modal
       class="rf-container rf-pb-6w rf-pt-2w"
@@ -173,6 +160,7 @@
     >
       <div>
         <error-report
+          v-if="!publicationOK"
           style="margin-left: 20px"
           :report="report"
           :reportValidStatus="reportValidStatus"
@@ -222,6 +210,20 @@
             </div>
         </div>
 
+        <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+            <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
+            <br/><br/><br/>
+            <div style="text-align: center;">
+                <button
+                  @click="btnClick()"
+                  class="rf-btn"
+                  title="Voir le jeu de données sur Datagouv"
+                >
+                  Voir le jeu de données sur Datagouv
+                </button>
+            </div>
+        </div>
+
       </div>
     </b-modal>
 
@@ -235,6 +237,7 @@
     >
       <div>
         {{ columnModalP }}
+        <br/>
         <div v-if="shouldRenameColumn">
           <input
             v-model="newFieldName"
@@ -915,33 +918,33 @@ export default {
       this.$refs.modal4.hide();
     },
     columnOperation(type,column) {
-      console.log(type);
-      console.log(column);
-      var mandatory = false;
-      this.schema.fields.forEach((schema) => {
-        if(schema.name == column) {
-          mandatory = true;
+      if(type != "default") {
+        var mandatory = false;
+        this.schema.fields.forEach((schema) => {
+          if(schema.name == column) {
+            mandatory = true;
+          }
+        });
+        if(type == "renommer") {
+          this.columnModalHeader = "Renommer une colonne"
+        } else if(type == "supprimer") {
+          this.columnModalHeader = "Supprimer une colonne"
         }
-      });
-      console.log(mandatory);
-      if(type == "renommer") {
-        this.columnModalHeader = "Renommer une colonne"
-      } else {
-        this.columnModalHeader = "Supprimer une colonne"
-      }
-      if(mandatory){
-        this.columnModalP = "Impossible de "+type+" la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
-      } else {
-        console.log('ok');
-        if(type == "renommer"){
-          this.shouldRenameColumn = true;
-          this.oldColumnName = column;
+        if(mandatory){
+          this.columnModalP = "Impossible de "+type+" la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
         } else {
-          this.removeColumn(column);
-          this.columnModalP = "La colonne \""+column+"\" a été supprimée."
+          console.log('ok');
+          if(type == "renommer"){
+            this.shouldRenameColumn = true;
+            this.oldColumnName = column;
+            this.columnModalP = "Renommer le champs \""+column+"\" :"
+          } else if(type == "supprimer") {
+            this.removeColumn(column);
+            this.columnModalP = "La colonne \""+column+"\" a été supprimée."
+          }
         }
+        this.showModal4();
       }
-      this.showModal4();
     },
     removeColumn(column) {
       this.columnDefs = this.columnDefs.filter(e => e.field !== column);
@@ -1008,6 +1011,7 @@ export default {
         delete row[this.oldColumnName]
       });
       this.shouldRenameColumn = false;
+      this.newFieldName = "";
     },
   },
 };
