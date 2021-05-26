@@ -53,6 +53,7 @@
               @add-empty-row='addEmptyRow'
               @maybe-add-row='maybeAddRow'
               @add-multiple-rows='addMultipleRows'
+              @column-operation='columnOperation'
               >
               <template v-slot:header-r>
                 <div style="padding-right: 5px;">
@@ -196,7 +197,7 @@
     </b-modal>
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w validation-report-modal"
+      class="rf-container rf-pb-6w rf-pt-2w"
       ref="modal3"
       id="modal3"
       hide-footer
@@ -213,6 +214,39 @@
               :reportRecos="reportRecos"
               :reportJson="reportJson"
             ></error-report>
+      </div>
+    </b-modal>
+
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modal4"
+      id="modal4"
+      hide-footer
+      :title="columnModalHeader"
+    >
+      <div>
+        {{ columnModalP }}
+        <div v-if="shouldRenameColumn">
+          <input
+            v-model="newFieldName"
+            class="rf-input"
+            placeholder="Entrer le nom du champs"
+            type="search" id="new-fieldname-input"
+            name="new-fieldname-input"
+          >
+          <br/>
+          <div style="text-align: center;">
+            <button
+              style="margin-right: 20px;"
+              @click="renameColumn()"
+              type="submit"
+              class="rf-btn"
+            >
+              Renommer la colonne
+            </button>
+          </div>
+        </div>
       </div>
     </b-modal>
 
@@ -289,6 +323,10 @@ export default {
       realRowsIds: [],
       colIndex: 0,
       rowIndex: 1,
+      columnModalHeader: "",
+      columnModalP: "",
+      shouldRenameColumn: false,
+      oldColumnName: "",
     };
   },
   watch: {
@@ -846,6 +884,8 @@ export default {
       this.rowsInfo = [];
       this.rowsError = [];
       this.rowsColor = [];
+      this.fieldNames = [];
+      this.realRowsIds = [];
       this.buildForm();
     },
     showModal2() {
@@ -859,6 +899,107 @@ export default {
     },
     hideModal3() {
       this.$refs.modal3.hide();
+    },
+    showModal4() {
+      this.$refs.modal4.show();
+    },
+    hideModal4() {
+      this.$refs.modal4.hide();
+    },
+    columnOperation(type,column) {
+      console.log(type);
+      console.log(column);
+      var mandatory = false;
+      this.schema.fields.forEach((schema) => {
+        if(schema.name == column) {
+          mandatory = true;
+        }
+      });
+      console.log(mandatory);
+      if(type == "renommer") {
+        this.columnModalHeader = "Renommer une colonne"
+      } else {
+        this.columnModalHeader = "Supprimer une colonne"
+      }
+      if(mandatory){
+        this.columnModalP = "Impossible de "+type+" la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
+      } else {
+        console.log('ok');
+        if(type == "renommer"){
+          this.shouldRenameColumn = true;
+          this.oldColumnName = column;
+        } else {
+          this.removeColumn(column);
+          this.columnModalP = "La colonne \""+column+"\" a été supprimée."
+        }
+      }
+      this.showModal4();
+    },
+    removeColumn(column) {
+      this.columnDefs = this.columnDefs.filter(e => e.field !== column);
+      this.fieldNames = this.fieldNames.filter(e => e !== column);
+      delete this.emptyRow[column]
+      delete this.emptyRowColor[column]
+      delete this.emptyRowError[column]
+      delete this.emptyRowInfo[column]
+      this.rows.forEach((row) => {
+        delete row[column]
+      });
+      this.rowsColor.forEach((row) => {
+        delete row[column]
+      });
+      this.rowsError.forEach((row) => {
+        delete row[column]
+      });
+      this.rowsInfo.forEach((row) => {
+        delete row[column]
+      });
+    },
+    renameColumn() { 
+      this.hideModal4();
+      console.log(this.newFieldName);
+      console.log(this.oldColumnName);
+
+      this.columnDefs.forEach((col) =>{
+        if(col.field == this.oldColumnName) {
+          console.log(col.field);
+          col.field = this.newFieldName;
+          col.headerName = this.newFieldName;
+        }
+      });
+
+      this.fieldNames = this.fieldNames.filter(e => e !== this.oldColumnName);
+      this.fieldNames.push(this.newFieldName);
+
+      this.emptyRow[this.newFieldName] = this.emptyRow[this.oldColumnName];
+      delete this.emptyRow[this.oldColumnName]
+
+      this.emptyRowColor[this.newFieldName] = this.emptyRowColor[this.oldColumnName];
+      delete this.emptyRowColor[this.oldColumnName]
+
+      this.emptyRowError[this.newFieldName] = this.emptyRowError[this.oldColumnName];
+      delete this.emptyRowError[this.oldColumnName]
+
+      this.emptyRowInfo[this.newFieldName] = this.emptyRowInfo[this.oldColumnName];
+      delete this.emptyRowInfo[this.oldColumnName]
+
+      this.rows.forEach((row) => {
+        row[this.newFieldName] = row[this.oldColumnName]
+        delete row[this.oldColumnName]
+      });
+      this.rowsColor.forEach((row) => {
+        row[this.newFieldName] = row[this.oldColumnName]
+        delete row[this.oldColumnName]
+      });
+      this.rowsError.forEach((row) => {
+        row[this.newFieldName] = row[this.oldColumnName]
+        delete row[this.oldColumnName]
+      });
+      this.rowsInfo.forEach((row) => {
+        row[this.newFieldName] = row[this.oldColumnName]
+        delete row[this.oldColumnName]
+      });
+      this.shouldRenameColumn = false;
     },
   },
 };

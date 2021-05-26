@@ -26,7 +26,15 @@ div.vue-editable-grid
             :class='{ sortable: column.sortable, sorting: column.field === sortByColumn, descending: sortByDesc }'
             @click='sort(column)'
           )
-            span.header-content {{ column.headerName }}
+            span.header-content
+              select(
+                :style='{ width: `15px`, border: `0px`, textAlign: `right`}'
+                @change='columnOperation($event,column.field)'
+              )
+                option(disabled selected value)
+                option(value="renommer") {{ "Renommer" }}
+                option(value="supprimer") {{ "Supprimer" }}
+              span {{ column.headerName }} 
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
       tbody(ref='body')
         div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
@@ -111,6 +119,7 @@ export default {
       visibleRows: [],
       isSelecting: false,
       selStartSelection: [],
+      toot: "supprimer"
     };
   },
   created() {
@@ -561,6 +570,9 @@ export default {
       this.$refs.tmp.value = value || '';
       this.$refs.tmp.select();
       document.execCommand('copy');
+    },
+    columnOperation(event,column){
+      this.$emit('column-operation', event.target.value, column);
     },
   },
 };
