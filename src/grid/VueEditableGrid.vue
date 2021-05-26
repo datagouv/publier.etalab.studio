@@ -35,6 +35,7 @@ div.vue-editable-grid
                 option(value="renommer") {{ "Renommer" }}
                 option(value="supprimer") {{ "Supprimer" }}
               span {{ column.headerName }} 
+              span( v-if='!column.optional') *
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
       tbody(ref='body')
         div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
