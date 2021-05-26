@@ -136,6 +136,7 @@
       id="modal1"
       hide-footer
       title="Attention, vous n'êtes pas connecté"
+      size="huge"
     >
       <div>
         <p>Pour publier vos données sur datagouv, il est nécessaire de vous connecter.</p>
@@ -192,6 +193,28 @@
         </div>
       </div>
     </b-modal>
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w validation-report-modal"
+      ref="modal3"
+      id="modal3"
+      hide-footer
+      title="Rapport de validation"
+    >
+      <div>
+            <error-report
+              :report="report"
+              :reportValidStatus="reportValidStatus"
+              :badgeUrl="badgeUrl"
+              :reportErrorInfo="reportErrorInfo"
+              :reportStructureErrors="reportStructureErrors"
+              :reportContentErrors="reportContentErrors"
+              :reportRecos="reportRecos"
+              :reportJson="reportJson"
+            ></error-report>
+      </div>
+    </b-modal>
+
     </div>
 </template>
 
@@ -203,23 +226,29 @@ import SelectField from '../components/SelectField.vue';
 import RadioField from '../components/RadioField.vue';
 
 import PublishFormUpload from '../components/PublishFormUpload.vue';
+import ErrorReport from '../components/ErrorReport.vue';
 
 import NavUser from '../components/NavUser.vue';
 import VueEditableGrid from '../grid/VueEditableGrid.vue';
 
 import PublishRessources from '../mixins/PublishResources.vue';
+import GetReport from '../mixins/GetReport.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
 
 export default {
   name: 'fillDataTable',
-  mixins: [PublishRessources],
+  mixins: [
+    PublishRessources,
+    GetReport,
+  ],
   components: {
     VueEditableGrid,
     PublishFormUpload,
     ClientOnly,
     NavUser,
+    ErrorReport,
   },
   data() {
     return {
@@ -486,6 +515,20 @@ export default {
       return factory(StringField, field);
     },
     submit() {
+
+      this.report = null;
+      this.reportJson = []
+      this.reportValidStatus = null;
+      this.badgeUrl = null;
+      this.publicationMessage = null;
+
+      this.reportValidStatus = null;
+      this.reportStructureErrors = [];
+      this.reportContentErrors = [];
+      this.reportRecos = [];
+      this.reportErrorInfo = null;
+
+      this.showModal3();
       const loader = this.$loading.show();
       this.rowsError.forEach((re) => {
         // eslint-disable-next-line no-restricted-syntax
@@ -535,6 +578,7 @@ export default {
             this.publicationButtons = true;
             this.lines.push(this.getCurrentLine());
           }
+          this.getValidataReport(data);
         }).finally(() => {
           loader.hide();
         });
@@ -804,6 +848,12 @@ export default {
     hideModal2() {
       this.$refs.modal2.hide();
     },
+    showModal3() {
+      this.$refs.modal3.show();
+    },
+    hideModal3() {
+      this.$refs.modal3.hide();
+    },
   },
 };
 </script>
@@ -835,5 +885,11 @@ export default {
     color: red;
     font-style: italic;
 }
+
+
+div.modal-dialog.modal-md {
+  max-width: 80%;
+}
+
 
 </style>
