@@ -35,6 +35,7 @@
           </button>
       </div>
       <br />
+      <span style="margin-left: 20px">ligne {{ rowIndex }}, colonne {{ colIndex }}</span>
       <div style="overflow-y: scroll; height:500px;">
           <vue-editable-grid
               class="grid"
@@ -286,6 +287,8 @@ export default {
       dataToPublish: {},
       newFieldName: '',
       realRowsIds: [],
+      colIndex: 0,
+      rowIndex: 1,
     };
   },
   watch: {
@@ -641,6 +644,9 @@ export default {
       }
     },
     rowSelected($event) {
+
+      if ($event.colIndex) this.colIndex = $event.colIndex;
+      if ($event.rowIndex) this.rowIndex = $event.rowIndex;
       this.selectedRow = $event.rowData;
 
       if (this.schema.fields) {
