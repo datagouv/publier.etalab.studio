@@ -1,6 +1,6 @@
 <template>
 <div>
-    <div v-if="!publicationReady" ref="test">
+    <div ref="test">
       <div style="margin-left: 20px">
           <!--<button
             style="margin-right: 20px"
@@ -24,14 +24,6 @@
             class="rf-btn"
           >
             Valider le fichier
-          </button>
-          <button
-            style="margin-right: 20px"
-            class="rf-btn"
-            v-if="publicationButtons"
-            @click="showPublishForm()"
-          >
-            Publier sur data.gouv.fr
           </button>
       </div>
       <br />
@@ -92,30 +84,6 @@
             </p>
           </div>
       </div>
-    </div>
-
-    <div class="rf-container rf-pb-1w rf-pt-2w" v-if="publicationReady & !publicationOK">
-        <publish-form-upload
-            v-model="dataToPublish"
-            :schemaName="schemaName"
-            :organizations="userOrganizations"
-            :publicationIntro="publicationIntro"
-            v-on:form-state-change="togglePublishButtonState"
-
-        />
-        <div v-if="!publishButtonDisabled">
-            <button
-              type="submit"
-              class="rf-btn"
-              title="Publier sur datagouv"
-              @click="publishDataset()"
-            >
-              Publier
-            </button>
-        </div>
-        <div v-if="publishButtonDisabled">
-            <button type="submit" class="rf-btn-light" title="Publier sur datagouv">Publier</button>
-        </div>
     </div>
 
     <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
@@ -204,16 +172,55 @@
       title="Rapport de validation"
     >
       <div>
-            <error-report
-              :report="report"
-              :reportValidStatus="reportValidStatus"
-              :badgeUrl="badgeUrl"
-              :reportErrorInfo="reportErrorInfo"
-              :reportStructureErrors="reportStructureErrors"
-              :reportContentErrors="reportContentErrors"
-              :reportRecos="reportRecos"
-              :reportJson="reportJson"
-            ></error-report>
+        <error-report
+          :report="report"
+          :reportValidStatus="reportValidStatus"
+          :badgeUrl="badgeUrl"
+          :reportErrorInfo="reportErrorInfo"
+          :reportStructureErrors="reportStructureErrors"
+          :reportContentErrors="reportContentErrors"
+          :reportRecos="reportRecos"
+          :reportJson="reportJson"
+        ></error-report>
+
+        <div v-if="!publicationReady" ref="test">
+          <div style="margin-left: 20px">
+            <button
+              style="margin-right: 20px"
+              class="rf-btn"
+              v-if="publicationButtons"
+              @click="showPublishForm()"
+            >
+              Publier sur data.gouv.fr
+            </button>
+          </div>
+        </div>
+
+
+        <div class="rf-container rf-pb-1w rf-pt-2w" v-if="publicationReady & !publicationOK">
+            <publish-form-upload
+                v-model="dataToPublish"
+                :schemaName="schemaName"
+                :organizations="userOrganizations"
+                :publicationIntro="publicationIntro"
+                v-on:form-state-change="togglePublishButtonState"
+
+            />
+            <div v-if="!publishButtonDisabled">
+                <button
+                  type="submit"
+                  class="rf-btn"
+                  title="Publier sur datagouv"
+                  @click="publishDataset()"
+                >
+                  Publier
+                </button>
+            </div>
+            <div v-if="publishButtonDisabled">
+                <button type="submit" class="rf-btn-light" title="Publier sur datagouv">Publier</button>
+            </div>
+        </div>
+
       </div>
     </b-modal>
 

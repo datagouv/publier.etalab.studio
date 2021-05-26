@@ -119,7 +119,6 @@ export default {
       visibleRows: [],
       isSelecting: false,
       selStartSelection: [],
-      toot: "supprimer"
     };
   },
   created() {
