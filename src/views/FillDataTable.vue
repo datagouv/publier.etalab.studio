@@ -381,6 +381,7 @@ export default {
         myobj.field = this.newFieldName;
         myobj.headerName = this.newFieldName;
         myobj.editable = true;
+        myobj.optional = true;
 
         this.emptyRow[this.newFieldName] = '';
         this.emptyRowInfo[this.newFieldName] = '';
