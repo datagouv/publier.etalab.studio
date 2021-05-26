@@ -382,6 +382,8 @@ export default {
         myobj.headerName = this.newFieldName;
         myobj.editable = true;
         myobj.optional = true;
+        var lenCharacter = this.newFieldName.length*10+50
+        myobj.size = lenCharacter.toString()+"px";
 
         this.emptyRow[this.newFieldName] = '';
         this.emptyRowInfo[this.newFieldName] = '';
@@ -439,6 +441,9 @@ export default {
             this.emptyRowInfo[field.name] = null;
             this.emptyRowError[field.name] = null;
           }
+
+          var lenCharacter = field.name.length*10+50;
+          myobj.size = lenCharacter.toString()+"px";
           this.columnDefs.push(myobj);
         });
         const uniqueid = this.makeid(15);
