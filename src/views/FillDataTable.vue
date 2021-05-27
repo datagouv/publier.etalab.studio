@@ -28,6 +28,8 @@
       </div>
       <br />
       <span style="margin-left: 20px">ligne {{ rowIndex }}, colonne {{ colIndex }}</span>
+      <br/>
+      <span style="margin-left: 20px"><i>* champs obligatoire</i></span>
       <div style="overflow-y: scroll; height:500px;">
           <vue-editable-grid
               class="grid"
@@ -382,7 +384,7 @@ export default {
         myobj.headerName = this.newFieldName;
         myobj.editable = true;
         myobj.optional = true;
-        var lenCharacter = this.newFieldName.length*10+50
+        var lenCharacter = this.newFieldName.length*10+70
         myobj.size = lenCharacter.toString()+"px";
 
         this.emptyRow[this.newFieldName] = '';
@@ -442,7 +444,7 @@ export default {
             this.emptyRowError[field.name] = null;
           }
 
-          var lenCharacter = field.name.length*10+50;
+          var lenCharacter = field.name.length*10+70;
           myobj.size = lenCharacter.toString()+"px";
           this.columnDefs.push(myobj);
         });

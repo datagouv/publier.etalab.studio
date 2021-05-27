@@ -16,7 +16,8 @@ td.cell.noselectx(
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
   span(
-    v-if='column.enumList && row[column.field] == ""'
+    v-if='column.enumList'
+    :style='{width: `100%`}'
   )
     select(
       :style='{width: `100%`, border: `0px`, textAlign: `right`}'
@@ -44,7 +45,8 @@ td.cell.noselectx(
       v-if='column.type === "link"'
       href='#'
     ) {{ row[column.field] | cellFormatter(column, row) }}
-    span(v-else) {{ row[column.field] | cellFormatter(column, row) }}
+    span(v-else) 
+      span(v-if='!column.enumList') {{ row[column.field] | cellFormatter(column, row) }}
 </template>
 
 <script>
