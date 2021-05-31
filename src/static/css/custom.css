@@ -87,13 +87,23 @@
 }
 
 .homepage-box{
+  flex: 1;
   padding-right: 20px;
-  color: #060191;
+  color: black;
   min-width: 50%;
   font-size: 35px;
   font-weight: bold;
 }
 
+.homepage-logo{
+  text-align: right;
+  padding-right: 5%;
+}
+
+
+.rf-btn{
+  border-radius: 0px;
+}
 
 .rf-btn-light{
   background-color: white;
@@ -117,4 +127,32 @@
   border: 0px;
   padding-left: 12px;
   padding-right: 12px;
+}
+
+.sub-title{
+  padding-top: 30px;
+  font-size: 20px;
+  font-weight: normal;
+  width: 100%;
+}
+
+.sub-title-btn{
+  font-size: 15px;
+  font-weight: normal;
+}
+
+.title-banner{
+  font-weight: bold;
+  font-size: 35px;
+  max-width: 78rem;
+  text-align: left;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.banner-title-background{
+  background-color: #5770BE;
+  color: white;
 }

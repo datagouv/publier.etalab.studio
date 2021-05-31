@@ -1,125 +1,46 @@
 <template>
     <div>
-        <div class="rf-container rf-pb-6w rf-pt-2w">
+        <div class="rf-container rf-pb-6w rf-pt">
         <br /><br/>
             <div class="boxes">
                 <div class="homepage-box">
-                   <br />
-                   <p class="color: blue; text-align: left; border: 1px solid black;">
+                   <p class="color: black; text-align: left; border: 1px solid black;">
                        Saisissez, validez et publiez 
                        <br/>
                        vos données structurées
                     </p>
+
+                    <div class="sub-title">
+                        <p>Vous utilisez un schéma de référence pour vos données ?
+                        <br/>
+                        Validez et corriger vos fichiers en quelques clics
+                        <br/>
+                        et publiez-les directement sur <a href="http://www.data.gouv.fr">data.gouv.fr</a> !</p>
+                    </div>
+
+                    <div>
+                        <b-button href="#search-bar" class="sub-title-btn rf-btn">
+                            Sélectionner un type de données&nbsp;&nbsp;
+                            <img src="../static/images/down-arrow.png" width="15" />
+                        </b-button>
+                    </div>
                 </div>
-                <div class="homepage-box">
+                <div class="homepage-box homepage-logo">
                     <img src="../static/images/logo.png" width="450" />
                 </div>
             </div>
             <br/><br />
-            <p>
-                Cet outil vous permet de saisir, valider et publier des données structurées sur la plateforme ouverte des données publiques françaises  <a href="http://www.data.gouv.fr/">data.gouv.fr</a>.</p>
-                <p>Les types de données aujourd'hui proposés sont référencés sur la plateforme <a href="http://schema.data.gouv.fr">schema.data.gouv.fr</a>.
-            </p>
-            <br /><!--
-            <vsa-list>
-                <vsa-item>
-                    <vsa-heading>
-                        <p>Qu'est-ce qu'un schéma de données ?</p>
-                    </vsa-heading>
-                    <vsa-content>
-                        <p>
-                            Les schémas de données permettent de décrire la structure
-                            d'un jeu de données. Ils indiquent clairement quels sont les
-                            différents champs (colonnes), comment sont représentées les données, 
-                            quelles sont les valeurs possibles etc.
-                        </p>
-                        <i>Synonymes : modèle de données, modèle logique de données, schéma.</i>
-                    </vsa-content>
-                </vsa-item>
-                <vsa-item>
-                    <vsa-heading>
-                        <p>Comment réaliser son propre schéma de données ?</p>
-                    </vsa-heading>
-                    <vsa-content>
-                        <p>
-                            Un guide a été publié en 2020 pour accompagner les futurs
-                            producteurs de schéma de données. N'hésitez pas à le lire et
-                            nous faire part de vos retours :
-                        </p>
-                        <ul>
-                            <li>
-                                <a href="" @click="btnGuideClick()">
-                                   Lire le guide
-                                </a>
-                            </li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-                <vsa-item>
-                    <vsa-heading>
-                        <p>Comment faire référencer son schéma de données ?</p>
-                    </vsa-heading>
-                    <vsa-content>
-                        <p>
-                            Vous envisagez de créer un schéma ou vous êtes en phase d'élaboration
-                            d'un schéma et vous souhaitez recueillir des retours de la part de la
-                            communauté. Vous pouvez déclarer cette initiative auprès de
-                            schema.data.gouv.fr :
-                        </p>
-                        <ul>
-                            <li>
-                                <a href="https://github.com/etalab/schema.data.gouv.fr/issues/new?template=referencer-un-schema.md">
-                                    En ouvrant un ticket sur GitHub ;
-                                </a>
-                            </li>
-                            <li>
-                                En envoyant un e-mail à l'adresse schema@data.gouv.fr.
-                            </li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-            </vsa-list>-->
+            <br />
 
         </div>
-        <div class="rf-container-fluid rf-bg--alt rf-centered rf-pb-6w rf-pt-2w">
-            <div class="rf-grid-row rf-grid-row--center">
-                <div class="rf-col-6"><h2>Produire des données de qualité</h2></div>
-            </div>
+        <div class="rf-container-fluid banner-title-background rf-centered rf-pb-6w rf-pt-2w">
+            <div class="title-banner"><p>Produire des données de qualité, en 4 étapes !</p></div>
             <div class="rf-grid-row rf-grid-row--center rf-grid-row--gutter">
-                <div class="rf-col-xs-12 rf-col-md-3 rf-p-3w">
-                    <div class="rf-text--lg rf-pb-2w">
-                        <img src="../static/images/writing.png" width="30" height="30"/>
-                        <br/>
-                        Saisir
-                    </div>
-                    <div class="rf-text--sm">Saisir ou charger vos données structurées</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <img src="../static/images/right-arrow.png" width="30" height="30"/>
-                </div>
-                <div class="rf-col-xs-12 rf-col-md-3 rf-p-3w">
-                <div class="rf-text--lg rf-pb-2w">
-                    <img src="../static/images/clipboard.png" width="30" height="30"/>
-                    <br/>
-                    Valider
-                </div>
-                <div class="rf-text--sm">Vérifier la conformité de vos données</div>
-                </div>
-                <div style="display: flex; align-items: center;">
-                    <img src="../static/images/right-arrow.png" width="30" height="30"/>
-                </div>
-                <div class="rf-col-xs-12 rf-col-md-3 rf-p-3w">
-                <div class="rf-text--lg rf-pb-2w">
-                    <img src="../static/images/broadcast.png" width="30" height="30"/>
-                    <br/>
-                    Publier
-                </div>
-                <div class="rf-text--sm">Publier vos données sur la plateforme data.gouv.fr</div>
-                </div>
+                <img src="../static/images/steps.png" width="80%" />
             </div>
         </div>
 
-        <div class="rf-container rf-pb-6w rf-pt-2w">
+        <div id="search-bar" class="rf-container rf-pb-6w rf-pt-2w">
             <br />
             <h3>Sélectionner un type de jeu de données</h3>
             <!--<br />
