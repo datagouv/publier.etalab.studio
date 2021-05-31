@@ -811,7 +811,7 @@ export default {
         //var file = new File([this.form], this.form.name+".json", {type:"application/json"});
         formData.append('file', blob, this.form.name+".json");
 
-        instance.post(`${process.env.VUE_APP_DEMO_API_UR}/api/1/datasets/60b4b9b37b3c3a33db85ba89/upload/`, formData, { headers: headers })
+        instance.post(`${process.env.VUE_APP_DEMO_API_URL}/api/1/datasets/60b4b9b37b3c3a33db85ba89/upload/`, formData, { headers: headers })
             .then((response) => {
                 console.log(response);
                 this.showLevel4 = false;
