@@ -5,6 +5,7 @@ import Homepage from './views/Homepage.vue';
 import FillDataTable from './views/FillDataTable.vue';
 import SelectFillingMode from './views/SelectFillingMode.vue';
 import FillDataUpload from './views/FillDataUpload.vue';
+import CreateSchemaForm from './views/CreateSchemaForm.vue';
 import Login from './views/Login.vue';
 
 Vue.use(Router);
@@ -42,6 +43,11 @@ export default new Router({
       path: '/upload',
       name: 'upload',
       component: FillDataUpload,
+    },
+    {
+      path: '/create',
+      name: 'create',
+      component: CreateSchemaForm,
     },
   ],
 });

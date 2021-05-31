@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import BootstrapVue from 'bootstrap-vue';
+import { BootstrapVue } from 'bootstrap-vue';
 import Loading from 'vue-loading-overlay';
 import { Icon } from 'leaflet'
 import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet'
@@ -14,10 +14,13 @@ import App from './App.vue';
 import store from './store';
 
 import 'vue-loading-overlay/dist/vue-loading.css';
+
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue/dist/bootstrap-vue.css';
 import 'vue-simple-suggest/dist/styles.css';
 import 'leaflet/dist/leaflet.css'
+
+import VueClipboard from 'vue-clipboard2'
 
 import '@gouvfr/all/dist/js/all.js';
 import '@gouvfr/all/dist/css/all.css';
@@ -30,11 +33,13 @@ Icon.Default.mergeOptions({
   shadowUrl: require('leaflet/dist/images/marker-shadow.png'),
 })
 
+
 Vue.config.productionTip = false;
 Vue.use(VueAxios, axios);
 Vue.use(BootstrapVue);
 Vue.use(Loading);
 Vue.use(Vuex);
+Vue.use(VueClipboard);
 
 Vue.component('vue-simple-suggest', VueSimpleSuggest);
 
