@@ -152,7 +152,59 @@
   margin-right: auto;
 }
 
+.title-page{
+  font-weight: bold;
+  font-size: 45px;
+}
+
+.subtitle-page{
+  font-weight: bold;
+  font-size: 35px;
+}
+
 .banner-title-background{
   background-color: #5770BE;
   color: white;
+}
+
+.infobox{
+  border: 2px solid #F8E473;
+  background-color: #FFFEF9;
+  border-radius: 5px;
+  padding: 20px;
+}
+.infobox-title{
+  line-height: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 15px;
+}
+
+.infobox-content{
+  padding-left: 35px;
+}
+
+.infobox-content-item{
+  margin-bottom: 15px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.choice-no-selected{
+  padding: 15px;
+  margin-right: 20px; 
+  border-radius: 30px;
+  background-color: #F9F8F6;
+  cursor: pointer;
+}
+.choice-selected{
+  padding: 15px;
+  margin-right: 20px; 
+  border-radius: 30px;
+  background-color: #F2F2F9;
+  color: #060191;
+  cursor: pointer;
+}
+.choice-box{
+  font-size: 20px;
 }

@@ -1,74 +1,50 @@
 <template>
     <div>
-        <div v-if="schema"  class="rf-container rf-pb-6w rf-pt-2w">
-            <h3>{{ schema.title }}</h3>
-            <br/>
-            {{ schema.description }}
-            <br />
-            <br />
-            <div>   
-                <ul>
-                    <li>
-                        <a href="" @click="btnDocClick()">
-                            Voir la documentation technique de ce type de données
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" @click="btnFilesClick()">
-                            Voir les ressources déjà publiées
-                        </a>
-                    </li>
-                    <li>
-                        <a href="" @click="btnConsolidationClick()">
-                            Voir la base de consolidation
-                        </a>
-                    </li>
-                </ul>
+        <div v-if="schema"  class="rf-container rf-pb-6w rf-pt-1w">
+            <p style="font-size: 14px; cursor: pointer;"><a @click="gotoHomePage()" >Accueil</a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;{{ schema.title }}</p>
+            
+            <p class="title-page">Saisir ou charger mes données</p>
+            
+            <div class="infobox">
+              <div class="infobox-title"><img src="../static/images/info-button.png" width="20" />&nbsp;&nbsp;&nbsp;Avant de commencer</div>
+              <div class="infobox-content">
+                <div v-for="item in this.schema.examples" v-bind:key="item.title">
+                  <div class="infobox-content-item">
+                    <span @click="gotoExemple(item.path)">
+                        {{ item.title }}
+                    </span>
+                  </div>
+                </div>
+                <div class="infobox-content-item">
+                  <p @click="btnDocClick()">
+                      Lire la documentation de ce type de données
+                  </p>
+                </div>
+                <div class="infobox-content-item">
+                  <p @click="btnFilesClick()">
+                      Voir tous les fichiers de ce type sur data.gouv.fr
+                  </p>
+                </div>
+              </div>
             </div>
             <br />
+            <p class="subtitle-page" v-if="schema && (schema.schema_type == 'tableschema' || schema.schema_type == 'jsonschema')">Comment sont vos données ?</p>
             <br />
-            <h3 v-if="schema && (schema.schema_type == 'tableschema' || schema.schema_type == 'jsonschema')">Comment souhaitez-vous saisir vos données ?</h3>
-            <br />
-            <div class="boxes">
-                <div v-if="schema && (schema.schema_type == 'tableschema' || schema.schema_type == 'jsonschema')" class="box style-saisie" @click="goto('upload')">
-                    <div class="box-header">
-                        Mes données sont déjà structurées
-                    </div>
-                    <div class="box-logo">
-                        <img src="../static/images/biceps.png" width="30" height="30"/>
-                    </div>
-                    <br/>
-                    <div class="box-content">
-                        Je souhaite m'assurer de la validité des données et/ou
-                        les publier sur la plateforme data.gouv.fr
-                    </div>
-                </div>
-                <div v-if="schema && schema.schema_type == 'tableschema'" class="box style-saisie" @click="goto('form')">
-                    <div class="box-header">
-                        Je souhaite saisir mes données dans un formulaire
-                    </div>
-                    <div class="box-logo">
-                        <img src="../static/images/bullet-form.png" width="30" height="30"/>
-                    </div>
-                    <div class="box-content">
-                        Générez-moi un formulaire adapté pour
-                        que je puisse saisir mes données.
-                    </div>
-                </div>
-                <div v-if="schema && schema.schema_type == 'tableschema'" class="box style-saisie" @click="goto('table')">
-                    <div class="box-header">
-                        Je souhaite saisir mes données sur un tableur
-                    </div>
-                    <div class="box-logo">
-                        <img src="../static/images/table.png" width="30" height="30"/>
-                    </div>
-                    <div class="box-content">
-                        Générez-moi un tableur adapté pour
-                        que je puisse saisir mes données.
-                    </div>
-                </div>
+            <div class="choice-box" v-if="schema && (schema.schema_type == 'tableschema' || schema.schema_type == 'jsonschema')">
+              <span @click="goto('upload')" class="choice-no-selected">J'ai déjà un fichier de données structurées</span>
+              <span @click="noDataChoice = !noDataChoice" v-if="noDataChoice && schema && schema.schema_type == 'tableschema'" class="choice-no-selected">Je n'ai pas encore de fichier de données structurées</span>
+              <span @click="noDataChoice = !noDataChoice" v-if="!noDataChoice && schema && schema.schema_type == 'tableschema'" class="choice-selected">Je n'ai pas encore de fichier de données structurées</span>
+              <div v-if="!noDataChoice">
+                <br /><br />
+                <p>Notre outils vous aide à construire votre fichier !</p>
+                <p>Comment souhaitez-vous procéder ?</p>
+                <br />
+                <span @click="goto('form')" class="choice-no-selected">Remplir un formulaire</span>
+                <span @click="goto('table')" class="choice-no-selected">Utiliser l'outil de tableur</span>
+              </div>
             </div>
             <p  v-if="schema && schema.schema_type == 'other'">Ce schéma obéit à un standard indépendant, notre outil ne propose pas la saisie de ces données</p>
+            <br /><br /><br />
         </div>
     </div>
 </template>
@@ -85,6 +61,7 @@ export default {
     return {
       schemaName: this.$route.query.schema,
       schemas: null,
+      noDataChoice: true,
     };
   },
   mounted() {
@@ -109,15 +86,18 @@ export default {
     goto(type) {
       this.$router.push(`${type}?schema=${this.$route.query.schema}`);
     },
+    gotoHomePage() {
+      this.$router.push('/');
+    },
     btnDocClick() {
       window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
     },
     btnFilesClick() {
       window.open(`${DGV_BASE_URL}/datasets/?schema=${this.schemaName}`);
     },
-    btnConsolidationClick() {
-      window.open(`${DGV_BASE_URL}/search/?tag=${this.schemaName.replace('/', '-')}-consolidation`);
-    },
+    gotoExemple(url){
+      window.open(url)
+    }
   },
 };
 </script>
