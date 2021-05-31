@@ -163,7 +163,10 @@ export default {
               const resourceId = response.data.id;
               const payload = {
                 title: publishContent.resource.title,
-                schema: this.schemaName,
+                schema: {
+                  name: this.schemaName,
+                  version: "latest",
+                }
               };
               $api
                 .put(
@@ -221,7 +224,10 @@ export default {
               const resourceId = response.data.id;
               const payload = {
                 title: publishContent.resource.title,
-                schema: this.schemaName,
+                schema: {
+                  name: this.schemaName,
+                  version: "latest",
+                }
               };
               $api
                 .put(
@@ -289,7 +295,10 @@ export default {
               const resourceId = response.data.id;
               const payload = {
                 title: publishContent.resource.title,
-                schema: this.schemaName,
+                schema: {
+                  name: this.schemaName,
+                  version: "latest",
+                }
               };
               $api
                 .put(
