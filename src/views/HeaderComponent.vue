@@ -24,9 +24,12 @@
                             <i>Pour la publication de données de qualité</i>
                             </p>
                         </div>
-                        <client-only>
-                            <nav-user />
-                        </client-only>
+                        <div class="fill-remaining-space"></div>
+                        <div>
+                            <client-only>
+                                <nav-user />
+                            </client-only>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -44,3 +47,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.fill-remaining-space {
+  flex: auto;
+}
+</style>
