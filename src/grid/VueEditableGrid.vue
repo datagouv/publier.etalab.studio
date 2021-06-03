@@ -1,23 +1,10 @@
 <template lang="pug">
 div.vue-editable-grid
   .grid-tools
-    .grid-tools-left
-      slot(name='header')
-      paginate.grid-tool(
-        :page='page'
-        :pages='pages'
-        :page-count='pageCount'
-        :total-rows='rowDataFiltered.length'
-        @count-changed='pageCount=$event'
-        @prev='page--'
-        @next='page++'
-        v-if='pageCount'
-      )
-      filters.grid-tool(:filters='filter' :columnDefs='columnDefs' @remove='removeFilter')
-    .grid-tools-right
-      slot(name='header-r')
+    span.infolines ligne {{ actualRow }}, colonne {{ actualCol }}
+    span.infolines Nombre de lignes sur le fichier : {{ nbLinesFile }}
   .grid-table-container(ref='container')
-    table.grid-table(ref='table' )
+    table.grid-table(style="border-collapse: collapse;" ref='table' )
       thead(ref='head')
         tr.headers-row(:style='{ "grid-template-columns": gridTemplateColumns }')
           th(
@@ -25,25 +12,23 @@ div.vue-editable-grid
             :key='index'
             :class='{ sortable: column.sortable, sorting: column.field === sortByColumn, descending: sortByDesc }'
             @click='sort(column)'
+            style="border: 1px solid #ebebeb; border-collapse: collapse;"
           )
             span.header-content
-              select(
-                :style='{ width: `15px`, border: `0px`, textAlign: `right`}'
-                @change='columnOperation($event,column.field)'
-              )
-                option(value="default")
-                option(value="renommer") {{ "Renommer" }}
-                option(value="supprimer") {{ "Supprimer" }}
-              span {{ column.headerName }} 
-              span( v-if='!column.optional') *
+              span.header-name
+                span(:ref="column.headerName") {{ column.headerName }} 
+                span( v-if='!column.optional') *
+              span.intermediary
+              span(class="menuIcon" @click="moveHeaderMenu(column.headerName)") 
+                img(src="../static/images/menu.png", width="15")
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
-      tbody(ref='body')
+      tbody(ref='body', id='body', v-on="handleScroll()")
         div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
           tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
             cell(
               v-for='(column, columnIndex) in columnDefs'
-              :style='{"background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
-              :ref='`cell`'
+              v-bind:style='rowDataColor[rowIndex][fieldNames[columnIndex-1]] ? {"border": `1px solid ${rowDataColor[rowIndex][fieldNames[columnIndex-1]]}` } : {}'
+              :ref='`cell${rowIndex}-${columnIndex}`'
               :key='columnIndex'
               :column='column'
               :row='row'
@@ -97,9 +82,12 @@ export default {
     rowDataKey: { type: String, required: true },
     enableFilters: { type: Boolean, default: true },
     pageCount: { type: Number, default: 0 },
-    itemHeight: { type: Number, default: 30 },
+    itemHeight: { type: Number, default: 40 },
     virtualScrollOffset: { type: Number, default: 3 },
     onlyBorder: { type: Boolean, default: true },
+    actualRow: { type: Number, default: 0},
+    actualCol: { type: Number, default: 0},
+    nbLinesFile: { type: Number, default: 0}
   },
   data() {
     return {
@@ -120,9 +108,11 @@ export default {
       visibleRows: [],
       isSelecting: false,
       selStartSelection: [],
+      scrollLeft: null,
     };
   },
-  created() {
+  created() {  
+
     document.addEventListener('keydown', ($event) => {
       if (!this.focused || this.cellEditing.length) {
         return;
@@ -275,6 +265,14 @@ export default {
     },
   },
   methods: {
+    handleScroll(){
+      if(this.$refs.body) {
+        if(this.$refs.body.scrollLeft != this.scrollLeft){
+          this.scrollLeft = this.$refs.body.scrollLeft;
+          this.$emit('remove-boxes');
+        }
+      }
+    },
     addMultRows(val) {
       this.$emit('add-multiple-rows', { rowsToAdd: val });
     },
@@ -333,7 +331,8 @@ export default {
       this.setGridColumnTemplate();
     },
     async selectCell(rowIndex, colIndex, $event) {
-      console.log($event);
+      this.$emit('show-errors', $event, rowIndex, colIndex, this.$refs[`cell${rowIndex}-${colIndex}`][0].$el.getBoundingClientRect());
+
       if (changePending) {
         return;
       }
@@ -575,6 +574,10 @@ export default {
       console.log(event);
       this.$emit('column-operation', event.target.value, column);
     },
+    moveHeaderMenu(column){
+      console.log(this.$refs[column])
+      this.$emit('moveHeaderMenu', this.$refs[column][0].getBoundingClientRect(), column);
+    }
   },
 };
 </script>
@@ -672,8 +675,9 @@ th {
   .header-content {
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: block;
+    display: flex;
     overflow: hidden;
+    width: 100%;
   }
 }
 

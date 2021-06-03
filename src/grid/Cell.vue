@@ -5,7 +5,7 @@ td.cell.noselectx(
   :class='{ selected: !onlyBorder && selected,  "selected-top": selectedTop, "selected-right": selectedRight, "selected-bottom": selectedBottom, "selected-left": selectedLeft, editable, invalid, [column.type || "text"]: true }'
   :title='invalid'
   :style='cellStyle'
-  @click='$emit("click", $event)'
+  @click='clickCell($event)'
   @dblclick='$emit("dblclick", $event)'
   @contextmenu='$emit("contextmenu", $event)'
   @mousedown='$emit("mousedown", $event)'
@@ -146,6 +146,9 @@ export default {
     },
   },
   methods: {
+    clickCell(event){
+      this.$emit("click", event);
+    },
     toto(event){
       var value = event.target.value;
       let valueChanged = true;

@@ -276,3 +276,114 @@
   border: 1px solid black;
   margin-bottom: 20px;
 }
+
+
+.schema-box{
+  padding: 8px;
+  padding-left: 25px;
+  padding-right: 25px;
+  border-radius: 30px;
+  background-color: #F2F2F9;
+  color: #060191;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.title-input{
+  border: 0px;
+  margin-bottom: 10px;
+}
+
+.title-box{
+  border: 2px solid #060191;
+  padding: 8px;
+  margin-left: 20px;
+  cursor: pointer;
+}
+
+.menuBox{
+  background-color: #060191;
+  width: 200px; 
+  position: absolute;
+  z-index: 100;
+  color: white; 
+  border-radius: 3px;
+}
+
+.infoBox{
+  background-color: #060191;
+  padding: 10px;
+  font-size: 14px;
+  width: 400px; 
+  position: absolute;
+  z-index: 100;
+  color: white; 
+  border-radius: 3px;
+}
+
+.errorBox{
+  border: 1px solid #ebebeb;
+  background-color: #F2F2F9;
+  padding: 10px;
+  font-size: 12px;
+  width: 300px; 
+  position: absolute;
+  z-index: 100;
+  color: black; 
+  border-radius: 3px;
+
+}
+
+.menuElement{
+  padding: 10px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.menuIcon{
+  cursor: pointer;
+  text-align: right;
+  flex: 1;
+}
+
+.header-name{
+  flex: 1;
+}
+
+.intermediary{
+  width: auto;
+  flex: 1;
+}
+
+.header-content{
+  display: flex;
+}
+.tableur{
+  border: 1px solid #ebebeb;
+  margin-top: 10px;
+}
+
+
+.infolines{
+  font-size: 10px;
+  padding: 10px;
+}
+
+.addLineButton{
+  padding: 5px;
+  padding-left: 30px;
+  padding-right: 30px;
+  background-color: #F2F2F9;
+  border: 1px solid #F2F2F9;
+  color: black;
+  border: 0px;
+}
+.addColumnButton{
+  margin-top: 10px;
+  height: 100%;
+  padding-left: 15px;
+  padding-right: 15px;
+  background-color: #F2F2F9;
+  color: black;
+  border: 0px;
+}

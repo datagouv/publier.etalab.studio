@@ -1,90 +1,125 @@
 <template>
-<div>
-    <div ref="test">
-      <div style="margin-left: 20px">
-          <!--<button
-            style="margin-right: 20px"
-            @click="addEmptyRow()"
-            type="submit"
-            class="rf-btn-light"
-          >
-            Ajouter une ligne
-          </button>-->
-          <button
-            style="margin-right: 20px"
-            class="rf-btn-light"
-            @click="csvLinkData"
-          >
-            Télécharger le CSV
-          </button>
-          <button
-            style="margin-right: 20px"
-            @click="submit()"
-            type="submit"
-            class="rf-btn"
-          >
-            Valider le fichier
-          </button>
+<div @click="clickPage()">
+    <div v-if="displayMenuBox" class="menuBox" :style="`top: ${topDiv}px; left: ${leftDiv}px;`">
+      <div class="menuElement" @click="columnOperation('info')">
+        <img src="../static/images/info-button-white.png" width="15" />
+        &nbsp;&nbsp;
+        Informations
       </div>
-      <br />
-      <span style="margin-left: 20px">ligne {{ rowIndex }}, colonne {{ colIndex }}</span>
-      <br/>
-      <span style="margin-left: 20px"><i>* champs obligatoire</i></span>
-      <div style="overflow-y: scroll; height:500px;">
-          <vue-editable-grid
-              class="grid"
-              ref="grid"
-              id="mygrid"
-              :column-defs="columnDefs"
-              :row-data="rows"
-              :row-data-color="rowsColor"
-              :field-names="fieldNames"
-              row-data-key='id'
-              @cell-updated="cellUpdated"
-              @row-selected="rowSelected"
-              @link-clicked="linkClicked"
-              @context-menu="contextMenu"
-              @add-empty-row='addEmptyRow'
-              @maybe-add-row='maybeAddRow'
-              @add-multiple-rows='addMultipleRows'
-              @column-operation='columnOperation'
-              >
-              <template v-slot:header-r>
-                <div style="padding-right: 5px;">
-                  <button class="table-buttons" @click="addEmptyRow()">Ajouter une ligne</button>
-                </div>
-                <div style="padding-right: 5px;">
-                  <button
-                    @click="showModal2()"
-                    class="table-buttons"
-                  >
-                    Ajouter une colonne
-                  </button>
-                </div>
-                <div style="padding-right: 5px;">
-                  <button class="table-buttons" @click="reinitRows()">Réinitialiser le tableur</button>
-                </div>
-                <div style="padding-right: 5px;">
-                 <button class="table-buttons">Nombre de lignes : {{ realRowsIds.length }}</button>
-                </div>
-              </template>
-          </vue-editable-grid>
+      <div class="menuElement" @click="columnOperation('rename')">
+        <img src="../static/images/edit-white.png" width="15" />
+        &nbsp;&nbsp;
+        Renommer
       </div>
+      <div class="menuElement" @click="columnOperation('remove')">
+        <img src="../static/images/trash-white.png" width="15" />
+        &nbsp;&nbsp;
+        Supprimer
+      </div>
+    </div>
+
+    <div v-if="displayInfoBox" class="infoBox" :style="`top: ${topDiv}px; left: ${leftDiv}px;`">
+      <p>Description :</p>
+      <p><i>{{ messageInfo }}</i></p>
+      <p>Exemple(s) : {{ exempleInfo }}</p>
+    </div>
+
+    <div v-if="displayErrorBox" class="errorBox" :style="`top: ${topDivError}px; left: ${leftDivError}px;`">
+        <p style="font-size: 14px;">Oups, une erreur !</p>
+        <p v-if="warningInfo != ''">{{ warningInfo }}</p>
+        <p v-if="errorInfo != null & errorInfo != ''">
+          Message d'erreur :
+          <br />
+          <b><i>{{ errorInfo }}</i></b>
+          <br />
+          <br />
+          Exemple(s) :
+          <br />
+          <b><i>{{ exempleInfo }}</i></b>
+        </p>
+    </div>
+
+    <div class="rf-container">
+      <p style="font-size: 14px; cursor: pointer;">
+        <a @click="gotoHomePage()" >Accueil</a>
+        &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+        <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+        &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+        Tableur
+      </p>
       <div>
-          <div
-            style="min-height: 180px;"
-            class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w"
-          >
-            <p>{{ messageInfo }}</p>
-            <p>{{ exempleInfo }}</p>
-            <p v-if="warningInfo != ''" class='warningInfo'>{{ warningInfo }}</p>
-            <p
-              v-if="errorInfo != null & errorInfo != ''"
-              class='errorInfo'
-            >
-              Message d'erreur : {{ errorInfo }}
-            </p>
+        <input
+          v-model="filename"
+          class="title-page title-input"
+          :placeholder="filename"
+          id="filename-input"
+          name="filename-input"
+          style="font-size: 35px;"
+          onkeypress="this.style.width = ((this.value.length + 1) * 18) + 'px';"
+        >
+        <span @click="csvLinkData" class="title-box"><img src="../static/images/download-blue.png" width="20" /></span>
+        <span  @click="reinitRows()" class="title-box"><img src="../static/images/trash.png" width="20" /></span>
+        <br />
+        <div style="display: flex;">
+          <div style="flex: 1;">
+            <span @click="btnDocClick()" class="schema-box">
+              <img src="../static/images/foreign-blue.png" width="10" />
+              &nbsp;&nbsp;
+              {{ this.schema.title }}
+            </span>
           </div>
+          <div style="flex: 1; text-align: right;">
+            <button
+              style="margin-right: 20px"
+              @click="submit()"
+              type="submit"
+              class="rf-btn"
+            >
+              Vérifier le fichier
+              &nbsp;
+              <img src="../static/images/gauge.png" width="30" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div ref="test">
+      <div style="width: 94%; margin-left: 3%; margin-right: 3%; height:1100px;">
+        <div style="width: 97%; float: left;">
+          <div class="tableur" style="overflow-y: scroll; height:1000px;">
+            <vue-editable-grid
+                class="grid"
+                ref="grid"
+                id="mygrid"
+                :column-defs="columnDefs"
+                :actualCol="colIndex"
+                :actualRow="rowIndex"
+                :nbLinesFile="realRowsIds.length"
+                :row-data="rows"
+                :row-data-color="rowsColor"
+                :field-names="fieldNames"
+                row-data-key='id'
+                @cell-updated="cellUpdated"
+                @row-selected="rowSelected"
+                @link-clicked="linkClicked"
+                @context-menu="contextMenu"
+                @add-empty-row='addEmptyRow'
+                @maybe-add-row='maybeAddRow'
+                @add-multiple-rows='addMultipleRows'
+                @column-operation='columnOperation'
+                @moveHeaderMenu='moveHeaderMenu'
+                @show-errors='showErrors'
+                @remove-boxes='removeBoxes'
+                >
+            </vue-editable-grid>
+          </div>
+          <div>
+            <b-button @click="addEmptyRow()" :style="`width: ${widthPlus}px;`" class="addLineButton">+</b-button>
+          </div>
+        </div>
+        <div style="width: 3%; height: 1000px; float: left;">
+          <b-button @click="showModal2()" class="addColumnButton">+</b-button>
+        </div>
       </div>
     </div>
 
@@ -174,18 +209,53 @@
           :reportJson="reportJson"
         ></error-report>
 
-        <div v-if="!publicationReady" ref="test">
-          <div style="margin-left: 20px">
-            <button
-              style="margin-right: 20px"
-              class="rf-btn"
-              v-if="publicationButtons"
-              @click="showPublishForm()"
-            >
-              Publier sur data.gouv.fr
-            </button>
-          </div>
-        </div>
+            <div v-if="!publicationReady" :class="validBox ? 'valid-box' : 'invalid-box'">
+              <div class="infobox-title">
+                <span v-if="validBox">
+                  <img src="../static/images/checked.png" width="20" />
+                </span>
+                <span v-if="!validBox">
+                  <img src="../static/images/warning-black.png" width="20" />
+                </span>
+                &nbsp;
+                {{ reportValidStatus }}
+              </div>
+              <div class="infobox-content">
+                <div v-if="infoboxType != 1">
+                  {{ infoboxContent }}
+                  <br /><br />
+                </div>
+                <b-button @click="showReport = true" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
+                  Voir le rapport d'erreur
+                  &nbsp;
+                  <img src="../static/images/align-left.png" width="15" />
+                </b-button>
+                <b-button @click="publicationReady = true" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
+                  Publier sur data.gouv.fr
+                  &nbsp;
+                  <img src="../static/images/link.png" width="15" />
+                </b-button>
+                <b-button @click="btnDocClick()" v-if="infoboxType == 4 || infoboxType == 5" class="infobox-button">
+                  Lire la documentation liée au schéma
+                  &nbsp;
+                  <img src="../static/images/foreign.png" width="15" />
+                </b-button>
+                <error-report v-if="showReport"
+                  :report="report"
+                  :reportValidStatus="reportValidStatus"
+                  :badgeUrl="badgeUrl"
+                  :reportErrorInfo="reportErrorInfo"
+                  :reportStructureErrors="reportStructureErrors"
+                  :reportGeneralErrors="reportGeneralErrors"
+                  :reportContentErrors="reportContentErrors"
+                  :reportRecos="reportRecos"
+                  :reportJson="reportJson"
+                  :validBox="validBox"
+                  :infoboxType="infoboxType"
+                  :editButtonTitle="editButtonTitle"
+                ></error-report>
+              </div>
+            </div>
 
 
         <div class="rf-container rf-pb-1w rf-pt-2w" v-if="publicationReady & !publicationOK">
@@ -325,9 +395,9 @@ export default {
       toRemove: 0,
       messageInfo: 'Veuillez sélectionner une cellule',
       exempleInfo: '',
-      warningInfo: '',
+      warningInfo: null,
       validInfo: '',
-      errorInfo: '',
+      errorInfo: null,
       publicationReady: false,
       publicationButtons: false,
       publicationOK: false,
@@ -340,6 +410,27 @@ export default {
       columnModalP: "",
       shouldRenameColumn: false,
       oldColumnName: "",
+      filename: "Monfichier.csv",
+      topDiv: "200",
+      leftDiv: "200",
+      menuSelected: false,
+      displayMenuBox: false,
+      operationHeaderColumn: null,
+      infoSelected: false,
+      displayInfoBox: false,
+      displayErrorBox: false,
+      errorSelected: false,
+      topDivError: "200",
+      leftDivError: "200",
+      widthPlus: "400",
+      validBox: true,
+      infoboxTitle: 'Bravo ! Votre fichier est parfaitement conforme.',
+      infoboxContent: '',
+      infoboxType: 1,
+      editButtonTitle: 'Prévisualiser le fichier',
+      editButtonImg: 'checked.png',
+      showReport: false,
+      showInfobox: false,
     };
   },
   watch: {
@@ -358,13 +449,20 @@ export default {
         this.saveRows()
       }, 5000)
 
+    this.widthPlus = this.$refs.grid.$el.offsetWidth.toString();
   },
   computed: {
     ongoingData() {
       return this.$store.state.data;
     },
   },
+  created() {
+    window.addEventListener('scroll', this.handleScroll);
+  },
   methods: {
+    handleScroll () {
+      this.scrolled = window.scrollY > 0;
+    },
     maybeAddRow($event){
       if ($event.rowIndex === (this.rows.length - 1)) {
         this.addEmptyRow()
@@ -584,6 +682,7 @@ export default {
 
       this.reportValidStatus = null;
       this.reportStructureErrors = [];
+      this.reportGeneralErrors = [];
       this.reportContentErrors = [];
       this.reportRecos = [];
       this.reportErrorInfo = null;
@@ -628,8 +727,8 @@ export default {
               // eslint-disable-next-line no-bitwise
               if (error.code === 'type-error' | error.code === 'constraint-error') {
                 this.rowsError[error.rowNumber - 1][error.fieldName] = error.name;
-                this.rowsColor[error.rowNumber - 1][error.fieldName] = '#FF0000';
-                this.$refs.grid.selectCell(error.rowNumber - 1, 1);
+                this.rowsColor[error.rowNumber - 1][error.fieldName] = '#F4CDA4';
+                this.$refs.grid.selectCell(this.rowIndex-1, this.colIndex);
               }
             });
           } else {
@@ -701,9 +800,9 @@ export default {
       }
     },
     rowSelected($event) {
-
+      
       if ($event.colIndex) this.colIndex = $event.colIndex;
-      if ($event.rowIndex) this.rowIndex = $event.rowIndex;
+      if ($event.rowIndex != null) this.rowIndex = $event.rowIndex+1;
       this.selectedRow = $event.rowData;
 
       if (this.schema.fields) {
@@ -711,7 +810,7 @@ export default {
           if ($event.colData) {
             if (field.name === $event.colData.field) {
               this.messageInfo = field.description;
-              this.exempleInfo = `Exemple : ${field.example}`;
+              this.exempleInfo = `${field.example}`;
             }
           }
         });
@@ -925,33 +1024,43 @@ export default {
     hideModal4() {
       this.$refs.modal4.hide();
     },
-    columnOperation(type,column) {
+    columnOperation(type) {
+      var column = this.operationHeaderColumn;
       if(type != "default") {
         var mandatory = false;
-        this.schema.fields.forEach((schema) => {
-          if(schema.name == column) {
+        var desc = "";
+        var example = "";
+        this.schema.fields.forEach((field) => {
+          if(field.name == column) {
             mandatory = true;
+            desc = field.description;
+            example = field.example;
           }
         });
-        if(type == "renommer") {
+        if(type == "rename") {
           this.columnModalHeader = "Renommer une colonne"
-        } else if(type == "supprimer") {
+        } else if(type == "remove") {
           this.columnModalHeader = "Supprimer une colonne"
+        } else if(type == "info") {
+          this.infoSelected = true;
+          this.displayInfoBox = true;
+          this.messageInfo = desc;
+          this.exempleInfo = example;
         }
-        if(mandatory){
+        if(mandatory && type != "info"){
           this.columnModalP = "Impossible de "+type+" la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
         } else {
           console.log('ok');
-          if(type == "renommer"){
+          if(type == "rename"){
             this.shouldRenameColumn = true;
             this.oldColumnName = column;
             this.columnModalP = "Renommer le champs \""+column+"\" :"
-          } else if(type == "supprimer") {
+          } else if(type == "remove") {
             this.removeColumn(column);
             this.columnModalP = "La colonne \""+column+"\" a été supprimée."
           }
         }
-        this.showModal4();
+        //this.showModal4();
       }
     },
     removeColumn(column) {
@@ -1020,6 +1129,47 @@ export default {
       });
       this.shouldRenameColumn = false;
       this.newFieldName = "";
+    },
+    btnDocClick() {
+      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+    },
+    moveHeaderMenu(event, column){
+      this.operationHeaderColumn = column;
+      this.menuSelected = true;
+      this.displayMenuBox = true;
+      this.topDiv = window.scrollY+event.y+27;
+      this.leftDiv = event.x-10;
+      console.log(event);
+    },
+    clickPage(){
+      if(!this.menuSelected) this.displayMenuBox = false;
+      this.menuSelected = false;
+      if(!this.infoSelected) this.displayInfoBox = false;
+      this.infoSelected = false;
+      if(!this.errorSelected) this.displayErrorBox = false;
+      this.errorSelected = false;
+    },
+    showErrors(event,row,col,pos){
+      console.log()
+      if(this.rowsError[row][this.columnDefs[col].field]) {
+        this.topDivError = window.scrollY+pos.y+40;
+        this.leftDivError = pos.x;
+        this.errorSelected = true;
+        this.displayErrorBox = true;
+      } else{
+        this.displayErrorBox = false;
+      }
+    },
+    removeBoxes(){
+      this.displayErrorBox = false;
+      this.displayInfoBox = false;
+      this.displayMenuBox = false;
+    },
+    test(){
+      console.log(this.$refs.grid.$el.offsetWidth)
+    },
+    gotoSelectPage() {
+      this.$router.push('/select?schema='+this.schemaName);
     },
   },
 };
