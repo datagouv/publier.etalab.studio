@@ -2,53 +2,82 @@
     <div style="min-height: 500px" >
 
         <div v-if="schema && !publicationReady" class="rf-container rf-pb-6w rf-pt-2w">
-            <h3>{{ schema.title }} - Chargement des données</h3>
-            <br />
+            <p style="font-size: 14px; cursor: pointer;">
+              <a @click="gotoHomePage()" >Accueil</a>
+              &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+              <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+              &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+              Chargement des données
+            </p>
+            <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
+            <label for="file"><img src="../static/images/upload.png" width="40" /><br /><br />Charger votre fichier</label>
 
-            <div class="large-12 medium-12 small-12 cell">
-                <label>Veuillez charger votre fichier :
-                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-                </label>
-                <br/><br/>
+            <div v-if="showInfobox" :class="validBox ? 'valid-box' : 'invalid-box'">
+              <div class="infobox-title">
+                <span v-if="validBox">
+                  <img src="../static/images/checked.png" width="20" />
+                </span>
+                <span v-if="!validBox">
+                  <img src="../static/images/warning-black.png" width="20" />
+                </span>
+                &nbsp;
+                {{ reportValidStatus }}
+              </div>
+              <div class="infobox-content">
+                <div v-if="infoboxType != 1">
+                  {{ infoboxContent }}
+                  <br /><br />
+                </div>
+                <b-button @click="editFile()" v-if="(infoboxType == 1 || infoboxType == 2 || infoboxType == 3) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
+                  {{ editButtonTitle }}
+                  &nbsp;
+                  <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/view.png" width="20" />
+                  <img v-if="infoboxType == 3" src="../static/images/pen.png" width="20" />
+                </b-button>
+                <b-button @click="showReport = true" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
+                  Voir le rapport d'erreur
+                  &nbsp;
+                  <img src="../static/images/align-left.png" width="15" />
+                </b-button>
+                <b-button @click="publicationReady = true" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
+                  Publier sur data.gouv.fr
+                  &nbsp;
+                  <img src="../static/images/link.png" width="15" />
+                </b-button>
+                <b-button @click="btnDocClick()" v-if="infoboxType == 4 || infoboxType == 5" class="infobox-button">
+                  Lire la documentation liée au schéma
+                  &nbsp;
+                  <img src="../static/images/foreign.png" width="15" />
+                </b-button>
+                <error-report v-if="showReport"
+                  :report="report"
+                  :reportValidStatus="reportValidStatus"
+                  :badgeUrl="badgeUrl"
+                  :reportErrorInfo="reportErrorInfo"
+                  :reportStructureErrors="reportStructureErrors"
+                  :reportGeneralErrors="reportGeneralErrors"
+                  :reportContentErrors="reportContentErrors"
+                  :reportRecos="reportRecos"
+                  :reportJson="reportJson"
+                  :validBox="validBox"
+                  :infoboxType="infoboxType"
+                  :editButtonTitle="editButtonTitle"
+                ></error-report>
+              </div>
             </div>
-            <br/>
-            <br/>
-            <error-report
-              :report="report"
-              :reportValidStatus="reportValidStatus"
-              :badgeUrl="badgeUrl"
-              :reportErrorInfo="reportErrorInfo"
-              :reportStructureErrors="reportStructureErrors"
-              :reportContentErrors="reportContentErrors"
-              :reportRecos="reportRecos"
-              :reportJson="reportJson"
-            ></error-report>
-            <br/><br/>
-            <div v-if="wrongFormat">
-              <p>Le fichier soumis n'est pas au format attendu.</p>
+            <div v-if="this.infoboxType == 4">
+              <br />
+              <p v-if="schema.examples.length > 0">Vous pouvez vous appuyer sur <span v-if="schema.examples.length > 1">les fichiers suivants :</span> <span v-if="schema.examples.length = 1">le fichier suivant :</span></p>
+              <ul v-for="example in schema.examples" v-bind:key="example.title">
+                <li @click="gotoExemple(example.path)" style="cursor: pointer;"><u>{{ example.title }}</u></li>
+              </ul>
             </div>
-            <span v-if="this.schema.schema_type == 'tableschema' && this.file && !this.wrongFormat">
-              <button
-                type="submit"
-                style="margin-right: 20px"
-                class="rf-btn-light"
-                title="Editer le fichier"
-                @click="editFile()"
-              >
-                Editer ce fichier
-              </button>
-            </span>
-            <span v-if="publication">
-                <button
-                  type="submit"
-                  style="margin-right: 20px"
-                  class="rf-btn"
-                  title="Publier sur datagouv"
-                  @click="publicationForm()"
-                >
-                  {{ publicationMessage }}
-                </button>
-            </span>
+            <div v-if="(this.infoboxType == 3 || this.infoboxType == 4 || this.infoboxType == 5) && this.schema.contact && this.schema.contact != ''">
+              <p>
+                En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
+                <a :href="'mailto:'+this.schema.contact">{{ this.schema.contact }}</a>
+              </p>
+            </div>
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
@@ -161,6 +190,14 @@ export default {
       linkDgv: '',
       contentFile: '',
       wrongFormat:false,
+      infoboxTitle: 'Bravo ! Votre fichier est parfaitement conforme.',
+      infoboxContent: '',
+      infoboxType: 1,
+      editButtonTitle: 'Prévisualiser le fichier',
+      editButtonImg: 'checked.png',
+      validBox: true,
+      showReport: false,
+      showInfobox: false,
     };
   },
   computed: {
@@ -169,6 +206,9 @@ export default {
   },
   methods: {
     handleFileUpload() {
+      this.showInfobox = true;
+      this.showReport = false;
+      this.editButtonTitle = 'Prévisualiser le fichier'
       this.wrongFormat = false;
       this.file = this.$refs.file.files[0];
       this.report = null;
@@ -180,9 +220,11 @@ export default {
 
       this.reportValidStatus = null;
       this.reportStructureErrors = [];
+      this.reportGeneralErrors = [];
       this.reportContentErrors = [];
       this.reportRecos = [];
       this.reportErrorInfo = null;
+
 
       if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['name'].includes('.csv')) {
         // eslint-disable-next-line prefer-destructuring
@@ -228,6 +270,14 @@ export default {
         
       } else {
         this.wrongFormat = true;
+        this.reportValidStatus = 'Votre fichier n\'est pas au format attendu.';
+        if(this.schema.schema_type == 'tableschema'){
+          this.infoboxContent = 'Le fichier que vous venez de charger n\'est pas au format CSV. Le format CSV est le format obligatoire pour ce type de données.'
+        }
+        if(this.schema.schema_type =='jsonschema'){
+          this.infoboxContent = 'Le fichier que venez de charger n\'est pas au format JSON. Le format JSON est le format obligatoire pour ce type de données.'
+        }
+        this.infoboxType = 5;
       }
     },
     publicationForm() {
@@ -286,6 +336,18 @@ export default {
       }
       reader.readAsText(this.$refs.file.files[0]);
 
+    },
+    gotoHomePage() {
+      this.$router.push('/');
+    },
+    gotoSelectPage() {
+      this.$router.push('/select?schema='+this.schemaName);
+    },
+    btnDocClick() {
+      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+    },
+    gotoExemple(url){
+      window.open(url)
     }
   },
   mounted() {

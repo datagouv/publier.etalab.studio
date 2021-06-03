@@ -130,8 +130,8 @@
 }
 
 .sub-title{
-  padding-top: 30px;
-  font-size: 20px;
+  padding-top: 28px;
+  font-size: 19px;
   font-weight: normal;
   width: 100%;
 }
@@ -159,7 +159,7 @@
 
 .subtitle-page{
   font-weight: bold;
-  font-size: 35px;
+  font-size: 30px;
 }
 
 .banner-title-background{
@@ -168,30 +168,31 @@
 }
 
 .infobox{
-  border: 2px solid #F8E473;
-  background-color: #FFFEF9;
+  background-color: #F2F2F9;
   border-radius: 5px;
   padding: 20px;
 }
 .infobox-title{
   line-height: 40px;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: bold;
   padding-bottom: 15px;
 }
 
 .infobox-content{
-  padding-left: 35px;
 }
 
 .infobox-content-item{
   margin-bottom: 15px;
+  font-size: 15px;
   cursor: pointer;
   text-decoration: none;
 }
 
 .choice-no-selected{
   padding: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
   margin-right: 20px; 
   border-radius: 30px;
   background-color: #F9F8F6;
@@ -199,6 +200,8 @@
 }
 .choice-selected{
   padding: 15px;
+  padding-left: 25px;
+  padding-right: 25px;
   margin-right: 20px; 
   border-radius: 30px;
   background-color: #F2F2F9;
@@ -206,5 +209,70 @@
   cursor: pointer;
 }
 .choice-box{
-  font-size: 20px;
+  font-size: 16px;
+}
+
+.inputfile {
+	width: 0.1px;
+	height: 0.1px;
+	opacity: 0;
+	overflow: hidden;
+	position: absolute;
+	z-index: -1;
+}
+
+.inputfile + label {
+  width: 100%;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  height: 200px;
+  padding-top: 50px;
+  padding: auto;
+  color: black;
+  background-color: #F9F8F6;
+  display: inline-block;
+  text-align: center;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
+}
+
+
+
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: #F2F2F9;
+}
+
+
+
+.valid-box{
+  border: 2px solid #5FAF95;
+  background-color: #F9FFFC;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+
+.invalid-box{
+  border: 2px solid #F4CDA4;
+  background-color: #FEFBF8;
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.infobox-button{
+  border: 1px solid black;
+  border-radius: 0px;
+  background-color: transparent;
+  color: black;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.vsa-item__trigger{
+  background-color: transparent;
+  border: 1px solid black;
+  margin-bottom: 20px;
 }
