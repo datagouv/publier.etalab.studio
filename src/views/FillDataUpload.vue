@@ -9,7 +9,6 @@
               &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
               Chargement des données
             </p>
-
             <p class="title-page">Vérifier un fichier existant</p>
             <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
             <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
