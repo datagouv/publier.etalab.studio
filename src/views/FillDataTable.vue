@@ -261,6 +261,7 @@
         <div class="rf-container rf-pb-1w rf-pt-2w" v-if="publicationReady & !publicationOK">
             <publish-form-upload
                 v-model="dataToPublish"
+                :filename="filename"
                 :schemaName="schemaName"
                 :organizations="userOrganizations"
                 :publicationIntro="publicationIntro"
@@ -615,11 +616,15 @@ export default {
       });
       if(notEmpty) {
         this.fieldNames.forEach((field) => {
+          var fi = line[field];
+          if(fi == null){
+            fi = ''
+          }
           if (cpt === 0) {
-            linecsv = `"${line[field]}"`;
+            linecsv = `"${fi}"`;
             cpt = 1;
           } else {
-            linecsv = `${linecsv},"${line[field]}"`;
+            linecsv = `${linecsv},"${fi}"`;
           }
         });
       }
@@ -778,6 +783,7 @@ export default {
       // Reinit color once change
       if($event.column.field in this.rowsColor[$event.rowIndex]) {
         delete this.rowsColor[$event.rowIndex][$event.column.field];
+        delete this.rowsError[$event.rowIndex][$event.column.field];
       }
       console.log('edit')
       
@@ -1060,7 +1066,7 @@ export default {
             this.columnModalP = "La colonne \""+column+"\" a été supprimée."
           }
         }
-        //this.showModal4();
+        if(type != 'info') this.showModal4();
       }
     },
     removeColumn(column) {

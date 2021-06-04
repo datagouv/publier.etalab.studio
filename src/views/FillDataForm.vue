@@ -110,6 +110,7 @@
     <div>
       <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
         <publish-form-upload
+            :filename="filename"
             v-model="dataToPublish"
             :schemaName="schemaName"
             :organizations="userOrganizations"
@@ -216,6 +217,7 @@ export default {
       publicationOK: false,
       publicationReady: false,
       dataToPublish: {},
+      filename: 'Monfichier.csv',
     };
   },
   watch: {

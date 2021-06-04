@@ -188,7 +188,6 @@
           v-model="form.resource.title"
           v-on:input="onChange"
           :trim="true"
-          placeholder="data.csv"
         ></b-form-input>
       </b-form-group>
       <p class="text-muted">
@@ -206,6 +205,7 @@ export default {
     schemaName: String,
     organizations: Array,
     publicationIntro: String,
+    filename: String,
     value: {
       type: undefined,
       required: true,
@@ -272,6 +272,7 @@ export default {
   },
   methods: {
     onChange() {
+      this.form.resource.title = this.filename;
       // eslint-disable-next-line prefer-destructuring
       const okState = this.okState;
       if (this.form.org !== '') {
@@ -289,7 +290,7 @@ export default {
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
           this.typeResPicked = '';
-          this.form.resource.title = '';
+          this.form.resource.title = this.filename;
           this.form.existingResource = '';
           this.editResShow = false;
         }
@@ -302,7 +303,7 @@ export default {
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
           this.typeResPicked = '';
-          this.form.resource.title = '';
+          this.form.resource.title = this.filename;
           this.form.existingResource = '';
           this.editResShow = false;
         }
@@ -312,7 +313,7 @@ export default {
       this.form.org = '';
       this.form.dataset.title = '';
       this.form.dataset.description = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.form.existingDataset = '';
       this.editJDDShow = false;
       this.newJDDShow = false;
@@ -336,9 +337,9 @@ export default {
     radioclickJDD(type) {
       this.form.dataset.title = '';
       this.form.dataset.description = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.form.existingDataset = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.typeResPicked = '';
       this.form.existingResource = '';
       this.editResShow = false;
@@ -357,7 +358,7 @@ export default {
       }
     },
     radioclickRes(type) {
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.typeResPicked = '';
       this.form.existingResource = '';
       if (type === 'existing') {
