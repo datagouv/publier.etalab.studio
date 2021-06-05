@@ -521,7 +521,8 @@ export default {
             }
           } else if (field.type === 'date') {
             
-            myobj.type = 'date';
+            //myobj.type = 'date';
+            myobj.type = 'string';
             //myobj.format = defaultDateTimeFormat;
             var dateFormat = 'yyyy-MM-dd'
             if (field.format) {
@@ -1176,6 +1177,9 @@ export default {
     },
     gotoSelectPage() {
       this.$router.push('/select?schema='+this.schemaName);
+    },
+    gotoHomePage() {
+      this.$router.push('/');
     },
   },
 };

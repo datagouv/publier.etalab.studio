@@ -27,7 +27,7 @@ div.vue-editable-grid
           tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
             cell(
               v-for='(column, columnIndex) in columnDefs'
-              v-bind:style='rowDataColor[rowIndex][fieldNames[columnIndex-1]] ? {"border": `1px solid ${rowDataColor[rowIndex][fieldNames[columnIndex-1]]}` } : {}'
+              v-bind:style='rowDataColor[rowIndex][fieldNames[columnIndex-1]] ? {"border": `2px solid ${rowDataColor[rowIndex][fieldNames[columnIndex-1]]}`, "border-collapse": "collapse" } : {}'
               :ref='`cell${rowIndex}-${columnIndex}`'
               :key='columnIndex'
               :column='column'

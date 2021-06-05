@@ -5,6 +5,8 @@ export const currencyFormatter = new Intl.NumberFormat('en-US', { style: 'curren
 export const percentFormatter = new Intl.NumberFormat('en-US', { style: 'percent', minimumFractionDigits: 2, maximumFractionDigits: 2 });
 export const numericFormatter = new Intl.NumberFormat('en-US', {});
 
+import moment from 'moment';
+
 export const checkFocus = (element, func) => {
   let isFocused = null;
   document.addEventListener('click', (event) => {
@@ -26,7 +28,10 @@ export const checkFocus = (element, func) => {
   });
 };
 
-
+function isValidDate(dateString) {
+  var regEx = /^\d{4}-\d{2}-\d{2}$/;
+  return dateString.match(regEx) != null;
+}
 
 export const cellValueParser = (column, row, value, fromInput) => {
   //console.log(column, row, value, fromInput)
@@ -47,7 +52,10 @@ export const cellValueParser = (column, row, value, fromInput) => {
         value = format(valueDate, column.format);
       } else {
         value = valueDate;
+        
       }
+    } else {
+      console.log("no input")
     }
   } else if (column.type === 'datetime') {
     if (fromInput) {
