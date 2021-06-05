@@ -71,31 +71,48 @@ export default {
   data() {
     return {
       schemaName: this.$route.query.schema,
+      schemaUrl: this.$route.query.schema_url,
       schemas: null,
       noDataChoice: true,
+      schema: {}
     };
   },
   mounted() {
     const loader = this.$loading.show();
     fetch(`${SCHEMAS_CATALOG_URL}`).then((r) => r.json()).then((data) => {
       this.schemas = data.schemas;
+      this.schema = this.schemas.find((s) => s.name === this.schemaName);
+      console.log(this.schema);
+      if(!this.schema) {
+        fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
+          console.log(data2);
+          if (data2.$schema && data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json") {
+            console.log(this.schemaUrl);
+            var obj = {}
+            obj['contact'] = '';
+            obj['description'] = '';
+            obj['examples'] = [];
+            obj['name'] = data2.name;
+            obj['schema_type'] = "tableschema";
+            obj['schema_url'] = this.schemaUrl;
+            obj['title'] = data2.title;
+            obj['versions'] = [];
+            this.schema = obj;
+          }
+        });
+      }
     }).finally(() => {
       loader.hide();
     });
   },
   computed: {
-    schema() {
-      if (!this.schemaName) return;
-      if (!this.schemas) return;
-      // eslint-disable-next-line consistent-return
-      return this.schemas.find((s) => s.name === this.schemaName);
-    },
   },
   watch: {
   },
   methods: {
     goto(type) {
-      this.$router.push(`${type}?schema=${this.$route.query.schema}`);
+      if(this.$route.query.schema) this.$router.push(`${type}?schema=${this.$route.query.schema}`);
+      if(this.$route.query.schema_url) this.$router.push(`${type}?schema_url=${this.$route.query.schema_url}`);
     },
     gotoHomePage() {
       this.$router.push('/');

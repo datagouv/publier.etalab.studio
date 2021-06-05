@@ -13,6 +13,7 @@ export default {
   data() {
     return {
       schemaName: this.$route.query.schema,
+      schemaUrl: this.$route.query.schema_url,
       fieldNames: [],
       schemas: null,
       options: [],
@@ -34,7 +35,27 @@ export default {
         text: s.title || s.name 
       }));
       this.schema = this.schemas.find((s) => s.name === this.schemaName);
-      this.schemaMeta = this.schema;
+      console.log(this.schema);
+      if(!this.schema) {
+        fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
+          console.log(data2);
+          if (data2.$schema && data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json") {
+            console.log(this.schemaUrl);
+            var obj = {}
+            obj['contact'] = '';
+            obj['description'] = '';
+            obj['examples'] = [];
+            obj['name'] = data2.name;
+            obj['schema_type'] = "tableschema";
+            obj['schema_url'] = this.schemaUrl;
+            obj['title'] = data2.title;
+            obj['versions'] = [];
+            this.schema = obj;
+            this.schemaMeta = this.schema;
+          }
+        });
+      }
+      if(this.schema) this.schemaMeta = this.schema;
     }).finally(() => {
       loader.hide();
     });

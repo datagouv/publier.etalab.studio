@@ -279,8 +279,8 @@
                             class="rf-select"
                         >
                             <b-form-select-option disabled value="">Sélectionner un type de contrainte...</b-form-select-option>
-                            <b-form-select-option value="true">Oui</b-form-select-option>
-                            <b-form-select-option value="false">Non</b-form-select-option>
+                            <b-form-select-option :value="true">Oui</b-form-select-option>
+                            <b-form-select-option :value="false">Non</b-form-select-option>
                         </b-form-select>
                         <br />
                     </b-form-group>
