@@ -28,9 +28,18 @@
     </div>
 
     <div v-if="displayInfoBox" class="infoBox" :style="`top: ${topDiv}px; left: ${leftDiv}px;`">
-      <p>Description :</p>
-      <p><i>{{ messageInfo }}</i></p>
-      <p>Exemple(s) : {{ exempleInfo }}</p>
+      <span v-if="displayInformations && messageInfo != ''">
+        <p>Description :</p>
+        <p><i>{{ messageInfo }}</i></p>
+        <p>Exemple(s) : {{ exempleInfo }}</p>
+      </span>      
+      <span v-if="displayInformations && messageInfo == ''">
+        <p>Vous avez ajouté cette colonne.</p>
+        <p>Pas d'informations</p>
+      </span>
+      <span v-if="displayRename || displayRemove">
+        {{ this.columnModalP }}
+      </span>
     </div>
 
     <div v-if="displayErrorBox" class="errorBox" :style="`top: ${topDivError}px; left: ${leftDivError}px;`">
@@ -112,6 +121,7 @@
                 @moveHeaderMenu='moveHeaderMenu'
                 @show-errors='showErrors'
                 @remove-boxes='removeBoxes'
+                @rename-field='renameField'
                 >
             </vue-editable-grid>
           </div>
@@ -120,52 +130,17 @@
           </div>
         </div>
         <div style="width: 3%; height: 1000px; float: left;">
-          <b-button @click="showModal2()" class="addColumnButton">+</b-button>
+          <b-button @click="addNewField()" class="addColumnButton">+</b-button>
         </div>
       </div>
     </div>
-
-
-
-    <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
-      ref="modal2"
-      id="modal2"
-      hide-footer
-      title="Ajouter une colonne"
-    >
-      <div>
-        <p>Attention, ajouter une colonne sur un type de donnée bien défini aura pour conséquence de ne pas avoir un fichier parfaitement conforme en terme de qualité. Cependant, l'ajout de colonnes supplémentaires est toléré.</p>
-
-        <p>Si vous souhaitez toujours ajouter une colonne, merci de renseigner son nom ici :</p>
-
-        <input
-          v-model="newFieldName"
-          class="rf-input"
-          placeholder="Entrer le nom du champs"
-          type="search" id="new-fieldname-input"
-          name="new-fieldname-input"
-        >
-        <br/>
-        <div style="text-align: center;">
-          <button
-            style="margin-right: 20px;"
-            @click="addNewField()"
-            type="submit"
-            class="rf-btn"
-          >
-            Ajouter une colonne
-          </button>
-        </div>
-      </div>
-    </b-modal>
 
     <b-modal
       class="rf-container rf-pb-6w rf-pt-2w"
       ref="modal3"
       id="modal3"
       hide-footer
-      title="Rapport de validation"
+      :title="titleVerificationModal"
     >
       <div>
         <br />
@@ -203,7 +178,7 @@
                   &nbsp;
                   <img src="../static/images/align-left.png" width="15" />
                 </b-button>
-                <b-button @click="publicationReady = true" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
+                <b-button @click="publicationReady = true; titleVerificationModal = 'Publier vos données sur data.gouv.fr'" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
                   Publier sur data.gouv.fr
                   &nbsp;
                   <img src="../static/images/link.png" width="15" />
@@ -374,6 +349,7 @@ export default {
           headerName: '',
           size: '40px',
           type: 'supp',
+          rename: false,
         },
       ],
       emptyRow: {},
@@ -410,6 +386,9 @@ export default {
       operationHeaderColumn: null,
       infoSelected: false,
       displayInfoBox: false,
+      displayRename: false,
+      displayRemove: false,
+      displayInformations: false,
       displayErrorBox: false,
       errorSelected: false,
       topDivError: "200",
@@ -466,26 +445,25 @@ export default {
       }
     },
     addNewField() {
-        this.fieldNames.push(this.newFieldName);
+        var new_name = "nouvelle_colonne_"+this.columnDefs.length.toString()
+        this.fieldNames.push(new_name);
         const myobj = {};
         myobj.sortable = false;
         myobj.filter = true;
-        myobj.field = this.newFieldName;
-        myobj.headerName = this.newFieldName;
+        myobj.field = new_name;
+        myobj.headerName = new_name;
         myobj.editable = true;
         myobj.optional = true;
-        var lenCharacter = this.newFieldName.length*10+70
-        myobj.size = lenCharacter.toString()+"px";
+        myobj.rename = false;
+        var lenCharacter = new_name.length*10+70
+        myobj.size = (lenCharacter+100).toString()+"px";
 
-        this.emptyRow[this.newFieldName] = '';
-        this.emptyRowInfo[this.newFieldName] = '';
-        this.emptyRowError[this.newFieldName] = '';
+        this.emptyRow[new_name] = '';
+        this.emptyRowInfo[new_name] = '';
+        this.emptyRowError[new_name] = '';
 
         this.columnDefs.push(myobj);
-
-        this.hideModal2();
-        this.newFieldName = '';
-
+        
     },
     buildForm() {
       const loader = this.$loading.show();
@@ -576,8 +554,8 @@ export default {
                 rowNb++;
               });
               
-              for(var k = 0; k < this.ongoingData.fileRows.length ; k++) {
-                this.realRowsIds.push(this.rows[k]['idRowVEG'])
+              for(var l = 0; l < this.ongoingData.fileRows.length ; l++) {
+                this.realRowsIds.push(this.rows[l]['idRowVEG'])
                 this.realRowsIds = [...new Set(this.realRowsIds)];
               }
 
@@ -994,6 +972,7 @@ export default {
           headerName: '',
           size: '40px',
           type: 'supp',
+          rename: false,
         },
       ];
       this.rows = [];
@@ -1003,12 +982,6 @@ export default {
       this.fieldNames = [];
       this.realRowsIds = [];
       this.buildForm();
-    },
-    showModal2() {
-      this.$refs.modal2.show();
-    },
-    hideModal2() {
-      this.$refs.modal2.hide();
     },
     showModal3() {
       this.$refs.modal3.show();
@@ -1023,6 +996,9 @@ export default {
       this.$refs.modal4.hide();
     },
     columnOperation(type) {
+      this.displayRename = false;
+      this.displayRemove = false;
+      this.displayInformations = false;
       var column = this.operationHeaderColumn;
       if(type != "default") {
         var mandatory = false;
@@ -1037,28 +1013,40 @@ export default {
         });
         if(type == "rename") {
           this.columnModalHeader = "Renommer une colonne"
+          this.displayInfoBox = true;
+          this.displayRename = true;
+          this.infoSelected = true;
+          this.columnModalP = "Impossible de renommer la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
         } else if(type == "remove") {
+          this.columnModalP = "Impossible de supprimer la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
           this.columnModalHeader = "Supprimer une colonne"
+          this.displayInfoBox = true;
+          this.displayRemove = true;
+          this.infoSelected = true;
         } else if(type == "info") {
           this.infoSelected = true;
           this.displayInfoBox = true;
+          this.displayInformations = true;
           this.messageInfo = desc;
           this.exempleInfo = example;
         }
-        if(mandatory && type != "info"){
-          this.columnModalP = "Impossible de "+type+" la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
-        } else {
-          console.log('ok');
+        if(!mandatory){
           if(type == "rename"){
             this.shouldRenameColumn = true;
             this.oldColumnName = column;
-            this.columnModalP = "Renommer le champs \""+column+"\" :"
+            this.columnModalP = "Renommer le champs \""+column+"\"."
+            this.columnDefs.forEach((c) => {
+              if(c.field == this.operationHeaderColumn) {
+                c.rename = true;
+                c.size = "200px";
+              }
+            });
           } else if(type == "remove") {
             this.removeColumn(column);
             this.columnModalP = "La colonne \""+column+"\" a été supprimée."
           }
         }
-        if(type != 'info') this.showModal4();
+        // if(type != 'info') this.showModal4();
       }
     },
     removeColumn(column) {
@@ -1081,52 +1069,50 @@ export default {
         delete row[column]
       });
     },
-    renameColumn() { 
-      this.hideModal4();
-      console.log(this.newFieldName);
-      console.log(this.oldColumnName);
+    renameField(newNameHeader,oldNameHeader) { 
 
       this.columnDefs.forEach((col) =>{
-        if(col.field == this.oldColumnName) {
-          console.log(col.field);
-          col.field = this.newFieldName;
-          col.headerName = this.newFieldName;
+        if(col.field == oldNameHeader) {
+          col.field = newNameHeader;
+          col.headerName = newNameHeader;
+          col.rename = false;
         }
       });
 
-      this.fieldNames = this.fieldNames.filter(e => e !== this.oldColumnName);
-      this.fieldNames.push(this.newFieldName);
+      this.fieldNames = this.fieldNames.filter(e => e !== oldNameHeader);
+      this.fieldNames.push(newNameHeader);
 
-      this.emptyRow[this.newFieldName] = this.emptyRow[this.oldColumnName];
-      delete this.emptyRow[this.oldColumnName]
+      this.emptyRow[newNameHeader] = this.emptyRow[oldNameHeader];
+      delete this.emptyRow[oldNameHeader]
 
-      this.emptyRowColor[this.newFieldName] = this.emptyRowColor[this.oldColumnName];
-      delete this.emptyRowColor[this.oldColumnName]
+      this.emptyRowColor[newNameHeader] = this.emptyRowColor[oldNameHeader];
+      delete this.emptyRowColor[oldNameHeader]
 
-      this.emptyRowError[this.newFieldName] = this.emptyRowError[this.oldColumnName];
-      delete this.emptyRowError[this.oldColumnName]
+      this.emptyRowError[newNameHeader] = this.emptyRowError[oldNameHeader];
+      delete this.emptyRowError[oldNameHeader]
 
-      this.emptyRowInfo[this.newFieldName] = this.emptyRowInfo[this.oldColumnName];
-      delete this.emptyRowInfo[this.oldColumnName]
+      this.emptyRowInfo[newNameHeader] = this.emptyRowInfo[oldNameHeader];
+      delete this.emptyRowInfo[oldNameHeader]
 
       this.rows.forEach((row) => {
-        row[this.newFieldName] = row[this.oldColumnName]
-        delete row[this.oldColumnName]
+        row[newNameHeader] = row[oldNameHeader]
+        delete row[oldNameHeader]
       });
       this.rowsColor.forEach((row) => {
-        row[this.newFieldName] = row[this.oldColumnName]
-        delete row[this.oldColumnName]
+        row[newNameHeader] = row[oldNameHeader]
+        delete row[oldNameHeader]
       });
       this.rowsError.forEach((row) => {
-        row[this.newFieldName] = row[this.oldColumnName]
-        delete row[this.oldColumnName]
+        row[newNameHeader] = row[oldNameHeader]
+        delete row[oldNameHeader]
       });
       this.rowsInfo.forEach((row) => {
-        row[this.newFieldName] = row[this.oldColumnName]
-        delete row[this.oldColumnName]
+        row[newNameHeader] = row[oldNameHeader]
+        delete row[oldNameHeader]
       });
       this.shouldRenameColumn = false;
-      this.newFieldName = "";
+      newNameHeader = "";
+      
     },
     btnDocClick() {
       window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
@@ -1142,7 +1128,10 @@ export default {
     clickPage(){
       if(!this.menuSelected) this.displayMenuBox = false;
       this.menuSelected = false;
-      if(!this.infoSelected) this.displayInfoBox = false;
+      if(!this.infoSelected) {
+        this.displayInfoBox = false;
+        this.displayInformations = false;
+      }
       this.infoSelected = false;
       if(!this.errorSelected) this.displayErrorBox = false;
       this.errorSelected = false;
@@ -1161,7 +1150,11 @@ export default {
     removeBoxes(){
       this.displayErrorBox = false;
       this.displayInfoBox = false;
+      this.displayInformations = false;
       this.displayMenuBox = false;
+      this.displayRemove = false;
+      this.displayRename = false;
+      this.columnModalP = '';
     },
     test(){
       console.log(this.$refs.grid.$el.offsetWidth)

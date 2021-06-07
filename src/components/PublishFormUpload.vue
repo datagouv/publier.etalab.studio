@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p class="title-page">Publier vos données sur data.gouv.fr</p>
     <b-form>
       <p class="text-muted">
         {{ publicationIntro }}

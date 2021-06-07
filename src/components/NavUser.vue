@@ -2,7 +2,7 @@
   <div>
     <b-navbar-nav class="ml-auto">
       <b-navbar-nav v-if="user && !user.loggedIn">
-        <b-nav-item @click="showModalConnectLaunch()">
+        <b-nav-item @click="showModalConnect()">
           Se connecter
         </b-nav-item>
       </b-navbar-nav>

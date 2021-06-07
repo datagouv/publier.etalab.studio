@@ -30,6 +30,7 @@ export default {
       publishButtonDisabled: true,
       fromFile: this.$route.query.fromFile,
       publishWithSchema: true,
+      titleVerificationModal: "Rapport de validation",
     };
   },
   mounted() {

@@ -16,7 +16,16 @@ div.vue-editable-grid
           )
             span.header-content
               span.header-name
-                span(:ref="column.headerName") {{ column.headerName }} 
+                span(v-if='!column.rename' :ref="column.headerName") {{ column.headerName }} 
+                span(v-if = 'column.rename')
+                  input(
+                      type='text'
+                      size="20"
+                      v-model='newNameHeader'
+                    )
+                  span &nbsp;&nbsp;
+                  a(@click='renameField(column.headerName)')
+                    img(src="../static/images/tick.png", width="15")
                 span( v-if='!column.optional') *
               span.intermediary
               span(class="menuIcon" @click="moveHeaderMenu(column.headerName)") 
@@ -109,6 +118,7 @@ export default {
       isSelecting: false,
       selStartSelection: [],
       scrollLeft: null,
+      newNameHeader: '',
     };
   },
   created() {  
@@ -577,6 +587,10 @@ export default {
     moveHeaderMenu(column){
       console.log(this.$refs[column])
       this.$emit('moveHeaderMenu', this.$refs[column][0].getBoundingClientRect(), column);
+    },
+    renameField(oldname) {
+      this.$emit('rename-field', this.newNameHeader, oldname);
+      this.newNameHeader = '';
     }
   },
 };

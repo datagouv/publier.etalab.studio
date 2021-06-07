@@ -85,6 +85,7 @@
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+            <p class="title-page">Publier vos données sur data.gouv.fr</p>
             <publish-form-upload
                 :filename="filename"
                 v-model="dataToPublish"
