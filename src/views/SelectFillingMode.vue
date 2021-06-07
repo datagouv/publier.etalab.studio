@@ -12,15 +12,21 @@
                 <br /><br />
                 <div class="choice-box" v-if="schema && (schema.schema_type == 'tableschema' || schema.schema_type == 'jsonschema')">
                   <span @click="goto('upload')" class="choice-no-selected">Oui</span>
-                  <span @click="noDataChoice = !noDataChoice" v-if="noDataChoice && schema && schema.schema_type == 'tableschema'" class="choice-no-selected">Non</span>
-                  <span @click="noDataChoice = !noDataChoice" v-if="!noDataChoice && schema && schema.schema_type == 'tableschema'" class="choice-selected">Non</span>
-                  <div v-if="!noDataChoice">
+                  <span @click="noDataChoice = !noDataChoice" v-if="noDataChoice && schema" class="choice-no-selected">Non</span>
+                  <span @click="noDataChoice = !noDataChoice" v-if="!noDataChoice && schema" class="choice-selected">Non</span>
+                  <div v-if="!noDataChoice && schema.schema_type == 'tableschema'">
                     <br /><br />
                     <p>Notre outils vous aide à construire votre fichier !</p>
                     <p>Comment souhaitez-vous procéder ?</p>
                     <br />
                     <span @click="goto('form')" class="choice-no-selected">Remplir un formulaire</span>
                     <span @click="goto('table')" class="choice-no-selected">Utiliser l'outil de tableur</span>
+                  </div>
+                  <div v-if="!noDataChoice && schema.schema_type != 'tableschema'">
+                    <br /><br />
+                    <p>Nous ne proposons pas encore d'outils de saisie des données pour les schémas de type jsonschema.</p>
+                    <p>Si vous avez déjà un fichier contenant des données en votre possession, vous pouvez cependant charger vos données (en cliquant "oui" ci-dessus).</p>
+                    <br />
                   </div>
                 </div>
                 <p  v-if="schema && schema.schema_type == 'other'">Ce schéma obéit à un standard indépendant, notre outil ne propose pas la saisie de ces données</p>
@@ -86,7 +92,7 @@ export default {
       if(!this.schema) {
         fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
           console.log(data2);
-          if (data2.$schema && data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json") {
+          if (data2.$schema && (data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json" || data2.$schema == "https://frictionlessdata.io/schemas/table-schema.json")) {
             console.log(this.schemaUrl);
             var obj = {}
             obj['contact'] = '';

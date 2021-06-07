@@ -39,7 +39,7 @@ export default {
       if(!this.schema) {
         fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
           console.log(data2);
-          if (data2.$schema && data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json") {
+          if (data2.$schema && (data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json" || data2.$schema == "https://frictionlessdata.io/schemas/table-schema.json")) {
             console.log(this.schemaUrl);
             var obj = {}
             obj['contact'] = '';
