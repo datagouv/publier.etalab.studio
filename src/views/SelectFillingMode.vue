@@ -1,7 +1,14 @@
 <template>
     <div>
+        <div class="rf-container">
+            <p style="font-size: 14px; cursor: pointer;">
+              <a @click="gotoHomePage()" >Accueil</a>
+              &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;{{ schema.title }}
+            </p>
+        </div>
+
         <div v-if="schema"  class="rf-container rf-pb-6w rf-pt-1w">
-            <p style="font-size: 14px; cursor: pointer;"><a @click="gotoHomePage()" >Accueil</a>&nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;{{ schema.title }}</p>
+
             
             <div style="display: flex;">
               <div style="flex: 2;">

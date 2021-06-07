@@ -155,12 +155,7 @@
 </template>
 
 <script>
-
-import ClientOnly from 'vue-client-only';
-
 import PublishFormUpload from '../components/PublishFormUpload.vue';
-import NavUser from '../components/NavUser.vue';
-
 import ErrorReport from '../components/ErrorReport.vue';
 
 import PublishRessources from '../mixins/PublishResources.vue';
@@ -176,8 +171,6 @@ export default {
   ],
   components: {
     PublishFormUpload,
-    ClientOnly,
-    NavUser,
     ErrorReport,
   },
   data() {
@@ -337,12 +330,6 @@ export default {
       }
       reader.readAsText(this.$refs.file.files[0]);
 
-    },
-    gotoHomePage() {
-      this.$router.push('/');
-    },
-    gotoSelectPage() {
-      this.$router.push('/select?schema='+this.schemaName);
     },
     btnDocClick() {
       window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);

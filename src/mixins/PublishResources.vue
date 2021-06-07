@@ -445,6 +445,12 @@ export default {
       evt.preventDefault();
       window.location = $auth.authUrl();
     },
+    gotoHomePage() {
+      this.$router.push('/');
+    },
+    gotoSelectPage() {
+      this.$router.push('/select?schema='+this.schemaName);
+    },
   },
 };
 </script>

@@ -1,5 +1,16 @@
 <template>
+  <div>
+    <div class="rf-container">
+      <p style="font-size: 14px; cursor: pointer;">
+        <a @click="gotoHomePage()" >Accueil</a>
+        &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+        <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+        &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+        Formulaire
+      </p>
+    </div>
   <div class="rf-container rf-pb-6w rf-pt-2w">
+
       <div v-if="!publicationReady">
         <h3>Saisir vos données via un formulaire</h3>
         <br />
@@ -171,11 +182,11 @@
 
 
   </div>
+  </div>
 </template>
 
 <script>
 import Vue from 'vue';
-import ClientOnly from 'vue-client-only';
 import StringField from '../components/StringField.vue';
 import SelectField from '../components/SelectField.vue';
 import RadioField from '../components/RadioField.vue';
@@ -188,8 +199,6 @@ import { EventBus } from '../event-bus.js';
 
 import PublishRessources from '../mixins/PublishResources.vue';
 
-import NavUser from '../components/NavUser.vue';
-
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
 
@@ -198,8 +207,6 @@ export default {
   mixins: [PublishRessources],
   components: {
     PublishFormUpload,
-    ClientOnly,
-    NavUser,
   },
   data() {
     return {

@@ -334,7 +334,6 @@
 
 <script>
 import Vue from 'vue';
-import ClientOnly from 'vue-client-only';
 import StringField from '../components/StringField.vue';
 import SelectField from '../components/SelectField.vue';
 import RadioField from '../components/RadioField.vue';
@@ -342,7 +341,6 @@ import RadioField from '../components/RadioField.vue';
 import PublishFormUpload from '../components/PublishFormUpload.vue';
 import ErrorReport from '../components/ErrorReport.vue';
 
-import NavUser from '../components/NavUser.vue';
 import VueEditableGrid from '../grid/VueEditableGrid.vue';
 
 import PublishRessources from '../mixins/PublishResources.vue';
@@ -360,8 +358,6 @@ export default {
   components: {
     VueEditableGrid,
     PublishFormUpload,
-    ClientOnly,
-    NavUser,
     ErrorReport,
   },
   data() {
@@ -1169,12 +1165,6 @@ export default {
     },
     test(){
       console.log(this.$refs.grid.$el.offsetWidth)
-    },
-    gotoSelectPage() {
-      this.$router.push('/select?schema='+this.schemaName);
-    },
-    gotoHomePage() {
-      this.$router.push('/');
     },
   },
 };
