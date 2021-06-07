@@ -87,13 +87,14 @@ export default {
     const loader = this.$loading.show();
     fetch(`${SCHEMAS_CATALOG_URL}`).then((r) => r.json()).then((data) => {
       this.schemas = data.schemas;
-      this.schema = this.schemas.find((s) => s.name === this.schemaName);
-      console.log(this.schema);
+      this.schema = this.schemas.find((s) => (s.name === this.schemaName || s.schema_url === this.schemaUrl));
+      if(this.schema && !this.schemaName) this.schemaName = this.schema.name
+      if(this.schema) this.schema.version = this.schema.versions[this.schema.versions.length - 1]['version_name']
       if(!this.schema) {
         fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
           console.log(data2);
           if (data2.$schema && (data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json" || data2.$schema == "https://frictionlessdata.io/schemas/table-schema.json")) {
-            console.log(this.schemaUrl);
+            console.log(this.schema);
             var obj = {}
             obj['contact'] = '';
             obj['description'] = '';

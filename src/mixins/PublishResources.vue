@@ -34,8 +34,9 @@ export default {
         value: s.name, 
         text: s.title || s.name 
       }));
-      this.schema = this.schemas.find((s) => s.name === this.schemaName);
-      console.log(this.schema);
+      this.schema = this.schemas.find((s) => (s.name === this.schemaName || s.schema_url === this.schemaUrl));
+      if(this.schema && !this.schemaName) this.schemaName = this.schema.name
+      if(this.schema) this.schema.version = this.schema.versions[this.schema.versions.length - 1]['version_name']
       if(!this.schema) {
         fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
           console.log(data2);
@@ -182,13 +183,28 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+              var payload = {}
+              if(this.schemaName) {
+                payload = {
+                  title: publishContent.resource.title,
+                  schema: {
+                    name: this.schemaName,
+                    version: this.schema.version
+                  },
+                  extras: {
+                    publish_source: "publier.etalab.studio"
+                  }
+                };
+              } else if(this.schemaUrl) {
+                payload = {
+                  title: publishContent.resource.title,
+                  extras: {
+                    external_schema_url: this.schemaUrl,
+                    external_schema_name: this.schema.name,
+                    publish_source: "publier.etalab.studio"
+                  }
                 }
-              };
+              }
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
@@ -243,13 +259,31 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+
+              var payload = {}
+              if(this.schemaName) {
+                payload = {
+                  title: publishContent.resource.title,
+                  schema: {
+                    name: this.schemaName,
+                    version: this.schema.version
+                  },
+                  extras: {
+                    publish_source: "publier.etalab.studio"
+                  }
+                };
+                console.log(payload)
+              } else if(this.schemaUrl) {
+                payload = {
+                  title: publishContent.resource.title,
+                  extras: {
+                    external_schema_url: this.schemaUrl,
+                    external_schema_name: this.schema.name,
+                    publish_source: "publier.etalab.studio"
+                  }
                 }
-              };
+              }
+
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
@@ -314,13 +348,30 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+
+              var payload = {}
+              if(this.schemaName) {
+                payload = {
+                  title: publishContent.resource.title,
+                  schema: {
+                    name: this.schemaName,
+                    version: this.schema.version
+                  },
+                  extras: {
+                    publish_source: "publier.etalab.studio"
+                  }
+                };
+              } else if(this.schemaUrl) {
+                payload = {
+                  title: publishContent.resource.title,
+                  extras: {
+                    external_schema_url: this.schemaUrl,
+                    external_schema_name: this.schema.name,
+                    publish_source: "publier.etalab.studio"
+                  }
                 }
-              };
+              }
+
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
