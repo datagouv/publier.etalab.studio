@@ -55,6 +55,7 @@ export default {
                 this.editButtonTitle = 'Corriger le fichier';
                 this.validBox = false;
                 this.infoboxType = 3;
+                this.ext = "csv"
                 if(data.report.tables[0].errors.length > 20){
                     this.reportValidStatus = 'Votre fichier contient de nombreuses erreurs.'
                     this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'
@@ -105,6 +106,7 @@ export default {
             this.infoboxType = 3;
             this.badgeUrl = lkInvalide;
             this.validBox = false;
+            this.ext = "json"
         } else {
             this.reportValidStatus = 'Votre fichier est conforme.';
             this.infoboxType = 1;

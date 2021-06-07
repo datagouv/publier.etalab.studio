@@ -3,6 +3,11 @@ import { EventBus } from '../event-bus.js';
 
 import $api from '../services/Api';
 
+import Auth from '../services/Auth';
+
+const $auth = new Auth();
+
+
 const SCHEMAS_CATALOG_URL = process.env.VUE_APP_SCHEMAS_CATALOG_URL;
 const DGV_BASE_URL = process.env.VUE_APP_DATAGOUV_API_URL;
 
@@ -24,6 +29,7 @@ export default {
       publicationIntro: 'Publiez vos données au format CSV dans un nouveau jeu de données',
       publishButtonDisabled: true,
       fromFile: this.$route.query.fromFile,
+      publishWithSchema: true,
     };
   },
   mounted() {
@@ -71,11 +77,6 @@ export default {
     }
   },
   computed: {
-    filename() {
-      const date = new Date();
-      const name = [this.schemaName, date.toISOString()].join('_');
-      return `${name}.csv`;
-    },
     user() {
       return this.$store.state.auth.user;
     },
@@ -183,26 +184,37 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
+
               var payload = {}
-              if(this.schemaName) {
-                payload = {
-                  title: publishContent.resource.title,
-                  schema: {
-                    name: this.schemaName,
-                    version: this.schema.version
-                  },
-                  extras: {
-                    publish_source: "publier.etalab.studio"
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
                   }
-                };
-              } else if(this.schemaUrl) {
+                }
+              } else {
                 payload = {
-                  title: publishContent.resource.title,
-                  extras: {
-                    external_schema_url: this.schemaUrl,
-                    external_schema_name: this.schema.name,
-                    publish_source: "publier.etalab.studio"
-                  }
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
                 }
               }
               $api
@@ -224,6 +236,7 @@ export default {
         });
     },
     updateDatasetCreateResource(publishContent, dataBlob, ext="csv") {
+      console.log(dataBlob);
       $api
         .put(
           `datasets/${publishContent.existingDataset}`,
@@ -260,27 +273,37 @@ export default {
               // New resource identifier
               const resourceId = response.data.id;
 
+
               var payload = {}
-              if(this.schemaName) {
-                payload = {
-                  title: publishContent.resource.title,
-                  schema: {
-                    name: this.schemaName,
-                    version: this.schema.version
-                  },
-                  extras: {
-                    publish_source: "publier.etalab.studio"
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
                   }
-                };
-                console.log(payload)
-              } else if(this.schemaUrl) {
+                }
+              } else {
                 payload = {
-                  title: publishContent.resource.title,
-                  extras: {
-                    external_schema_url: this.schemaUrl,
-                    external_schema_name: this.schema.name,
-                    publish_source: "publier.etalab.studio"
-                  }
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
                 }
               }
 
@@ -350,25 +373,35 @@ export default {
               const resourceId = response.data.id;
 
               var payload = {}
-              if(this.schemaName) {
-                payload = {
-                  title: publishContent.resource.title,
-                  schema: {
-                    name: this.schemaName,
-                    version: this.schema.version
-                  },
-                  extras: {
-                    publish_source: "publier.etalab.studio"
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
                   }
-                };
-              } else if(this.schemaUrl) {
+                }
+              } else {
                 payload = {
-                  title: publishContent.resource.title,
-                  extras: {
-                    external_schema_url: this.schemaUrl,
-                    external_schema_name: this.schema.name,
-                    publish_source: "publier.etalab.studio"
-                  }
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
                 }
               }
 
@@ -397,10 +430,20 @@ export default {
       window.open(this.linkDgv);
     },
     showModal() {
-      this.$refs.modal1.show();
+      this.$refs.modalConnectLaunch.show();
     },
     hideModal() {
-      this.$refs.modal1.hide();
+      this.$refs.modalConnectLaunch.hide();
+    },
+    submitLogin(evt) {
+      console.log(evt);
+      if ((this.$route.name != 'login') & (this.$route.name != 'home')) {
+        this.$store.dispatch('auth/fillLastPage',this.$route.name+'?schema='+this.$route.query.schema)
+      } else {
+        this.$store.dispatch('auth/fillLastPage','/')
+      }
+      evt.preventDefault();
+      window.location = $auth.authUrl();
     },
   },
 };

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="title-page">Publier vos données sur data.gouv.fr</p>
     <b-form>
       <p class="text-muted">
         {{ publicationIntro }}
@@ -37,6 +38,7 @@
             v-model="form.org"
             :options="organizations"
             v-on:change="onChange"
+            class="rf-select"
             required
           ></b-form-select>
       </b-form-group>
@@ -73,8 +75,9 @@
           id="input-editjdd-me"
           v-model="form.existingDataset"
           v-on:change="onChangeJDDMe"
+          class="rf-select"
         >
-          <option v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
+          <option class="rf-select" v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
             {{ ds.title }}
           </option>
         </b-form-select>
@@ -115,6 +118,7 @@
           v-model="form.dataset.title"
           v-on:input="onChange"
           :trim="true"
+          class="rf-input"
         ></b-form-input>
       </b-form-group>
 
@@ -133,6 +137,7 @@
           rows="4"
           v-on:input="onChange"
           :trim="true"
+          class="rf-input"
         ></b-form-textarea>
       </b-form-group>
 
@@ -167,8 +172,9 @@
         <b-form-select
           id="input-editres"
           v-model="form.existingResource"
+          class="rf-select"
         >
-          <option v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
+          <option class="rf-select" v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
             {{ res.title }}
           </option>
         </b-form-select>
@@ -181,13 +187,14 @@
         label-for="input-resource-title"
       >
         <template v-slot:label>
-          Nom du fichier CSV <span class="text-danger">*</span>
+          Nom du fichier <span class="text-danger">*</span>
         </template>
         <b-form-input
           id="input-resource-title"
           v-model="form.resource.title"
           v-on:input="onChange"
           :trim="true"
+          class="rf-input"
         ></b-form-input>
       </b-form-group>
       <p class="text-muted">
@@ -272,7 +279,7 @@ export default {
   },
   methods: {
     onChange() {
-      this.form.resource.title = this.filename;
+      if(this.form.resource.title == '') this.form.resource.title = this.filename;
       // eslint-disable-next-line prefer-destructuring
       const okState = this.okState;
       if (this.form.org !== '') {

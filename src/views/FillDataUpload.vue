@@ -1,14 +1,15 @@
 <template>
     <div style="min-height: 500px" >
-
+        <div class="rf-container">
+          <p style="font-size: 14px; cursor: pointer;">
+            <a @click="gotoHomePage()" >Accueil</a>
+            &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+            <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+            &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+            Chargement des données
+          </p>
+        </div>
         <div v-if="schema && !publicationReady" class="rf-container rf-pb-6w rf-pt-2w">
-            <p style="font-size: 14px; cursor: pointer;">
-              <a @click="gotoHomePage()" >Accueil</a>
-              &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-              <a @click="gotoSelectPage()" >{{ schema.title }}</a>
-              &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-              Chargement des données
-            </p>
             <p class="title-page">Vérifier un fichier existant</p>
             <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
             <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
@@ -79,6 +80,7 @@
                 En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
                 <a :href="'mailto:'+this.schema.contact">{{ this.schema.contact }}</a>
               </p>
+              <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;">en cliquant ici</a></p>
             </div>
         </div>
 
@@ -126,34 +128,29 @@
             </div>
         </div>
 
-        <b-modal
-          class="rf-container rf-pb-6w rf-pt-2w"
-          ref="modal1"
-          id="modal1"
-          hide-footer
-          title="Attention, vous n'êtes pas connecté"
-        >
-          <div>
-            <p>Pour publier vos données sur datagouv, il est nécessaire de vous connecter.</p>
-          </div>
-            <div class="button-boxes">
-                <div style="padding-right: 30px; text-align: center;">
-                  <client-only>
-                      <nav-user />
-                  </client-only>
-                </div>
-                <br /><br /><br />
-                <div style="padding-right: 30px; text-align: center;">
-                  <button
-                    class="rf-btn-light"
-                    block
-                    @click="hideModal"
-                  >
-                    Je n'ai pas l'intention de publier mes données
-                  </button>
-                </div>
-              </div>
-        </b-modal>
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modalConnectLaunch"
+      id="modalConnectLaunch"
+      hide-footer
+      title="Autoriser publier.etalab.studio"
+    >
+      <div>
+        <br />
+        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;Vous n'avez pas autorisé <b>publier.etalab.studio</b> à accéder à votre compte <b>data.gouv.fr</b>.</p>
+        <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
+        <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
+        <br />
+        <b-button class="rf-btn" @click="submitLogin">
+          Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
+        </b-button>
+        &nbsp;&nbsp;&nbsp;
+        <span @click="hideModal()" style="cursor: pointer;"><u>Je ne souhaite pas publier mes données sur data.gouv.fr</u></span>
+      </div>
+    </b-modal>
+
+
     </div>
 </template>
 
@@ -201,7 +198,7 @@ export default {
       validBox: true,
       showReport: false,
       showInfobox: false,
-      filename: 'Monfichier.csv',
+      filename: 'Monfichier',
     };
   },
   computed: {

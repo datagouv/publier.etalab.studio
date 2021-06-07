@@ -387,3 +387,96 @@
   color: black;
   border: 0px;
 }
+
+#modalConnect___BV_modal_content_ {
+  border-radius: 0px;
+  padding: 20px;
+  max-width: 1000px;
+
+}
+
+#modalConnect header button{
+  border: 0px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#modalConnect___BV_modal_title_ {
+  font-size: 30px;
+}
+#modalConnect___BV_modal_header_ {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
+
+#modalConnectLaunch___BV_modal_content_ {
+  border-radius: 0px;
+  padding: 20px;
+  max-width: 1000px;
+
+}
+
+#modalConnectLaunch header button{
+  border: 0px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#modalConnectLaunch___BV_modal_title_ {
+  font-size: 30px;
+}
+#modalConnectLaunch___BV_modal_header_ {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
+.modal-body {
+  margin: 0px;
+}
+
+
+
+#modal3___BV_modal_content_ {
+  border-radius: 0px;
+  padding: 20px;
+  max-width: 1000px;
+
+}
+
+#modal3 header button{
+  border: 0px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#modal3___BV_modal_title_ {
+  font-size: 30px;
+}
+#modal3___BV_modal_header_ {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
+
+
+#modal1___BV_modal_content_ {
+  border-radius: 0px;
+  padding: 20px;
+  max-width: 1000px;
+
+}
+
+#modal1 header button{
+  border: 0px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#modal1___BV_modal_title_ {
+  font-size: 30px;
+}
+#modal1___BV_modal_header_ {
+  border: 0px;
+  padding-bottom: 0px;
+}
