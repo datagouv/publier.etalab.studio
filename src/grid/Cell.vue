@@ -32,9 +32,9 @@ td.cell.noselectx(
       v-if='column.type === "arrayEnum"'
       :style='{width: `100%`}'
     )
-    span {{ row[column.field] }}
     a(@click="showArrayEnum(rowIndex,columnIndex,column.headerName, row[column.field])")
-      img(src='../static/images/menu.png',width="15px",height="15px")
+      img(src='../static/images/down-arrow-black.png',width="10px",height="10px")
+    span &nbsp;&nbsp;{{ row[column.field] }}
   span(v-if='column.type != "arrayEnum"')
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
       input(

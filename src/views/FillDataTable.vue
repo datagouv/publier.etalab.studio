@@ -447,14 +447,12 @@ export default {
   },
   methods: {
     addArrayValue(item) {
-      console.log(item);
       if(!item.selected) {
         if(!this.rows[this.rowCurrentArray][this.colCurrentArray]) {
           this.rows[this.rowCurrentArray][this.colCurrentArray] = []
         }
         this.rows[this.rowCurrentArray][this.colCurrentArray].push(item.value);
       } else {
-        console.log('here')
         if(this.rows[this.rowCurrentArray][this.colCurrentArray]) {
           this.rows[this.rowCurrentArray][this.colCurrentArray] = this.rows[this.rowCurrentArray][this.colCurrentArray].filter(el => el != item.value);
         }
@@ -473,7 +471,6 @@ export default {
       this.topDivError = window.scrollY+pos.y+40;
       this.leftDivError = pos.x;
       this.displayArrayBox = true;
-      console.log(this.rows[row][column]);
       this.schema.fields.forEach((field) => {
         if(field.name == column){
           this.currentArrayItems = []
@@ -546,9 +543,8 @@ export default {
             this.emptyRowError[field.name] = '';
             if(field.arrayItem && field.arrayItem.constraints && field.arrayItem.constraints.enum) {
               myobj.type = 'arrayEnum';
-            }
-            else {
-              field.type = 'string';
+            } else {
+              myobj.type = 'array';
             }
             //myobj.enumList = field.arrayItem.constraints.enum;
           }
@@ -652,7 +648,6 @@ export default {
       let cpt = 0;
       var notEmpty = false;
       this.fieldNames.forEach((field) => {
-        if(field == "array_enum_field") console.log(field);
         if(line[field] != "" && line[field] != null){
           notEmpty = true;
         }
@@ -672,8 +667,28 @@ export default {
               }
             });
             fi = fi+']'
-            console.log(fi)
           }
+          this.columnDefs.forEach((cd) => {
+            if(cd.headerName == field) {
+              if(cd.type == 'array') {
+                console.log(cd);
+                if(line[field]) {
+                  var tab = line[field].replaceAll("[","").replaceAll("]","").replaceAll("'",'').replaceAll('"','').replaceAll(', ',',').replaceAll(' ',',').split(',')
+                  fi = '['
+                  var cpt2 = 0
+                  tab.forEach((l) => {
+                    if(cpt2 == 0) {
+                      cpt2 = 1
+                      fi = fi+'""'+l+'""'
+                    } else {
+                      fi = fi+',""'+l+'""'
+                    }
+                  });
+                  fi = fi+']'
+                }
+              }
+            }
+          });
           if(fi == null){
             fi = ''
           }
