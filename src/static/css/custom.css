@@ -334,6 +334,19 @@
 
 }
 
+.arrayBox{
+  border: 1px solid #ebebeb;
+  background-color: #F2F2F9;
+  padding: 10px;
+  font-size: 16px;
+  min-width: 150px; 
+  position: absolute;
+  z-index: 100;
+  color: black; 
+  border-radius: 3px;
+
+}
+
 .menuElement{
   padding: 10px;
   font-size: 14px;
@@ -479,9 +492,4 @@
 #modal1___BV_modal_header_ {
   border: 0px;
   padding-bottom: 0px;
-}
-
-.multiselect--active {
-  background-color: blue;
-  z-index: 3000;
 }

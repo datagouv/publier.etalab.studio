@@ -57,6 +57,7 @@ div.vue-editable-grid
               @mousedown='startSelection(offsetRows + rowIndex, columnIndex)'
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
+              @show-array-enum='showArrayEnum'
             )
     textarea.hidde(ref='tmp')
 </template>
@@ -274,6 +275,9 @@ export default {
     },
   },
   methods: {
+    showArrayEnum(row,col, column, val){
+      this.$emit('show-array-enum', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
+    },
     handleScroll(){
       if(this.$refs.body) {
         if(this.$refs.body.scrollLeft != this.scrollLeft){

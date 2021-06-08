@@ -27,6 +27,7 @@
       </div>
     </div>
 
+
     <div v-if="displayInfoBox" class="infoBox" :style="`top: ${topDiv}px; left: ${leftDiv}px;`">
       <span v-if="displayInformations && messageInfo != ''">
         <p>Description :</p>
@@ -55,6 +56,12 @@
           <br />
           <b><i>{{ exempleInfo }}</i></b>
         </p>
+    </div>
+
+    <div v-if="displayArrayBox" class="arrayBox" :style="`top: ${topDivError}px; left: ${leftDivError}px;`">
+      <div v-for="item in currentArrayItems" v-bind:key="item.value">
+        <input type="checkbox" @click="addArrayValue(item)" :checked="item.selected"> {{ item.value }}
+      </div>
     </div>
 
     <div class="rf-container">
@@ -122,6 +129,7 @@
                 @show-errors='showErrors'
                 @remove-boxes='removeBoxes'
                 @rename-field='renameField'
+                @show-array-enum='showArrayEnum'
                 >
             </vue-editable-grid>
           </div>
@@ -390,6 +398,8 @@ export default {
       displayRemove: false,
       displayInformations: false,
       displayErrorBox: false,
+      displayArrayBox: false,
+      arraySelected: false,
       errorSelected: false,
       topDivError: "200",
       leftDivError: "200",
@@ -402,6 +412,11 @@ export default {
       editButtonImg: 'checked.png',
       showReport: false,
       showInfobox: false,
+      currentArrayItems: [],
+      currentArrayValues: [],
+      rowCurrentArray: null,
+      colCurrentArray: null,
+      colindexCurrentArray: null,
     };
   },
   watch: {
@@ -431,6 +446,51 @@ export default {
     window.addEventListener('scroll', this.handleScroll);
   },
   methods: {
+    addArrayValue(item) {
+      console.log(item);
+      if(!item.selected) {
+        if(!this.rows[this.rowCurrentArray][this.colCurrentArray]) {
+          this.rows[this.rowCurrentArray][this.colCurrentArray] = []
+        }
+        this.rows[this.rowCurrentArray][this.colCurrentArray].push(item.value);
+      } else {
+        console.log('here')
+        if(this.rows[this.rowCurrentArray][this.colCurrentArray]) {
+          this.rows[this.rowCurrentArray][this.colCurrentArray] = this.rows[this.rowCurrentArray][this.colCurrentArray].filter(el => el != item.value);
+        }
+      }
+      this.currentArrayItems.forEach((el) => {
+        if(el.value == item.value) el.selected = !el.selected;
+      });
+      this.$refs.grid.selectCell(this.rowCurrentArray, this.colindexCurrentArray);
+    },
+    showArrayEnum(row, col, column, val, pos){
+      this.displayErrorBox = false;
+      this.arraySelected = false;
+      this.rowCurrentArray = row;
+      this.colindexCurrentArray = col;
+      this.colCurrentArray = column;
+      this.topDivError = window.scrollY+pos.y+40;
+      this.leftDivError = pos.x;
+      this.displayArrayBox = true;
+      console.log(this.rows[row][column]);
+      this.schema.fields.forEach((field) => {
+        if(field.name == column){
+          this.currentArrayItems = []
+          field.arrayItem.constraints.enum.forEach((el) => {
+            var obj = {}
+            if(this.rows[row][column]) {
+              obj['selected'] = this.rows[row][column].includes(el);
+            } else {
+              obj['selected'] = false;
+            }
+            obj['value'] = el
+            this.currentArrayItems.push(obj);
+          });
+        }
+      });
+
+    },
     handleScroll () {
       this.scrolled = window.scrollY > 0;
     },
@@ -480,13 +540,17 @@ export default {
           myobj.headerName = field.name;
           myobj.editable = true;
           
-          if(field.type == 'array' && field.arrayItem) {
-            console.log(field.arrayItem.constraints.enum);
-            this.emptyRow[field.name] = [];
+          if(field.type == 'array') {
+            this.emptyRow[field.name] = '';
             this.emptyRowInfo[field.name] = '';
             this.emptyRowError[field.name] = '';
-            myobj.type = 'arrayEnum';
-            myobj.enumList = field.arrayItem.constraints.enum;
+            if(field.arrayItem && field.arrayItem.constraints && field.arrayItem.constraints.enum) {
+              myobj.type = 'arrayEnum';
+            }
+            else {
+              field.type = 'string';
+            }
+            //myobj.enumList = field.arrayItem.constraints.enum;
           }
 
           if (field.type === 'string') {
@@ -588,6 +652,7 @@ export default {
       let cpt = 0;
       var notEmpty = false;
       this.fieldNames.forEach((field) => {
+        if(field == "array_enum_field") console.log(field);
         if(line[field] != "" && line[field] != null){
           notEmpty = true;
         }
@@ -595,6 +660,20 @@ export default {
       if(notEmpty) {
         this.fieldNames.forEach((field) => {
           var fi = line[field];
+          if(Array.isArray(line[field])) {
+            fi = '['
+            var cpt2 = 0
+            line[field].forEach((l) => {
+              if(cpt2 == 0) {
+                cpt2 = 1
+                fi = fi+'""'+l+'""'
+              } else {
+                fi = fi+',""'+l+'""'
+              }
+            });
+            fi = fi+']'
+            console.log(fi)
+          }
           if(fi == null){
             fi = ''
           }
@@ -783,8 +862,18 @@ export default {
     },
     rowSelected($event) {
       
-      if ($event.colIndex) this.colIndex = $event.colIndex;
-      if ($event.rowIndex != null) this.rowIndex = $event.rowIndex+1;
+      if ($event.colIndex) {
+        if(this.colIndex != $event.colIndex) {
+          this.arraySelected = true;
+        }
+        this.colIndex = $event.colIndex;
+      }
+      if ($event.rowIndex != null) {
+        if(this.rowIndex != $event.rowIndex+1) {
+          this.arraySelected = true;
+        }
+        this.rowIndex = $event.rowIndex+1;
+      }
       this.selectedRow = $event.rowData;
 
       if (this.schema.fields) {
@@ -823,6 +912,10 @@ export default {
       this.schema.fields.forEach((field) => {
         if (field.type === 'string' || field.type === 'stringEnum') {
           myobj[field.name] = '';
+          myobjInfo[field.name] = '';
+          myobjError[field.name] = '';
+        } else if(field.type == 'arrayEnum') {
+          myobj[field.name] = [];
           myobjInfo[field.name] = '';
           myobjError[field.name] = '';
         } else if (field.type === 'date') {
@@ -1137,18 +1230,24 @@ export default {
         this.displayInformations = false;
       }
       this.infoSelected = false;
-      if(!this.errorSelected) this.displayErrorBox = false;
+      if(!this.errorSelected) {
+        this.displayErrorBox = false;
+      }
       this.errorSelected = false;
+      if(this.arraySelected) {
+        this.displayArrayBox = false;
+      }
     },
     showErrors(event,row,col,pos){
       if(this.rowsError[row][this.columnDefs[col].field]) {
         this.topDivError = window.scrollY+pos.y+40;
         this.leftDivError = pos.x;
         this.errorSelected = true;
-        this.displayErrorBox = true;
+        if(this.displayArrayBox != true) this.displayErrorBox = true;
       } else{
         this.displayErrorBox = false;
       }
+      if(this.arraySelected) this.displayArrayBox = false;
     },
     removeBoxes(){
       this.displayErrorBox = false;
@@ -1157,6 +1256,7 @@ export default {
       this.displayMenuBox = false;
       this.displayRemove = false;
       this.displayRename = false;
+      this.displayArrayBox = false;
       this.columnModalP = '';
     }
   },

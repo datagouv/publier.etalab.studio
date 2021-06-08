@@ -16,7 +16,7 @@ td.cell.noselectx(
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
   span(
-    v-if='column.enumList && column.type == "stringEnum"'
+    v-if='column.enumList'
     :style='{width: `100%`}'
   )
     select(
@@ -28,49 +28,32 @@ td.cell.noselectx(
         v-for='obj in column.enumList'
         value=obj
       ) {{ obj }}
-    
   span(
-    v-if='column.enumList && column.type == "arrayEnum"'
-    :style='{ width: `100%` }'
-  )    
-    multiselect(
-      v-model="valueSelect",
-      :options="optionsSelect",
-      :multiple="true",
-      :close-on-select="false",
-      :clear-on-select="false",
-      :preserve-search="true",
-      placeholder="Pick some"
-      label="name",
-      track-by="name",
-      :preselect-first="true"
+      v-if='column.type === "arrayEnum"'
+      :style='{width: `100%`}'
     )
-      template(
-        slot="selection"
-        slot-scope="{ values, search, isOpen }"
+    span {{ row[column.field] }}
+    a(@click="showArrayEnum(rowIndex,columnIndex,column.headerName, row[column.field])")
+      img(src='../static/images/menu.png',width="15px",height="15px")
+  span(v-if='column.type != "arrayEnum"')
+    span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
+      input(
+        :type='inputType'
+        ref='input'
+        @keyup.enter='setEditableValue'
+        @keydown.tab='setEditableValue'
+        @keyup.esc='editCancelled'
+        @focus='editPending = true'
+        @blur='leaved'
       )
-        span.multiselect__single(v-if="values.length && !isOpen")
-          | {{ values.length }} options selected
-
-  
-  span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
-    input(
-      :type='inputType'
-      ref='input'
-      @keyup.enter='setEditableValue'
-      @keydown.tab='setEditableValue'
-      @keyup.esc='editCancelled'
-      @focus='editPending = true'
-      @blur='leaved'
-    )
-  span.cell-content(v-else)
-    a(
-      @click.prevent='linkClicked'
-      v-if='column.type === "link"'
-      href='#'
-    ) {{ row[column.field] | cellFormatter(column, row) }}
-    span(v-else) 
-      span(v-if='!column.enumList') {{ row[column.field] | cellFormatter(column, row) }}
+    span.cell-content(v-else)
+      a(
+        @click.prevent='linkClicked'
+        v-if='column.type === "link"'
+        href='#'
+      ) {{ row[column.field] | cellFormatter(column, row) }}
+      span(v-else) 
+        span(v-if='!column.enumList') {{ row[column.field] | cellFormatter(column, row) }}
 </template>
 
 <script>
@@ -79,15 +62,11 @@ import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
-import Multiselect from 'vue-multiselect'
 
 
 export default {
   filters: {
     cellFormatter,
-  },
-  components: {
-    Multiselect
   },
   props: {
     column: { type: Object },
@@ -105,15 +84,6 @@ export default {
       value: null, 
       rowValue: null, 
       editPending: false,
-      valueSelect: [],
-      optionsSelect: [
-        { name: 'Vue.js', language: 'JavaScript' },
-        { name: 'Adonis', language: 'JavaScript' },
-        { name: 'Rails', language: 'Ruby' },
-        { name: 'Sinatra', language: 'Ruby' },
-        { name: 'Laravel', language: 'PHP' },
-        { name: 'Phoenix', language: 'Elixir' }
-      ]
     };
   },
   computed: {
@@ -152,6 +122,7 @@ export default {
     },
     inputType() {
       switch (this.column.type) {
+        case 'arrayEnum': return 'text';
         case 'text': return 'text';
         case 'link': return 'text';
         case 'numeric': return 'number';
@@ -188,6 +159,9 @@ export default {
     },
   },
   methods: {
+    showArrayEnum(row,col, column, val){
+      this.$emit("show-array-enum", row, col, column, val);
+    },
     clickCell(event){
       this.$emit("click", event);
     },
