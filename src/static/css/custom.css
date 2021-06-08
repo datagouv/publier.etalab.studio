@@ -480,3 +480,8 @@
   border: 0px;
   padding-bottom: 0px;
 }
+
+.multiselect--active {
+  background-color: blue;
+  z-index: 3000;
+}

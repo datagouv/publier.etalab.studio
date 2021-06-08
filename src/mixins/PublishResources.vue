@@ -26,7 +26,7 @@ export default {
       schemaMeta: {},
       values: {},
       hasValues: false,
-      publicationIntro: 'Publiez vos données au format CSV dans un nouveau jeu de données',
+      publicationIntro: 'Publiez vos données dans un nouveau jeu de données',
       publishButtonDisabled: true,
       fromFile: this.$route.query.fromFile,
       publishWithSchema: true,

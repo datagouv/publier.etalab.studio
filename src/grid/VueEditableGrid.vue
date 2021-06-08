@@ -54,7 +54,7 @@ div.vue-editable-grid
               @edit-cancelled='cellEditing = []'
               @link-clicked='linkClicked(row, column, offsetRows + rowIndex, columnIndex)'
               @contextmenu='contextMenu(row, column, rowIndex, columnIndex, $event)'
-              @mousedown='startSelection(offsetRows + rowIndex, columnIndex, $event)'
+              @mousedown='startSelection(offsetRows + rowIndex, columnIndex)'
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
             )
@@ -177,7 +177,6 @@ export default {
             let cell = this.getCell();
             if(arrayPasted.length > (this.rowData.length - cell.rowIndex)) {
               this.addMultRows(cell.rowIndex-this.rowData.length+arrayPasted.length);
-              console.log('add rows')
             }
             arrayPasted.forEach((rowsData, rIdx) => {
               rowsData.forEach((value, cIdx) => {
@@ -547,7 +546,7 @@ export default {
         }, {})
       });
     },
-    startSelection (rowIndex, colIndex, e) {
+    startSelection (rowIndex, colIndex) {
       this.isSelecting = true
       this.selStartSelection = [rowIndex, colIndex]
     },
@@ -581,11 +580,9 @@ export default {
       document.execCommand('copy');
     },
     columnOperation(event,column){
-      console.log(event);
       this.$emit('column-operation', event.target.value, column);
     },
     moveHeaderMenu(column){
-      console.log(this.$refs[column])
       this.$emit('moveHeaderMenu', this.$refs[column][0].getBoundingClientRect(), column);
     },
     renameField(oldname) {

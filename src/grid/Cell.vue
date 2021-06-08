@@ -16,18 +16,42 @@ td.cell.noselectx(
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
   span(
-    v-if='column.enumList'
+    v-if='column.enumList && column.type == "stringEnum"'
     :style='{width: `100%`}'
   )
     select(
       :style='{width: `100%`, border: `0px`, textAlign: `right`}'
-      @change='toto($event,row,column.field)'
+      @change='changeEnum($event,row,column.field)'
     )
       option 
       option(
         v-for='obj in column.enumList'
         value=obj
       ) {{ obj }}
+    
+  span(
+    v-if='column.enumList && column.type == "arrayEnum"'
+    :style='{ width: `100%` }'
+  )    
+    multiselect(
+      v-model="valueSelect",
+      :options="optionsSelect",
+      :multiple="true",
+      :close-on-select="false",
+      :clear-on-select="false",
+      :preserve-search="true",
+      placeholder="Pick some"
+      label="name",
+      track-by="name",
+      :preselect-first="true"
+    )
+      template(
+        slot="selection"
+        slot-scope="{ values, search, isOpen }"
+      )
+        span.multiselect__single(v-if="values.length && !isOpen")
+          | {{ values.length }} options selected
+
   
   span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
     input(
@@ -55,10 +79,15 @@ import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
+import Multiselect from 'vue-multiselect'
+
 
 export default {
   filters: {
     cellFormatter,
+  },
+  components: {
+    Multiselect
   },
   props: {
     column: { type: Object },
@@ -72,7 +101,20 @@ export default {
     onlyBorder: { type: Boolean },
   },
   data() {
-    return { value: null, rowValue: null, editPending: false };
+    return { 
+      value: null, 
+      rowValue: null, 
+      editPending: false,
+      valueSelect: [],
+      optionsSelect: [
+        { name: 'Vue.js', language: 'JavaScript' },
+        { name: 'Adonis', language: 'JavaScript' },
+        { name: 'Rails', language: 'Ruby' },
+        { name: 'Sinatra', language: 'Ruby' },
+        { name: 'Laravel', language: 'PHP' },
+        { name: 'Phoenix', language: 'Elixir' }
+      ]
+    };
   },
   computed: {
     selected() {
@@ -149,7 +191,7 @@ export default {
     clickCell(event){
       this.$emit("click", event);
     },
-    toto(event){
+    changeEnum(event){
       var value = event.target.value;
       let valueChanged = true;
       const { row, column, rowIndex, columnIndex } = this;

@@ -37,7 +37,7 @@
                   <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/view.png" width="20" />
                   <img v-if="infoboxType == 3" src="../static/images/pen.png" width="20" />
                 </b-button>
-                <b-button @click="showReport = true" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
+                <b-button @click="showReport = !showReport" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
                   Voir le rapport d'erreur
                   &nbsp;
                   <img src="../static/images/align-left.png" width="15" />

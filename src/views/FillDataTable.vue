@@ -173,7 +173,7 @@
                   {{ infoboxContent }}
                   <br /><br />
                 </div>
-                <b-button @click="showReport = true" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
+                <b-button @click="showReport = !showReport" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
                   Voir le rapport d'erreur
                   &nbsp;
                   <img src="../static/images/align-left.png" width="15" />
@@ -479,6 +479,15 @@ export default {
           myobj.field = field.name;
           myobj.headerName = field.name;
           myobj.editable = true;
+          
+          if(field.type == 'array' && field.arrayItem) {
+            console.log(field.arrayItem.constraints.enum);
+            this.emptyRow[field.name] = [];
+            this.emptyRowInfo[field.name] = '';
+            this.emptyRowError[field.name] = '';
+            myobj.type = 'arrayEnum';
+            myobj.enumList = field.arrayItem.constraints.enum;
+          }
 
           if (field.type === 'string') {
             this.emptyRow[field.name] = '';
@@ -564,7 +573,6 @@ export default {
             else {
               this.columnDefs = this.ongoingData.columnDefs;
               this.rows = this.ongoingData.rows;
-              console.log(this.ongoingData)
               this.realRowsIds = this.ongoingData.realRowsIds;
             }
           }
@@ -737,7 +745,6 @@ export default {
       var empty = true;
       this.rows.forEach((row) => {
         for (property in row) {
-          console.log(property)
           if (property != 'idRowVEG' && row[property] && row[property] != "") {
             empty = false;
           }
@@ -755,7 +762,6 @@ export default {
         delete this.rowsColor[$event.rowIndex][$event.column.field];
         delete this.rowsError[$event.rowIndex][$event.column.field];
       }
-      console.log('edit')
       
       this.realRowsIds.push(this.rows[$event.rowIndex]['idRowVEG'])
       this.realRowsIds = [...new Set(this.realRowsIds)];
@@ -803,7 +809,6 @@ export default {
     linkClicked() {
     },
     removeCurrentRow() {
-      console.log('remove')
       this.realRowsIds = this.realRowsIds.filter(e => e !== this.selectedRow.idRowVEG);
       this.rows = this.rows.filter((row) => row.idRowVEG !== this.selectedRow.idRowVEG);
     },
@@ -1123,7 +1128,6 @@ export default {
       this.displayMenuBox = true;
       this.topDiv = window.scrollY+event.y+27;
       this.leftDiv = event.x-10;
-      console.log(event);
     },
     clickPage(){
       if(!this.menuSelected) this.displayMenuBox = false;
@@ -1137,7 +1141,6 @@ export default {
       this.errorSelected = false;
     },
     showErrors(event,row,col,pos){
-      console.log()
       if(this.rowsError[row][this.columnDefs[col].field]) {
         this.topDivError = window.scrollY+pos.y+40;
         this.leftDivError = pos.x;
@@ -1155,10 +1158,7 @@ export default {
       this.displayRemove = false;
       this.displayRename = false;
       this.columnModalP = '';
-    },
-    test(){
-      console.log(this.$refs.grid.$el.offsetWidth)
-    },
+    }
   },
 };
 </script>
