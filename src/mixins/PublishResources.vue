@@ -450,7 +450,11 @@ export default {
       this.$router.push('/');
     },
     gotoSelectPage() {
-      this.$router.push('/select?schema='+this.schemaName);
+      if(this.schemaName){
+        this.$router.push('/select?schema='+this.schemaName);
+      } else if(this.schemaUrl) {
+        this.$router.push('/select?schema_url='+this.schemaUrl);
+      }
     },
   },
 };
