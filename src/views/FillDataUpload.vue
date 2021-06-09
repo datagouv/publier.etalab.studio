@@ -266,6 +266,7 @@ export default {
       } else {
         this.wrongFormat = true;
         this.reportValidStatus = 'Votre fichier n\'est pas au format attendu.';
+        this.validBox = false;
         if(this.schema.schema_type == 'tableschema'){
           this.infoboxContent = 'Le fichier que vous venez de charger n\'est pas au format CSV. Le format CSV est le format obligatoire pour ce type de données.'
         }
