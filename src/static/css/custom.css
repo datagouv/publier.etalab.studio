@@ -326,7 +326,7 @@
   background-color: #F2F2F9;
   padding: 10px;
   font-size: 12px;
-  width: 300px; 
+  min-width: 300px; 
   position: absolute;
   z-index: 100;
   color: black; 
@@ -492,4 +492,14 @@
 #modal1___BV_modal_header_ {
   border: 0px;
   padding-bottom: 0px;
+}
+
+.arrayEnumCell {
+  max-height: 40px;
+  display: block;
+}
+
+.cell {
+  max-height: 40px;
+  background-color: white;
 }

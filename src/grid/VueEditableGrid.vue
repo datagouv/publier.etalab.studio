@@ -26,9 +26,9 @@ div.vue-editable-grid
                   span &nbsp;&nbsp;
                   a(@click='renameField(column.headerName)')
                     img(src="../static/images/tick.png", width="15")
-                span( v-if='!column.optional') *
+                span( v-if='!column.optional && index != 0') *
               span.intermediary
-              span(class="menuIcon" @click="moveHeaderMenu(column.headerName)") 
+              span(v-if='index != 0' class="menuIcon" @click="moveHeaderMenu(column.headerName)") 
                 img(src="../static/images/menu.png", width="15")
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
       tbody(ref='body', id='body', v-on="handleScroll()")

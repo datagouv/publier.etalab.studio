@@ -124,9 +124,9 @@
       </div>
     </div>
     <div ref="test">
-      <div style="width: 94%; margin-left: 3%; margin-right: 3%; height:1100px;">
-        <div style="width: 97%; float: left;">
-          <div class="tableur" style="overflow-y: scroll; height:1000px;">
+      <div :style="{ width: `94%`, marginLeft: `3%`, marginRight: `3%`, height: `${this.rows.length*40+100}px` }">
+        <div :style="{ width: `97%`, float: `left` }">
+          <div class="tableur" :style="{ overflowY: `scroll`, height: `${this.rows.length*40}px` }">
             <vue-editable-grid
                 class="grid"
                 ref="grid"
@@ -160,7 +160,7 @@
             <b-button @click="addEmptyRow()" :style="`width: ${widthPlus}px;`" class="addLineButton">+</b-button>
           </div>
         </div>
-        <div style="width: 3%; height: 1000px; float: left;">
+        <div :style="{ width: `3%`, height: `${this.rows.length*40}px`, float: `left` }">
           <b-button @click="addNewField()" class="addColumnButton">+</b-button>
         </div>
       </div>

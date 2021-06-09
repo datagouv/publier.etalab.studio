@@ -29,6 +29,7 @@ td.cell.noselectx(
         value=obj
       ) {{ obj }}
   span(
+      class="arrayEnumCell"
       v-if='column.type === "arrayEnum"'
       :style='{width: `100%`}'
     )
