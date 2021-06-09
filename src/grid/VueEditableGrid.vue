@@ -97,7 +97,7 @@ export default {
     virtualScrollOffset: { type: Number, default: 3 },
     onlyBorder: { type: Boolean, default: true },
     actualRow: { type: Number, default: 0},
-    actualCol: { type: Number, default: 0},
+    actualCol: { type: Number, default: 1},
     nbLinesFile: { type: Number, default: 0}
   },
   data() {
@@ -121,6 +121,7 @@ export default {
       selStartSelection: [],
       scrollLeft: null,
       newNameHeader: '',
+      init: true,
     };
   },
   created() {  
@@ -207,6 +208,7 @@ export default {
         if (isShift) $event.preventDefault();
         this.copyToClipboard(isShift);
       } else if (!$event.metaKey && this.selStart[0] >= 0 && isWriteableKey($event.keyCode)) {
+        
         const { colData, rowData, rowIndex, colIndex } = this.getCell();
         $event.preventDefault();
         this.tryEdit(rowData, colData, rowIndex, colIndex, $event.key);
@@ -230,11 +232,17 @@ export default {
   watch: {
     selStart(value, old) {
       if (value[0] !== old[0]) {
-        this.emitRowSelected();
+        if(!this.init) {
+          this.emitRowSelected();
+        }
       }
     },
     selEnd() {
-      this.emitRowSelected();
+      console.log('test')
+      if(!this.init) {
+        this.emitRowSelected();
+      }
+        this.init = false;
     },
     rowDataPage() {
       this.emitRowSelected();
@@ -299,6 +307,7 @@ export default {
     emitRowSelected() {
       if ((this.selStart[0] === this.selEnd[0] && this.selStart[1] === this.selEnd[1])) {
         const cell = this.getCell();
+
         this.$emit('row-selected', cell);
       } else {
         this.$emit('row-selected', { rowData: null });
@@ -510,10 +519,10 @@ export default {
       });
     },
     selectFirstCol() {
-      this.selectCell(this.selStart[1], 0);
+      this.selectCell(this.selStart[1], 1);
     },
     selectLastCol() {
-      this.selectCell(this.selStart[0], this.columnDefs.length - 1);
+      this.selectCell(this.selStart[1], this.columnDefs.length - 1);
     },
     selectFirstRow() {
       this.selectCell(0, this.selStart[1]);

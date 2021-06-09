@@ -58,6 +58,7 @@
                   :badgeUrl="badgeUrl"
                   :reportErrorInfo="reportErrorInfo"
                   :reportStructureErrors="reportStructureErrors"
+                  :reportIntegrityErrors="reportIntegrityErrors"
                   :reportGeneralErrors="reportGeneralErrors"
                   :reportContentErrors="reportContentErrors"
                   :reportRecos="reportRecos"
@@ -215,6 +216,7 @@ export default {
 
       this.reportValidStatus = null;
       this.reportStructureErrors = [];
+      this.reportIntegrityErrors = [];
       this.reportGeneralErrors = [];
       this.reportContentErrors = [];
       this.reportRecos = [];

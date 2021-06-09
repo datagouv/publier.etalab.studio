@@ -11,6 +11,7 @@ export default {
       reportValidStatus: '',
       badgeUrl: null,
       reportStructureErrors: [],
+      reportIntegrityErrors: [],
       reportGeneralErrors: [],
       reportContentErrors: [],
       reportRecos: [],
@@ -78,11 +79,14 @@ export default {
                 this.reportErrors = data.report.tables[0].errors;
 
                 data.report.tables[0].errors.forEach((error) => {
-                if (error.tags.includes('#content')) {
+                if ((error.tags.includes('#content') && !error.tags.includes('#integrity')) || error.tags.includes('#body')) {
                     this.reportContentErrors.push(error);
                 }
                 if (error.tags.includes('#structure')) {
                     this.reportStructureErrors.push(error);
+                }
+                if (error.tags.includes('#integrity')) {
+                    this.reportIntegrityErrors.push(error);
                 }
                 });
 

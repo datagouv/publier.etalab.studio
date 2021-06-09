@@ -33,7 +33,7 @@
         <p>Bonjour !</p>
         <p>Pour publier à votre place sur data.gouv.fr, nous avons besoin de votre autorisation.</p>
         <p>Le site publier.etalab.studio pourra :<ul><li>accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
-        <p>Merci de vous cliquer sur le bouton ci-dessous et d'accepter ces autorisations.</p>
+        <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations.</p>
         <br />
         <b-button class="rf-btn" @click="submitLogin">
           Je suis d'accord&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>

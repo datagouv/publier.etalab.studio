@@ -9,6 +9,7 @@
             <vsa-content>
                 <ul v-bind:key="error.name" v-for="error in reportGeneralErrors">
                     <li><b>{{ error.name }}</b> : {{ error.note }}</li>
+                    <span v-if="error.message"><vue-markdown :source='error.message.replace("##","")' /></span>
                 </ul>
             </vsa-content>
         </vsa-item>
@@ -19,6 +20,18 @@
             <vsa-content>
                 <ul v-bind:key="error.name" v-for="error in reportStructureErrors">
                     <li><b>{{ error.name }}</b> : {{ error.note }}</li>
+                    <span v-if="error.message"><vue-markdown :source='error.message.replace("##","")' /></span>
+                </ul>
+            </vsa-content>
+        </vsa-item>
+        <vsa-item v-if="reportIntegrityErrors.length != 0">
+            <vsa-heading class="section-report">
+                Erreurs d'intégrité ({{ reportIntegrityErrors.length }})
+            </vsa-heading>
+            <vsa-content>
+                <ul v-bind:key="error.name" v-for="error in reportIntegrityErrors">
+                    <li><b>{{ error.name }}</b> : {{ error.note }}</li>
+                    <span v-if="error.message"><vue-markdown :source='error.message.replace("##","")' /></span>
                 </ul>
             </vsa-content>
         </vsa-item>
@@ -32,7 +45,8 @@
                         <b>{{ error.name }}</b> :
                         <span v-if="error.fieldName">
                         colonne <i>{{ error.fieldName }}</i>,
-                        </span> rang {{ error.rowPosition }}
+                        </span> ligne {{ error.rowPosition }}
+                        <span v-if="error.message"><vue-markdown :source='error.message.replace("##","")' /></span>
                     </li>
                 </ul>
             </vsa-content>
@@ -63,6 +77,8 @@
 
 
 <script>
+import VueMarkdown from 'vue-markdown';
+
 import {
   VsaList,
   VsaItem,
@@ -77,6 +93,7 @@ export default {
     badgeUrl: String,
     reportErrorInfo: Object,
     reportStructureErrors: Array,
+    reportIntegrityErrors: Array,
     reportGeneralErrors: Array,
     reportContentErrors: Array,
     reportRecos: Array,
@@ -88,6 +105,7 @@ export default {
     VsaItem,
     VsaHeading,
     VsaContent,
+    VueMarkdown
   },
   data() {
     return {

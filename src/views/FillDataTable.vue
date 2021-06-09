@@ -124,9 +124,9 @@
       </div>
     </div>
     <div ref="test">
-      <div :style="{ width: `94%`, marginLeft: `3%`, marginRight: `3%`, height: `${this.rows.length*40+100}px` }">
+      <div :style="{ width: `94%`, marginLeft: `3%`, marginRight: `3%`, height: `${this.rows.length*43+100}px` }">
         <div :style="{ width: `97%`, float: `left` }">
-          <div class="tableur" :style="{ overflowY: `scroll`, height: `${this.rows.length*40}px` }">
+          <div class="tableur" :style="{ overflowY: `scroll`, height: `${this.rows.length*43}px` }">
             <vue-editable-grid
                 class="grid"
                 ref="grid"
@@ -160,7 +160,7 @@
             <b-button @click="addEmptyRow()" :style="`width: ${widthPlus}px;`" class="addLineButton">+</b-button>
           </div>
         </div>
-        <div :style="{ width: `3%`, height: `${this.rows.length*40}px`, float: `left` }">
+        <div :style="{ width: `3%`, height: `${this.rows.length*43}px`, float: `left` }">
           <b-button @click="addNewField()" class="addColumnButton">+</b-button>
         </div>
       </div>
@@ -183,6 +183,7 @@
           :badgeUrl="badgeUrl"
           :reportErrorInfo="reportErrorInfo"
           :reportStructureErrors="reportStructureErrors"
+          :reportIntegrityErrors="reportIntegrityErrors"
           :reportContentErrors="reportContentErrors"
           :reportRecos="reportRecos"
           :reportJson="reportJson"
@@ -225,6 +226,7 @@
                   :badgeUrl="badgeUrl"
                   :reportErrorInfo="reportErrorInfo"
                   :reportStructureErrors="reportStructureErrors"
+                  :reportIntegrityErrors="reportIntegrityErrors"
                   :reportGeneralErrors="reportGeneralErrors"
                   :reportContentErrors="reportContentErrors"
                   :reportRecos="reportRecos"
@@ -869,6 +871,7 @@ export default {
 
       this.reportValidStatus = null;
       this.reportStructureErrors = [];
+      this.reportIntegrityErrors = [];
       this.reportGeneralErrors = [];
       this.reportContentErrors = [];
       this.reportRecos = [];
@@ -1013,6 +1016,7 @@ export default {
           }
         });
       }
+      console.log($event)
       if ($event.colData) {
         this.warningInfo = this.rowsInfo[$event.rowIndex][$event.colData.field];
         this.errorInfo = this.rowsError[$event.rowIndex][$event.colData.field];
