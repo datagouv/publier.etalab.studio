@@ -64,6 +64,28 @@
       </div>
     </div>
 
+
+    <div v-if="displayGeopointBox" class="arrayBox" :style="`width: 500px; top: ${topDivError}px; left: ${leftDivError}px;`">
+      <l-map
+        :center="center"
+        :zoom="zoom"
+        style="height: 300px; width: 100%"
+      >
+        <l-tile-layer :url="url" :attribution="attribution" />
+        <l-marker
+          :lat-lng="markerLocation"
+          :draggable="true"
+          @update:latLng="onMarkerMove"
+        >
+          <l-tooltip>
+            Déplacez moi<br />
+            pour mettre à jour<br />
+            les coordonnées
+          </l-tooltip>
+        </l-marker>
+      </l-map>
+    </div>
+
     <div class="rf-container">
       <div>
         <input
@@ -130,6 +152,7 @@
                 @remove-boxes='removeBoxes'
                 @rename-field='renameField'
                 @show-array-enum='showArrayEnum'
+                @show-geopoint='showGeopoint'
                 >
             </vue-editable-grid>
           </div>
@@ -329,8 +352,16 @@ import VueEditableGrid from '../grid/VueEditableGrid.vue';
 import PublishRessources from '../mixins/PublishResources.vue';
 import GetReport from '../mixins/GetReport.vue';
 
+import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet'
+
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
+const GEO_WIDGET_INITIAL_CENTER = [46.8, 2.11] // Center of France
+const GEO_DECIMAL_COUNT = 2
+// Geographical map is based on Jawg (https://www.jawg.io/) raster tiles
+// Request for a free API token and pass it through VUE_APP_GEO_ACCESS_TOKEN env variable
+const accessToken = process.env.VUE_APP_GEO_ACCESS_TOKEN
+const GEO_TILES_URL = `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`
 
 export default {
   name: 'fillDataTable',
@@ -342,6 +373,10 @@ export default {
     VueEditableGrid,
     PublishFormUpload,
     ErrorReport,
+    LMap,
+    LTileLayer,
+    LMarker,
+    LTooltip
   },
   data() {
     return {
@@ -399,7 +434,9 @@ export default {
       displayInformations: false,
       displayErrorBox: false,
       displayArrayBox: false,
+      displayGeopointBox: false,
       arraySelected: false,
+      geopointSelected: false,
       errorSelected: false,
       topDivError: "200",
       leftDivError: "200",
@@ -417,6 +454,20 @@ export default {
       rowCurrentArray: null,
       colCurrentArray: null,
       colindexCurrentArray: null,
+      rowCurrentGeopoint: null,
+      colCurrentGeopoint: null,
+      center: GEO_WIDGET_INITIAL_CENTER,
+      markerLocation: GEO_WIDGET_INITIAL_CENTER,
+      zoom: 5,
+      accessToken: null,
+      url: GEO_TILES_URL,
+      attribution: `<a href="http://jawg.io" title="Tiles Courtesy of Jawg Maps" target="_blank"
+                     class="jawg-attrib">&copy; <b>Jawg</b>Maps</a>
+                     | <a href="https://www.openstreetmap.org/copyright"
+                     title="OpenStreetMap is open data licensed under ODbL" target="_blank"
+                     class="osm-attrib">&copy; OSM contributors</a>`,
+      value: '',
+      floatPrecision: GEO_DECIMAL_COUNT,
     };
   },
   watch: {
@@ -486,8 +537,59 @@ export default {
           });
         }
       });
-
     },
+
+    // Called after marker has been moved
+    // either dragging it or setting its location
+    onMarkerMove(latLng) {
+      // marker location
+      this.markerLocation = latLng
+      // formatted value: "lon, lat"
+      var format = null
+      
+      this.columnDefs.forEach((cd) => {
+        if(cd.headerName == this.colCurrentGeopoint) {
+          format = cd.format;
+        }
+      });
+
+      this.schema.fields.forEach((field) => { 
+        if(field.name == this.colCurrentGeopoint){
+          console.log(field);
+          format = field.format;
+        }
+      });
+      
+      const value =  this.formatLatLng(latLng, format)
+      // update text input
+      // Hey! value has changed
+      this.rows[this.rowCurrentGeopoint][this.colCurrentGeopoint] = value;
+    },
+
+    // Format longLat object to string
+    formatLatLng(lngLat, format) {
+      const fp = this.floatPrecision
+      const { lat, lng } = lngLat
+      if (format == "array") {
+        return `[${lng.toFixed(fp)},${lat.toFixed(fp)}]`
+      }
+      if (format == "object") {
+        return `{"lon": ${lng.toFixed(fp)}, "lat": ${lat.toFixed(fp)}}`
+      }
+      return `${lng.toFixed(fp)},${lat.toFixed(fp)}`
+    },
+
+    showGeopoint(row, col, column, val, pos){
+      this.displayErrorBox = false;
+      this.geopointSelected = false;
+      this.rowCurrentGeopoint = row;
+      this.colindexCurrentGeopoint = col;
+      this.colCurrentGeopoint = column;
+      this.topDivError = window.scrollY+pos.y+40;
+      this.leftDivError = pos.x;
+      this.displayGeopointBox = true;
+    },
+
     handleScroll () {
       this.scrolled = window.scrollY > 0;
     },
@@ -537,6 +639,14 @@ export default {
           myobj.headerName = field.name;
           myobj.editable = true;
           
+          if(field.type == 'geopoint') { 
+            this.emptyRow[field.name] = '';
+            this.emptyRowInfo[field.name] = '';
+            this.emptyRowError[field.name] = '';
+            myobj.type = 'geopoint'
+            myobj.format = field.format;
+          }
+
           if(field.type == 'array') {
             this.emptyRow[field.name] = '';
             this.emptyRowInfo[field.name] = '';
@@ -880,12 +990,14 @@ export default {
       if ($event.colIndex) {
         if(this.colIndex != $event.colIndex) {
           this.arraySelected = true;
+          this.geopointSelected = true;
         }
         this.colIndex = $event.colIndex;
       }
       if ($event.rowIndex != null) {
         if(this.rowIndex != $event.rowIndex+1) {
           this.arraySelected = true;
+          this.geopointSelected = true;
         }
         this.rowIndex = $event.rowIndex+1;
       }
@@ -925,7 +1037,7 @@ export default {
       const myobjColor = {};
 
       this.schema.fields.forEach((field) => {
-        if (field.type === 'string' || field.type === 'stringEnum') {
+        if (field.type === 'string' || field.type === 'stringEnum' || field.type === 'geopoint') {
           myobj[field.name] = '';
           myobjInfo[field.name] = '';
           myobjError[field.name] = '';
@@ -1252,6 +1364,9 @@ export default {
       if(this.arraySelected) {
         this.displayArrayBox = false;
       }
+      if(this.geopointSelected) {
+        this.displayGeopointBox = false;
+      }
     },
     showErrors(event,row,col,pos){
       if(this.rowsError[row][this.columnDefs[col].field]) {
@@ -1263,9 +1378,11 @@ export default {
         this.displayErrorBox = false;
       }
       if(this.arraySelected) this.displayArrayBox = false;
+      if(this.geopointSelected) this.displayGeopointBox = false;
     },
     removeBoxes(){
       this.displayErrorBox = false;
+      this.displayGeopointBox = false;
       this.displayInfoBox = false;
       this.displayInformations = false;
       this.displayMenuBox = false;

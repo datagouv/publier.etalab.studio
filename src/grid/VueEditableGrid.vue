@@ -58,6 +58,7 @@ div.vue-editable-grid
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
               @show-array-enum='showArrayEnum'
+              @show-geopoint='showGeopoint'
             )
     textarea.hidde(ref='tmp')
 </template>
@@ -275,6 +276,9 @@ export default {
     },
   },
   methods: {
+    showGeopoint(row,col, column, val) {
+      this.$emit('show-geopoint', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
+    },
     showArrayEnum(row,col, column, val){
       this.$emit('show-array-enum', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
     },

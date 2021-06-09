@@ -35,6 +35,12 @@ td.cell.noselectx(
     a(@click="showArrayEnum(rowIndex,columnIndex,column.headerName, row[column.field])")
       img(src='../static/images/down-arrow-black.png',width="10px",height="10px")
     span(v-for='obj in row[column.field]') &nbsp;{{ obj }},
+  span(
+     v-if='column.type === "geopoint"'
+  ) 
+    a(@click="showGeopoint(rowIndex,columnIndex,column.headerName, row[column.field])")
+      img(src='../static/images/worldwide.png',width="20px",height="20px")
+      span &nbsp;&nbsp;
   span(v-if='column.type != "arrayEnum"')
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
       input(
@@ -159,6 +165,9 @@ export default {
     },
   },
   methods: {
+    showGeopoint(row,col, column, val){
+      this.$emit("show-geopoint", row, col, column, val);
+    },
     showArrayEnum(row,col, column, val){
       this.$emit("show-array-enum", row, col, column, val);
     },
