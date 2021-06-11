@@ -35,9 +35,6 @@ export default {
         
         this.report = data;
 
-        console.log(this.report);
-
-
         if (!data.report) {
             this.reportValidStatus = 'Nous avons rencontré une erreur dans la validation de votre fichier'
             this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'

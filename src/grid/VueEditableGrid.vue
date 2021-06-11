@@ -63,6 +63,7 @@ div.vue-editable-grid
               @mouseup='stopSelection'
               @show-array-enum='showArrayEnum'
               @show-geopoint='showGeopoint'
+              @get-identifier='getIdenfifier'
             )
     textarea.hidde(ref='tmp')
 </template>
@@ -125,7 +126,6 @@ export default {
       selStartSelection: [],
       scrollLeft: null,
       newNameHeader: '',
-      init: true,
     };
   },
   created() {  
@@ -235,18 +235,10 @@ export default {
   },
   watch: {
     selStart(value, old) {
-      if (value[0] !== old[0]) {
-        if(!this.init) {
-          this.emitRowSelected();
-        }
-      }
+      this.emitRowSelected();
     },
     selEnd() {
-      console.log('test')
-      if(!this.init) {
-        this.emitRowSelected();
-      }
-        this.init = false;
+      this.emitRowSelected();
     },
     rowDataPage() {
       this.emitRowSelected();
@@ -290,6 +282,9 @@ export default {
   methods: {
     showGeopoint(row,col, column, val) {
       this.$emit('show-geopoint', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
+    },
+    getIdenfifier(row,col, column, val) {
+      this.$emit('get-identifier', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
     },
     showArrayEnum(row,col, column, val){
       this.$emit('show-array-enum', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());

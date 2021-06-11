@@ -444,6 +444,29 @@
   padding-bottom: 0px;
 }
 
+
+
+#modalDelete___BV_modal_content_ {
+  border-radius: 0px;
+  padding: 20px;
+  max-width: 1000px;
+
+}
+
+#modalDelete header button{
+  border: 0px;
+  background-color: transparent;
+  font-size: 20px;
+}
+
+#modalDelete___BV_modal_title_ {
+  font-size: 30px;
+}
+#modalDelete___BV_modal_header_ {
+  border: 0px;
+  padding-bottom: 0px;
+}
+
 .modal-body {
   margin: 0px;
 }

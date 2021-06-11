@@ -12,8 +12,15 @@
         <div v-if="schema && !publicationReady" class="rf-container rf-pb-6w rf-pt-2w">
             <p class="title-page">Vérifier un fichier existant</p>
             <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
+            
             <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
-            <label for="file"><img src="../static/images/upload.png" width="40" /><br /><br />Charger votre fichier</label>
+            <label v-if="!showInfobox" for="file"><img src="../static/images/upload.png" width="40" /><br /><br />Charger votre fichier</label>
+            <label v-if="showInfobox" for="file">
+              <img src="../static/images/upload.png" width="40" />
+              <br /><br />
+              Nom du fichier : {{ filename }}
+              <span v-if="sizeFile"><br />Taille : {{ sizeFile/1000 }} ko</span>
+            </label>
 
             <div v-if="showInfobox" :class="validBox ? 'valid-box' : 'invalid-box'">
               <div class="infobox-title">
@@ -81,7 +88,7 @@
                 En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
                 <a :href="'mailto:'+this.schema.contact">{{ this.schema.contact }}</a>
               </p>
-              <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;">en cliquant ici</a></p>
+              <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;" style="cursor: pointer;">en cliquant ici</a></p>
             </div>
         </div>
 
@@ -194,6 +201,7 @@ export default {
       showReport: false,
       showInfobox: false,
       filename: 'Monfichier',
+      sizeFile: null,
     };
   },
   computed: {
@@ -202,11 +210,15 @@ export default {
   },
   methods: {
     handleFileUpload() {
+      this.sizeFile = null;
+      this.filename = 'Monfichier'
       this.showInfobox = true;
       this.showReport = false;
       this.editButtonTitle = 'Prévisualiser le fichier'
       this.wrongFormat = false;
       this.file = this.$refs.file.files[0];
+      if(this.file.name) this.filename = this.file.name;
+      if(this.file.size) this.sizeFile = this.file.size;
       this.report = null;
       this.reportJson = []
       this.reportValidStatus = null;
