@@ -779,9 +779,9 @@ export default {
               this.submit();
             }
             else {
-              this.columnDefs = {...this.ongoingData.columnDefs};
-              this.rows = {...this.ongoingData.rows};
-              this.realRowsIds = {...this.ongoingData.realRowsIds};
+              this.columnDefs = this.ongoingData.columnDefs;
+              this.rows = this.ongoingData.rows;
+              this.realRowsIds = this.ongoingData.realRowsIds;
             }
           }
         }
