@@ -27,6 +27,7 @@ td.cell.noselectx(
       option(
         v-for='obj in column.enumList'
         value=obj
+        :selected="obj === row[column.field]"
       ) {{ obj }}
   span(
       class="arrayEnumCell"
@@ -42,7 +43,10 @@ td.cell.noselectx(
     a(@click="showGeopoint(rowIndex,columnIndex,column.headerName, row[column.field])")
       img(src='../static/images/worldwide.png',width="20px",height="20px")
       span &nbsp;&nbsp;
-  span(v-if='column.type != "arrayEnum"')
+  span(
+    v-if='column.type != "arrayEnum"'
+    :style='{ width: `100%`}'
+  )
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
       input(
         :type='inputType'
@@ -59,7 +63,9 @@ td.cell.noselectx(
         v-if='column.type === "link"'
         href='#'
       ) {{ row[column.field] | cellFormatter(column, row) }}
-      span(v-else) 
+      span(
+        v-else 
+      ) 
         span(v-if='!column.enumList') {{ row[column.field] | cellFormatter(column, row) }}
 </template>
 
