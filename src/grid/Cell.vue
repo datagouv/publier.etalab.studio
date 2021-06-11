@@ -50,7 +50,7 @@ td.cell.noselectx(
       img(src='../static/images/fingerprint-scan.png',width="20px",height="20px")
       span &nbsp;&nbsp;
   span(v-if='column.type != "arrayEnum"'
-    :style='{ width: `100%`}'
+    :style='{ maxWidth: `100%`}'
   )
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
       input(
