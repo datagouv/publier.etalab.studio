@@ -37,6 +37,7 @@
             v-model="form.org"
             :options="organizations"
             v-on:change="onChange"
+            class="rf-select"
             required
           ></b-form-select>
       </b-form-group>
@@ -73,8 +74,9 @@
           id="input-editjdd-me"
           v-model="form.existingDataset"
           v-on:change="onChangeJDDMe"
+          class="rf-select"
         >
-          <option v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
+          <option class="rf-select" v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
             {{ ds.title }}
           </option>
         </b-form-select>
@@ -115,6 +117,7 @@
           v-model="form.dataset.title"
           v-on:input="onChange"
           :trim="true"
+          class="rf-input"
         ></b-form-input>
       </b-form-group>
 
@@ -133,6 +136,7 @@
           rows="4"
           v-on:input="onChange"
           :trim="true"
+          class="rf-input"
         ></b-form-textarea>
       </b-form-group>
 
@@ -167,8 +171,9 @@
         <b-form-select
           id="input-editres"
           v-model="form.existingResource"
+          class="rf-select"
         >
-          <option v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
+          <option class="rf-select" v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
             {{ res.title }}
           </option>
         </b-form-select>
@@ -181,14 +186,14 @@
         label-for="input-resource-title"
       >
         <template v-slot:label>
-          Nom du fichier CSV <span class="text-danger">*</span>
+          Nom du fichier <span class="text-danger">*</span>
         </template>
         <b-form-input
           id="input-resource-title"
           v-model="form.resource.title"
           v-on:input="onChange"
           :trim="true"
-          placeholder="data.csv"
+          class="rf-input"
         ></b-form-input>
       </b-form-group>
       <p class="text-muted">
@@ -206,6 +211,7 @@ export default {
     schemaName: String,
     organizations: Array,
     publicationIntro: String,
+    filename: String,
     value: {
       type: undefined,
       required: true,
@@ -272,6 +278,7 @@ export default {
   },
   methods: {
     onChange() {
+      if(this.form.resource.title == '') this.form.resource.title = this.filename;
       // eslint-disable-next-line prefer-destructuring
       const okState = this.okState;
       if (this.form.org !== '') {
@@ -289,7 +296,7 @@ export default {
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
           this.typeResPicked = '';
-          this.form.resource.title = '';
+          this.form.resource.title = this.filename;
           this.form.existingResource = '';
           this.editResShow = false;
         }
@@ -302,7 +309,7 @@ export default {
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
           this.typeResPicked = '';
-          this.form.resource.title = '';
+          this.form.resource.title = this.filename;
           this.form.existingResource = '';
           this.editResShow = false;
         }
@@ -312,7 +319,7 @@ export default {
       this.form.org = '';
       this.form.dataset.title = '';
       this.form.dataset.description = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.form.existingDataset = '';
       this.editJDDShow = false;
       this.newJDDShow = false;
@@ -336,9 +343,9 @@ export default {
     radioclickJDD(type) {
       this.form.dataset.title = '';
       this.form.dataset.description = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.form.existingDataset = '';
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.typeResPicked = '';
       this.form.existingResource = '';
       this.editResShow = false;
@@ -357,7 +364,7 @@ export default {
       }
     },
     radioclickRes(type) {
-      this.form.resource.title = '';
+      this.form.resource.title = this.filename;
       this.typeResPicked = '';
       this.form.existingResource = '';
       if (type === 'existing') {

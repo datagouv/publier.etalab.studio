@@ -3,6 +3,11 @@ import { EventBus } from '../event-bus.js';
 
 import $api from '../services/Api';
 
+import Auth from '../services/Auth';
+
+const $auth = new Auth();
+
+
 const SCHEMAS_CATALOG_URL = process.env.VUE_APP_SCHEMAS_CATALOG_URL;
 const DGV_BASE_URL = process.env.VUE_APP_DATAGOUV_API_URL;
 
@@ -13,6 +18,7 @@ export default {
   data() {
     return {
       schemaName: this.$route.query.schema,
+      schemaUrl: this.$route.query.schema_url,
       fieldNames: [],
       schemas: null,
       options: [],
@@ -20,9 +26,11 @@ export default {
       schemaMeta: {},
       values: {},
       hasValues: false,
-      publicationIntro: 'Publiez vos données au format CSV dans un nouveau jeu de données',
+      publicationIntro: 'Publiez vos données dans un nouveau jeu de données',
       publishButtonDisabled: true,
       fromFile: this.$route.query.fromFile,
+      publishWithSchema: true,
+      titleVerificationModal: "Rapport de validation",
     };
   },
   mounted() {
@@ -33,8 +41,29 @@ export default {
         value: s.name, 
         text: s.title || s.name 
       }));
-      this.schema = this.schemas.find((s) => s.name === this.schemaName);
-      this.schemaMeta = this.schema;
+      this.schema = this.schemas.find((s) => (s.name === this.schemaName || s.schema_url === this.schemaUrl));
+      if(this.schema && !this.schemaName) this.schemaName = this.schema.name
+      if(this.schema) this.schema.version = this.schema.versions[this.schema.versions.length - 1]['version_name']
+      if(!this.schema) {
+        fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
+          console.log(data2);
+          if (data2.$schema && (data2.$schema == "https://specs.frictionlessdata.io/schemas/table-schema.json" || data2.$schema == "https://frictionlessdata.io/schemas/table-schema.json")) {
+            console.log(this.schemaUrl);
+            var obj = {}
+            obj['contact'] = '';
+            obj['description'] = '';
+            obj['examples'] = [];
+            obj['name'] = data2.name;
+            obj['schema_type'] = "tableschema";
+            obj['schema_url'] = this.schemaUrl;
+            obj['title'] = data2.title;
+            obj['versions'] = [];
+            this.schema = obj;
+            this.schemaMeta = this.schema;
+          }
+        });
+      }
+      if(this.schema) this.schemaMeta = this.schema;
     }).finally(() => {
       loader.hide();
     });
@@ -49,11 +78,6 @@ export default {
     }
   },
   computed: {
-    filename() {
-      const date = new Date();
-      const name = [this.schemaName, date.toISOString()].join('_');
-      return `${name}.csv`;
-    },
     user() {
       return this.$store.state.auth.user;
     },
@@ -161,13 +185,39 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+
+              var payload = {}
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
+                  }
                 }
-              };
+              } else {
+                payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
+                }
+              }
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
@@ -187,6 +237,7 @@ export default {
         });
     },
     updateDatasetCreateResource(publishContent, dataBlob, ext="csv") {
+      console.log(dataBlob);
       $api
         .put(
           `datasets/${publishContent.existingDataset}`,
@@ -222,13 +273,41 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+
+
+              var payload = {}
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
+                  }
                 }
-              };
+              } else {
+                payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
+                }
+              }
+
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
@@ -293,13 +372,40 @@ export default {
             .then((response) => {
               // New resource identifier
               const resourceId = response.data.id;
-              const payload = {
-                title: publishContent.resource.title,
-                schema: {
-                  name: this.schemaName,
-                  version: "latest",
+
+              var payload = {}
+              if(this.publishWithSchema) {
+                if(this.schemaName) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    schema: {
+                      name: this.schemaName,
+                      version: this.schema.version
+                    },
+                    extras: {
+                      publish_source: "publier.etalab.studio"
+                    }
+                  };
+                } else if(this.schemaUrl) {
+                  payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      external_schema_url: this.schemaUrl,
+                      external_schema_name: this.schema.name,
+                      publish_source: "publier.etalab.studio"
+                    }
+                  }
                 }
-              };
+              } else {
+                payload = {
+                    title: publishContent.resource.title,
+                    extras: {
+                      publication_schema_failed: this.schemaName,
+                      publish_source: "publier.etalab.studio"
+                    }
+                }
+              }
+
               $api
                 .put(
                   `datasets/${datasetId}/resources/${resourceId}/`,
@@ -325,10 +431,30 @@ export default {
       window.open(this.linkDgv);
     },
     showModal() {
-      this.$refs.modal1.show();
+      this.$refs.modalConnectLaunch.show();
     },
     hideModal() {
-      this.$refs.modal1.hide();
+      this.$refs.modalConnectLaunch.hide();
+    },
+    submitLogin(evt) {
+      console.log(evt);
+      if ((this.$route.name != 'login') & (this.$route.name != 'home')) {
+        this.$store.dispatch('auth/fillLastPage',this.$route.name+'?schema='+this.$route.query.schema)
+      } else {
+        this.$store.dispatch('auth/fillLastPage','/')
+      }
+      evt.preventDefault();
+      window.location = $auth.authUrl();
+    },
+    gotoHomePage() {
+      this.$router.push('/');
+    },
+    gotoSelectPage() {
+      if(this.schemaName){
+        this.$router.push('/select?schema='+this.schemaName);
+      } else if(this.schemaUrl) {
+        this.$router.push('/select?schema_url='+this.schemaUrl);
+      }
     },
   },
 };

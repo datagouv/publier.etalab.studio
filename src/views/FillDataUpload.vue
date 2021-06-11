@@ -1,107 +1,94 @@
 <template>
     <div style="min-height: 500px" >
-
+        <div class="rf-container">
+          <p style="font-size: 14px; cursor: pointer;">
+            <a @click="gotoHomePage()" >Accueil</a>
+            &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+            <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+            &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
+            Chargement des données
+          </p>
+        </div>
         <div v-if="schema && !publicationReady" class="rf-container rf-pb-6w rf-pt-2w">
-            <h3>{{ schema.title }} - Chargement des données</h3>
-            <br />
+            <p class="title-page">Vérifier un fichier existant</p>
+            <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
+            <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
+            <label for="file"><img src="../static/images/upload.png" width="40" /><br /><br />Charger votre fichier</label>
 
-            <div class="large-12 medium-12 small-12 cell">
-                <label>Veuillez charger votre fichier :
-                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
-                </label>
-                <br/><br/>
-            </div>
-            <br/>
-            <br/>
-            <div v-if="report">
-                <h3>{{reportValidStatus}}</h3>
-                <img v-bind:src="badgeUrl"/>
-                <div v-if="reportErrorInfo">
-                  <br/>
-                  La tâche de validation a échouée. {{ reportErrorInfo }}.
+            <div v-if="showInfobox" :class="validBox ? 'valid-box' : 'invalid-box'">
+              <div class="infobox-title">
+                <span v-if="validBox">
+                  <img src="../static/images/checked.png" width="20" />
+                </span>
+                <span v-if="!validBox">
+                  <img src="../static/images/warning-black.png" width="20" />
+                </span>
+                &nbsp;
+                {{ reportValidStatus }}
+              </div>
+              <div class="infobox-content">
+                <div v-if="infoboxType != 1">
+                  {{ infoboxContent }}
+                  <br /><br />
                 </div>
-                <br/>
-                <br/><br/>
-
-                <vsa-list>
-                <!-- Here you can use v-for to loop through items  -->
-                <vsa-item v-if="reportStructureErrors.length != 0">
-                    <vsa-heading>
-                        Erreurs de structure ({{ reportStructureErrors.length }})
-                    </vsa-heading>
-                    <vsa-content>
-                        <ul v-bind:key="error.name" v-for="error in reportStructureErrors">
-                            <li><b>{{ error.name }}</b> : {{ error.note }}</li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-                <vsa-item v-if="reportContentErrors.length != 0" >
-                    <vsa-heading>
-                        Erreurs de contenu ({{ reportContentErrors.length }})
-                    </vsa-heading>
-                    <vsa-content>
-                        <ul v-bind:key="error.name" v-for="error in reportContentErrors">
-                            <li>
-                              <b>{{ error.name }}</b> :
-                              <span v-if="error.fieldName">
-                                colonne <i>{{ error.fieldName }}</i>,
-                              </span> rang {{ error.rowPosition }}
-                            </li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-                <vsa-item v-if="reportRecos.length != 0">
-                    <vsa-heading>
-                        Recommandations ({{ reportRecos.length }})
-                    </vsa-heading>
-                    <vsa-content>
-                        <ul v-bind:key="error.name" v-for="error in reportRecos">
-                            <li><b>{{ error.name }}</b> : {{ error.message }}</li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-                <vsa-item v-if="reportJson.length != 0">
-                    <vsa-heading>
-                        Erreurs ({{ reportJson.length }})
-                    </vsa-heading>
-                    <vsa-content>
-                        <ul v-bind:key="error" v-for="error in this.reportJson">
-                            <li><b>{{ error }}</b></li>
-                        </ul>
-                    </vsa-content>
-                </vsa-item>
-                </vsa-list>
+                <b-button @click="editFile()" v-if="(infoboxType == 1 || infoboxType == 2 || infoboxType == 3) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
+                  {{ editButtonTitle }}
+                  &nbsp;
+                  <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/view.png" width="20" />
+                  <img v-if="infoboxType == 3" src="../static/images/pen.png" width="20" />
+                </b-button>
+                <b-button @click="showReport = !showReport" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
+                  Voir le rapport d'erreur
+                  &nbsp;
+                  <img src="../static/images/align-left.png" width="15" />
+                </b-button>
+                <b-button @click="publicationReady = true" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
+                  Publier sur data.gouv.fr
+                  &nbsp;
+                  <img src="../static/images/link.png" width="15" />
+                </b-button>
+                <b-button @click="btnDocClick()" v-if="infoboxType == 4 || infoboxType == 5" class="infobox-button">
+                  Lire la documentation liée au schéma
+                  &nbsp;
+                  <img src="../static/images/foreign.png" width="15" />
+                </b-button>
+                <error-report v-if="showReport"
+                  :report="report"
+                  :reportValidStatus="reportValidStatus"
+                  :badgeUrl="badgeUrl"
+                  :reportErrorInfo="reportErrorInfo"
+                  :reportStructureErrors="reportStructureErrors"
+                  :reportIntegrityErrors="reportIntegrityErrors"
+                  :reportGeneralErrors="reportGeneralErrors"
+                  :reportContentErrors="reportContentErrors"
+                  :reportRecos="reportRecos"
+                  :reportJson="reportJson"
+                  :validBox="validBox"
+                  :infoboxType="infoboxType"
+                  :editButtonTitle="editButtonTitle"
+                ></error-report>
+              </div>
             </div>
-            <br/><br/>
-            <div v-if="wrongFormat">
-              <p>Le fichier soumis n'est pas au format attendu.</p>
+            <div v-if="this.infoboxType == 4">
+              <br />
+              <p v-if="schema.examples.length > 0">Vous pouvez vous appuyer sur <span v-if="schema.examples.length > 1">les fichiers suivants :</span> <span v-if="schema.examples.length = 1">le fichier suivant :</span></p>
+              <ul v-for="example in schema.examples" v-bind:key="example.title">
+                <li @click="gotoExemple(example.path)" style="cursor: pointer;"><u>{{ example.title }}</u></li>
+              </ul>
             </div>
-            <span v-if="this.schema.schema_type == 'tableschema' && this.file && !this.wrongFormat">
-              <button
-                type="submit"
-                style="margin-right: 20px"
-                class="rf-btn-light"
-                title="Editer le fichier"
-                @click="editFile()"
-              >
-                Editer ce fichier
-              </button>
-            </span>
-            <span v-if="publication">
-                <button
-                  type="submit"
-                  style="margin-right: 20px"
-                  class="rf-btn"
-                  title="Publier sur datagouv"
-                  @click="publicationForm()"
-                >
-                  {{ publicationMessage }}
-                </button>
-            </span>
+            <div v-if="(this.infoboxType == 3 || this.infoboxType == 4 || this.infoboxType == 5) && this.schema.contact && this.schema.contact != ''">
+              <p>
+                En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
+                <a :href="'mailto:'+this.schema.contact">{{ this.schema.contact }}</a>
+              </p>
+              <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;">en cliquant ici</a></p>
+            </div>
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+            <p class="title-page">Publier vos données sur data.gouv.fr</p>
             <publish-form-upload
+                :filename="filename"
                 v-model="dataToPublish"
                 :schemaName="schemaName"
                 :organizations="userOrganizations"
@@ -143,91 +130,70 @@
             </div>
         </div>
 
-        <b-modal
-          class="rf-container rf-pb-6w rf-pt-2w"
-          ref="modal1"
-          id="modal1"
-          hide-footer
-          title="Attention, vous n'êtes pas connecté"
-        >
-          <div>
-            <p>Pour publier vos données sur datagouv, il est nécessaire de vous connecter.</p>
-          </div>
-            <div class="button-boxes">
-                <div style="padding-right: 30px; text-align: center;">
-                  <client-only>
-                      <nav-user />
-                  </client-only>
-                </div>
-                <br /><br /><br />
-                <div style="padding-right: 30px; text-align: center;">
-                  <button
-                    class="rf-btn-light"
-                    block
-                    @click="hideModal"
-                  >
-                    Je n'ai pas l'intention de publier mes données
-                  </button>
-                </div>
-              </div>
-        </b-modal>
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modalConnectLaunch"
+      id="modalConnectLaunch"
+      hide-footer
+      title="Autoriser publier.etalab.studio"
+    >
+      <div>
+        <br />
+        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;Vous n'avez pas autorisé <b>publier.etalab.studio</b> à accéder à votre compte <b>data.gouv.fr</b>.</p>
+        <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
+        <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
+        <br />
+        <b-button class="rf-btn" @click="submitLogin">
+          Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
+        </b-button>
+        &nbsp;&nbsp;&nbsp;
+        <span @click="hideModal()" style="cursor: pointer;"><u>Je ne souhaite pas publier mes données sur data.gouv.fr</u></span>
+      </div>
+    </b-modal>
+
+
     </div>
 </template>
 
 <script>
-
-import ClientOnly from 'vue-client-only';
-import {
-  VsaList,
-  VsaItem,
-  VsaHeading,
-  VsaContent,
-} from 'vue-simple-accordion';
-
 import PublishFormUpload from '../components/PublishFormUpload.vue';
-import NavUser from '../components/NavUser.vue';
+import ErrorReport from '../components/ErrorReport.vue';
 
 import PublishRessources from '../mixins/PublishResources.vue';
-
-const lkInvalide = require('../static/images/badge-invalide.svg');
-const lkPartiellementValide = require('../static/images/badge-partiellement-valide.svg');
-const lkValide = require('../static/images/badge-valide.svg');
+import GetReport from '../mixins/GetReport.vue';
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
 export default {
   name: 'fillDataUpload',
-  mixins: [PublishRessources],
+  mixins: [
+    PublishRessources,
+    GetReport,
+  ],
   components: {
-    VsaList,
-    VsaItem,
-    VsaHeading,
-    VsaContent,
     PublishFormUpload,
-    ClientOnly,
-    NavUser,
+    ErrorReport,
   },
   data() {
     return {
       schemaObject: null,
       file: '',
-      report: null,
-      reportValidStatus: '',
-      badgeUrl: null,
-      reportStructureErrors: [],
-      reportContentErrors: [],
-      reportRecos: [],
-      reportErrorInfo: null,
-      reportJson: [],
-      publication: false,
-      publicationMessage: null,
       publicationReady: false,
       dataToPublish: {},
       publicationOK: false,
       linkDgv: '',
       contentFile: '',
-      ext: '',
       wrongFormat:false,
+      infoboxTitle: 'Bravo ! Votre fichier est parfaitement conforme.',
+      infoboxContent: '',
+      infoboxType: 1,
+      editButtonTitle: 'Prévisualiser le fichier',
+      editButtonImg: 'checked.png',
+      validBox: true,
+      showReport: false,
+      showInfobox: false,
+      filename: 'Monfichier',
     };
   },
   computed: {
@@ -236,6 +202,9 @@ export default {
   },
   methods: {
     handleFileUpload() {
+      this.showInfobox = true;
+      this.showReport = false;
+      this.editButtonTitle = 'Prévisualiser le fichier'
       this.wrongFormat = false;
       this.file = this.$refs.file.files[0];
       this.report = null;
@@ -247,9 +216,12 @@ export default {
 
       this.reportValidStatus = null;
       this.reportStructureErrors = [];
+      this.reportIntegrityErrors = [];
+      this.reportGeneralErrors = [];
       this.reportContentErrors = [];
       this.reportRecos = [];
       this.reportErrorInfo = null;
+
 
       if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['name'].includes('.csv')) {
         // eslint-disable-next-line prefer-destructuring
@@ -263,44 +235,10 @@ export default {
         })
         .then((r) => r.json())
         .then((data) => {
-          this.report = data;
-          if (data.report.errors.length > 0) {
-            this.reportValidStatus = 'Malheureusement, le fichier soumis est invalide.';
-            this.badgeUrl = lkInvalide;
-            this.reportErrorInfo = data.report.errors[0].note;
-          } else if (data.report.tables[0].errors) {
-            if (data.report.tables[0].errors.length > 0) {
-              this.reportValidStatus = 'Malheureusement, le fichier soumis est invalide.';
-              this.badgeUrl = lkInvalide;
-              this.reportErrors = data.report.tables[0].errors;
 
-              data.report.tables[0].errors.forEach((error) => {
-                if (error.tags.includes('#content')) {
-                  this.reportContentErrors.push(error);
-                }
-                if (error.tags.includes('#structure')) {
-                  this.reportStructureErrors.push(error);
-                }
-              });
+          this.getValidataReport(data);
 
-              if (data.report.tables[0].structure_warnings.length > 0) {
-                this.reportRecos = data.report.tables[0].structure_warnings;
-              }
-            } else if (data.report.tables[0].structure_warnings.length > 0) {
-              this.reportValidStatus = 'Votre fichier est partiellement valide.';
-              this.badgeUrl = lkPartiellementValide;
-              this.reportRecos = data.report.tables[0].structure_warnings;
-              this.publication = true;
-              this.publicationMessage = 'Malgré les recommandations, publier sur datagouv';
-              this.ext = "csv"
-            } else {
-              this.reportValidStatus = 'Félicitations, votre fichier est conforme au schéma !';
-              this.badgeUrl = lkValide;
-              this.publication = true;
-              this.publicationMessage = 'Publier sur datagouv';
-              this.ext = "csv"
-            }
-          }
+          
         }).finally(() => {
           // eslint-disable-next-line no-console
           console.log('finally');
@@ -320,19 +258,8 @@ export default {
           })
           .then((r) => r.json())
           .then((data) => {
-            this.report = data;
-            this.reportJson = data.errors
-            if(data.errors.length > 0) {
-              this.reportValidStatus = 'Malheureusement, le fichier soumis est invalide.';
-              this.badgeUrl = lkInvalide;
-            } else {
-              this.reportValidStatus = 'Félicitations, votre fichier est conforme au schéma !';
-              this.badgeUrl = lkValide;
-              this.publication = true;
-              this.publicationMessage = 'Publier sur datagouv';
-              this.ext = "json"
-            }
-        
+
+            this.getJsonSchemaReport(data);
 
           });
         }
@@ -340,6 +267,15 @@ export default {
         
       } else {
         this.wrongFormat = true;
+        this.reportValidStatus = 'Votre fichier n\'est pas au format attendu.';
+        this.validBox = false;
+        if(this.schema.schema_type == 'tableschema'){
+          this.infoboxContent = 'Le fichier que vous venez de charger n\'est pas au format CSV. Le format CSV est le format obligatoire pour ce type de données.'
+        }
+        if(this.schema.schema_type =='jsonschema'){
+          this.infoboxContent = 'Le fichier que venez de charger n\'est pas au format JSON. Le format JSON est le format obligatoire pour ce type de données.'
+        }
+        this.infoboxType = 5;
       }
     },
     publicationForm() {
@@ -398,6 +334,12 @@ export default {
       }
       reader.readAsText(this.$refs.file.files[0]);
 
+    },
+    btnDocClick() {
+      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+    },
+    gotoExemple(url){
+      window.open(url)
     }
   },
   mounted() {

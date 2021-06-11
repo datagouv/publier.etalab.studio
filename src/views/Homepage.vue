@@ -35,8 +35,8 @@
         </div>
         <div class="rf-container-fluid banner-title-background rf-centered rf-pb-6w rf-pt-2w">
             <div class="title-banner"><p>Produire des données de qualité, en 4 étapes !</p></div>
-            <div class="rf-grid-row rf-grid-row--center rf-grid-row--gutter">
-                <img src="../static/images/steps.png" width="80%" />
+            <div class="rf-grid-row rf-grid-row--center rf-grid-row--gutter" style="max-width: 1100px; margin: auto;">
+                <img src="../static/images/steps.png" width="100%" />
             </div>
         </div>
 
@@ -97,6 +97,7 @@
 </style>
 
 <script>
+import latinize from 'latinize';
 
 import {
   VsaList,
@@ -150,7 +151,7 @@ export default {
       if (this.searchText !== '') {
         const obj = [];
         this.schemas.forEach((schema) => {
-          if (schema.title.toLowerCase().includes(this.searchText.toLowerCase())) {
+          if (latinize(schema.title.toLowerCase()).includes(latinize(this.searchText.toLowerCase()))) {
             obj.push(schema);
           }
         });

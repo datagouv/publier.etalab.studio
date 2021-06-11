@@ -5,7 +5,7 @@ td.cell.noselectx(
   :class='{ selected: !onlyBorder && selected,  "selected-top": selectedTop, "selected-right": selectedRight, "selected-bottom": selectedBottom, "selected-left": selectedLeft, editable, invalid, [column.type || "text"]: true }'
   :title='invalid'
   :style='cellStyle'
-  @click='$emit("click", $event)'
+  @click='clickCell($event)'
   @dblclick='$emit("dblclick", $event)'
   @contextmenu='$emit("contextmenu", $event)'
   @mousedown='$emit("mousedown", $event)'
@@ -16,35 +16,57 @@ td.cell.noselectx(
   span(v-if='column.type === "supp"')
     img(src='../static/images/remove.png',width="30px",height="30px")
   span(
-    v-if='column.enumList && row[column.field] == ""'
+    v-if='column.enumList'
+    :style='{width: `100%`}'
   )
     select(
       :style='{width: `100%`, border: `0px`, textAlign: `right`}'
-      @change='toto($event,row,column.field)'
+      @change='changeEnum($event,row,column.field)'
     )
       option 
       option(
         v-for='obj in column.enumList'
         value=obj
+        :selected="obj === row[column.field]"
       ) {{ obj }}
-  
-  span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
-    input(
-      :type='inputType'
-      ref='input'
-      @keyup.enter='setEditableValue'
-      @keydown.tab='setEditableValue'
-      @keyup.esc='editCancelled'
-      @focus='editPending = true'
-      @blur='leaved'
+  span(
+      class="arrayEnumCell"
+      v-if='column.type === "arrayEnum"'
+      :style='{width: `100%`}'
     )
-  span.cell-content(v-else)
-    a(
-      @click.prevent='linkClicked'
-      v-if='column.type === "link"'
-      href='#'
-    ) {{ row[column.field] | cellFormatter(column, row) }}
-    span(v-else) {{ row[column.field] | cellFormatter(column, row) }}
+    a(@click="showArrayEnum(rowIndex,columnIndex,column.headerName, row[column.field])")
+      img(src='../static/images/down-arrow-black.png',width="10px",height="10px")
+    span(v-for='obj in row[column.field]') &nbsp;{{ obj }},
+  span(
+     v-if='column.type === "geopoint"'
+  ) 
+    a(@click="showGeopoint(rowIndex,columnIndex,column.headerName, row[column.field])")
+      img(src='../static/images/worldwide.png',width="20px",height="20px")
+      span &nbsp;&nbsp;
+  span(
+    v-if='column.type != "arrayEnum"'
+    :style='{ width: `100%`}'
+  )
+    span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
+      input(
+        :type='inputType'
+        ref='input'
+        @keyup.enter='setEditableValue'
+        @keydown.tab='setEditableValue'
+        @keyup.esc='editCancelled'
+        @focus='editPending = true'
+        @blur='leaved'
+      )
+    span.cell-content(v-else)
+      a(
+        @click.prevent='linkClicked'
+        v-if='column.type === "link"'
+        href='#'
+      ) {{ row[column.field] | cellFormatter(column, row) }}
+      span(
+        v-else 
+      ) 
+        span(v-if='!column.enumList') {{ row[column.field] | cellFormatter(column, row) }}
 </template>
 
 <script>
@@ -53,6 +75,7 @@ import { format } from 'date-fns';
 // eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
+
 
 export default {
   filters: {
@@ -70,7 +93,11 @@ export default {
     onlyBorder: { type: Boolean },
   },
   data() {
-    return { value: null, rowValue: null, editPending: false };
+    return { 
+      value: null, 
+      rowValue: null, 
+      editPending: false,
+    };
   },
   computed: {
     selected() {
@@ -108,6 +135,7 @@ export default {
     },
     inputType() {
       switch (this.column.type) {
+        case 'arrayEnum': return 'text';
         case 'text': return 'text';
         case 'link': return 'text';
         case 'numeric': return 'number';
@@ -144,7 +172,16 @@ export default {
     },
   },
   methods: {
-    toto(event){
+    showGeopoint(row,col, column, val){
+      this.$emit("show-geopoint", row, col, column, val);
+    },
+    showArrayEnum(row,col, column, val){
+      this.$emit("show-array-enum", row, col, column, val);
+    },
+    clickCell(event){
+      this.$emit("click", event);
+    },
+    changeEnum(event){
       var value = event.target.value;
       let valueChanged = true;
       const { row, column, rowIndex, columnIndex } = this;

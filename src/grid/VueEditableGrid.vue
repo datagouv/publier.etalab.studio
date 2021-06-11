@@ -1,23 +1,10 @@
 <template lang="pug">
 div.vue-editable-grid
   .grid-tools
-    .grid-tools-left
-      slot(name='header')
-      paginate.grid-tool(
-        :page='page'
-        :pages='pages'
-        :page-count='pageCount'
-        :total-rows='rowDataFiltered.length'
-        @count-changed='pageCount=$event'
-        @prev='page--'
-        @next='page++'
-        v-if='pageCount'
-      )
-      filters.grid-tool(:filters='filter' :columnDefs='columnDefs' @remove='removeFilter')
-    .grid-tools-right
-      slot(name='header-r')
+    span.infolines ligne {{ actualRow }}, colonne {{ actualCol }}
+    span.infolines Nombre de lignes sur le fichier : {{ nbLinesFile }}
   .grid-table-container(ref='container')
-    table.grid-table(ref='table' )
+    table.grid-table(style="border-collapse: collapse;" ref='table' )
       thead(ref='head')
         tr.headers-row(:style='{ "grid-template-columns": gridTemplateColumns }')
           th(
@@ -25,16 +12,36 @@ div.vue-editable-grid
             :key='index'
             :class='{ sortable: column.sortable, sorting: column.field === sortByColumn, descending: sortByDesc }'
             @click='sort(column)'
+            style="border: 1px solid #ebebeb; border-collapse: collapse;"
           )
-            span.header-content {{ column.headerName }}
+            span.header-content
+              span.header-name
+                span(v-if='!column.rename' :ref="column.headerName") {{ column.headerName }} 
+                span(v-if = 'column.rename')
+                  input(
+                      type='text'
+                      size="20"
+                      v-model='newNameHeader'
+                    )
+                  span &nbsp;&nbsp;
+                  a(@click='renameField(column.headerName)')
+                    img(src="../static/images/tick.png", width="15")
+                span( v-if='!column.optional && index != 0') *
+              span.intermediary
+              span(v-if='index != 0' class="menuIcon" @click="moveHeaderMenu(column.headerName)") 
+                img(src="../static/images/menu.png", width="15")
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
-      tbody(ref='body')
+      tbody(ref='body', id='body', v-on="handleScroll()")
         div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
-          tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
+          tr.gridrow(
+            v-for='(row, rowIndex) in visibleRows' 
+            :key='row[rowDataKey]' 
+            :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px`, width: `100%` }'
+          )
             cell(
               v-for='(column, columnIndex) in columnDefs'
-              :style='{"background-color": rowDataColor[rowIndex][fieldNames[columnIndex-1]] }'
-              :ref='`cell`'
+              v-bind:style='rowDataColor[rowIndex][fieldNames[columnIndex-1]] ? {"border": `2px solid ${rowDataColor[rowIndex][fieldNames[columnIndex-1]]}`, "border-collapse": "collapse" } : {}'
+              :ref='`cell${rowIndex}-${columnIndex}`'
               :key='columnIndex'
               :column='column'
               :row='row'
@@ -51,9 +58,11 @@ div.vue-editable-grid
               @edit-cancelled='cellEditing = []'
               @link-clicked='linkClicked(row, column, offsetRows + rowIndex, columnIndex)'
               @contextmenu='contextMenu(row, column, rowIndex, columnIndex, $event)'
-              @mousedown='startSelection(offsetRows + rowIndex, columnIndex, $event)'
+              @mousedown='startSelection(offsetRows + rowIndex, columnIndex)'
               @mouseover='onSelection(offsetRows + rowIndex, columnIndex)'
               @mouseup='stopSelection'
+              @show-array-enum='showArrayEnum'
+              @show-geopoint='showGeopoint'
             )
     textarea.hidde(ref='tmp')
 </template>
@@ -88,9 +97,12 @@ export default {
     rowDataKey: { type: String, required: true },
     enableFilters: { type: Boolean, default: true },
     pageCount: { type: Number, default: 0 },
-    itemHeight: { type: Number, default: 30 },
+    itemHeight: { type: Number, default: 40 },
     virtualScrollOffset: { type: Number, default: 3 },
     onlyBorder: { type: Boolean, default: true },
+    actualRow: { type: Number, default: 0},
+    actualCol: { type: Number, default: 1},
+    nbLinesFile: { type: Number, default: 0}
   },
   data() {
     return {
@@ -111,9 +123,13 @@ export default {
       visibleRows: [],
       isSelecting: false,
       selStartSelection: [],
+      scrollLeft: null,
+      newNameHeader: '',
+      init: true,
     };
   },
-  created() {
+  created() {  
+
     document.addEventListener('keydown', ($event) => {
       if (!this.focused || this.cellEditing.length) {
         return;
@@ -168,7 +184,6 @@ export default {
             let cell = this.getCell();
             if(arrayPasted.length > (this.rowData.length - cell.rowIndex)) {
               this.addMultRows(cell.rowIndex-this.rowData.length+arrayPasted.length);
-              console.log('add rows')
             }
             arrayPasted.forEach((rowsData, rIdx) => {
               rowsData.forEach((value, cIdx) => {
@@ -197,6 +212,7 @@ export default {
         if (isShift) $event.preventDefault();
         this.copyToClipboard(isShift);
       } else if (!$event.metaKey && this.selStart[0] >= 0 && isWriteableKey($event.keyCode)) {
+        
         const { colData, rowData, rowIndex, colIndex } = this.getCell();
         $event.preventDefault();
         this.tryEdit(rowData, colData, rowIndex, colIndex, $event.key);
@@ -220,11 +236,17 @@ export default {
   watch: {
     selStart(value, old) {
       if (value[0] !== old[0]) {
-        this.emitRowSelected();
+        if(!this.init) {
+          this.emitRowSelected();
+        }
       }
     },
     selEnd() {
-      this.emitRowSelected();
+      console.log('test')
+      if(!this.init) {
+        this.emitRowSelected();
+      }
+        this.init = false;
     },
     rowDataPage() {
       this.emitRowSelected();
@@ -266,6 +288,20 @@ export default {
     },
   },
   methods: {
+    showGeopoint(row,col, column, val) {
+      this.$emit('show-geopoint', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
+    },
+    showArrayEnum(row,col, column, val){
+      this.$emit('show-array-enum', row, col, column, val, this.$refs[`cell${row}-${col}`][0].$el.getBoundingClientRect());
+    },
+    handleScroll(){
+      if(this.$refs.body) {
+        if(this.$refs.body.scrollLeft != this.scrollLeft){
+          this.scrollLeft = this.$refs.body.scrollLeft;
+          this.$emit('remove-boxes');
+        }
+      }
+    },
     addMultRows(val) {
       this.$emit('add-multiple-rows', { rowsToAdd: val });
     },
@@ -275,6 +311,7 @@ export default {
     emitRowSelected() {
       if ((this.selStart[0] === this.selEnd[0] && this.selStart[1] === this.selEnd[1])) {
         const cell = this.getCell();
+
         this.$emit('row-selected', cell);
       } else {
         this.$emit('row-selected', { rowData: null });
@@ -324,7 +361,8 @@ export default {
       this.setGridColumnTemplate();
     },
     async selectCell(rowIndex, colIndex, $event) {
-      console.log($event);
+      this.$emit('show-errors', $event, rowIndex, colIndex, this.$refs[`cell${rowIndex}-${colIndex}`][0].$el.getBoundingClientRect());
+
       if (changePending) {
         return;
       }
@@ -485,10 +523,10 @@ export default {
       });
     },
     selectFirstCol() {
-      this.selectCell(this.selStart[1], 0);
+      this.selectCell(this.selStart[1], 1);
     },
     selectLastCol() {
-      this.selectCell(this.selStart[0], this.columnDefs.length - 1);
+      this.selectCell(this.selStart[1], this.columnDefs.length - 1);
     },
     selectFirstRow() {
       this.selectCell(0, this.selStart[1]);
@@ -529,7 +567,7 @@ export default {
         }, {})
       });
     },
-    startSelection (rowIndex, colIndex, e) {
+    startSelection (rowIndex, colIndex) {
       this.isSelecting = true
       this.selStartSelection = [rowIndex, colIndex]
     },
@@ -562,6 +600,16 @@ export default {
       this.$refs.tmp.select();
       document.execCommand('copy');
     },
+    columnOperation(event,column){
+      this.$emit('column-operation', event.target.value, column);
+    },
+    moveHeaderMenu(column){
+      this.$emit('moveHeaderMenu', this.$refs[column][0].getBoundingClientRect(), column);
+    },
+    renameField(oldname) {
+      this.$emit('rename-field', this.newNameHeader, oldname);
+      this.newNameHeader = '';
+    }
   },
 };
 </script>
@@ -659,8 +707,9 @@ th {
   .header-content {
     text-overflow: ellipsis;
     white-space: nowrap;
-    display: block;
+    display: flex;
     overflow: hidden;
+    width: 100%;
   }
 }
 
