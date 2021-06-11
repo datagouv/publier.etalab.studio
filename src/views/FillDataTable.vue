@@ -98,7 +98,7 @@
           onkeypress="this.style.width = ((this.value.length + 1) * 18) + 'px';"
         >
         <span @click="csvLinkData" class="title-box"><img src="../static/images/download-blue.png" width="20" /></span>
-        <span  @click="reinitRows()" class="title-box"><img src="../static/images/trash.png" width="20" /></span>
+        <span  @click="showModalDelete()" class="title-box"><img src="../static/images/trash.png" width="20" /></span>
         <br />
         <div style="display: flex;">
           <div style="flex: 1;">
@@ -153,6 +153,7 @@
                 @rename-field='renameField'
                 @show-array-enum='showArrayEnum'
                 @show-geopoint='showGeopoint'
+                @get-identifier='getIdentifier'
                 >
             </vue-editable-grid>
           </div>
@@ -165,6 +166,21 @@
         </div>
       </div>
     </div>
+
+    <b-modal
+      class="rf-container rf-pb-6w rf-pt-2w"
+      ref="modalDelete"
+      id="modalDelete"
+      hide-footer
+      title="Réinitialiser le fichier"
+    >
+      <p>Etes-vous sûr de vouloir effacer toutes les données contenues dans ce tableur ?</p>
+      <br/>
+      <b-button @click="reinitRows()" class="rf-btn">Je suis sûr</b-button>
+      &nbsp;&nbsp;&nbsp;
+      <span @click="hideModalDelete()" style="cursor: pointer;"><u>Je ne souhaite pas réinitialiser mes données</u></span>
+    </b-modal>
+
 
     <b-modal
       class="rf-container rf-pb-6w rf-pt-2w"
@@ -236,6 +252,23 @@
                   :editButtonTitle="editButtonTitle"
                 ></error-report>
               </div>
+            </div>
+
+            <div v-if="!publicationReady">
+                <div v-if="this.infoboxType == 4">
+                  <br />
+                  <p v-if="schemaMeta.examples && schemaMeta.examples.length > 0">Vous pouvez vous appuyer sur <span v-if="schemaMeta.examples.length > 1">les fichiers suivants :</span> <span v-if="schemaMeta.examples.length = 1">le fichier suivant :</span></p>
+                  <ul v-for="example in schemaMeta.examples" v-bind:key="example.title">
+                    <li @click="gotoExemple(example.path)" style="cursor: pointer;"><u>{{ example.title }}</u></li>
+                  </ul>
+                </div>
+                <div v-if="(this.infoboxType == 3 || this.infoboxType == 4 || this.infoboxType == 5) && this.schemaMeta.contact && this.schemaMeta.contact != ''">
+                  <p>
+                    En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
+                    <a :href="'mailto:'+this.schemaMeta.contact">{{ this.schemaMeta.contact }}</a>
+                  </p>
+                  <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;" style="cursor: pointer;">en cliquant ici</a></p>
+                </div>
             </div>
 
 
@@ -557,7 +590,6 @@ export default {
 
       this.schema.fields.forEach((field) => { 
         if(field.name == this.colCurrentGeopoint){
-          console.log(field);
           format = field.format;
         }
       });
@@ -591,7 +623,11 @@ export default {
       this.leftDivError = pos.x;
       this.displayGeopointBox = true;
     },
-
+    getIdentifier(row, col, column, val, pos) {
+      fetch('https://www.uuidgenerator.net/api/version1').then((r) => r.text()).then((data) => {
+        this.rows[row][column] = data;
+      });
+    },
     handleScroll () {
       this.scrolled = window.scrollY > 0;
     },
@@ -743,9 +779,9 @@ export default {
               this.submit();
             }
             else {
-              this.columnDefs = this.ongoingData.columnDefs;
-              this.rows = this.ongoingData.rows;
-              this.realRowsIds = this.ongoingData.realRowsIds;
+              this.columnDefs = {...this.ongoingData.columnDefs};
+              this.rows = {...this.ongoingData.rows};
+              this.realRowsIds = {...this.ongoingData.realRowsIds};
             }
           }
         }
@@ -783,7 +819,6 @@ export default {
           this.columnDefs.forEach((cd) => {
             if(cd.headerName == field) {
               if(cd.type == 'array') {
-                console.log(cd);
                 if(line[field]) {
                   var tab = line[field].replaceAll("[","").replaceAll("]","").replaceAll("'",'').replaceAll('"','').replaceAll(', ',',').replaceAll(' ',',').split(',')
                   fi = '['
@@ -918,7 +953,7 @@ export default {
               if (error.code === 'type-error' | error.code === 'constraint-error') {
                 this.rowsError[error.rowNumber - 1][error.fieldName] = error.name;
                 this.rowsColor[error.rowNumber - 1][error.fieldName] = '#F4CDA4';
-                this.$refs.grid.selectCell(this.rowIndex-1, this.colIndex);
+                this.$refs.grid.selectCell(this.rowIndex-1, this.colIndex+1);
               }
             });
           } else {
@@ -1016,7 +1051,6 @@ export default {
           }
         });
       }
-      console.log($event)
       if ($event.colData) {
         this.warningInfo = this.rowsInfo[$event.rowIndex][$event.colData.field];
         this.errorInfo = this.rowsError[$event.rowIndex][$event.colData.field];
@@ -1211,6 +1245,13 @@ export default {
       this.fieldNames = [];
       this.realRowsIds = [];
       this.buildForm();
+      this.hideModalDelete();
+    },
+    showModalDelete() {
+      this.$refs.modalDelete.show();
+    },
+    hideModalDelete() {
+      this.$refs.modalDelete.hide();
     },
     showModal3() {
       this.$refs.modal3.show();

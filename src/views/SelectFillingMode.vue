@@ -23,7 +23,7 @@
                   <span @click="noDataChoice = !noDataChoice" v-if="!noDataChoice && schema" class="choice-selected">Non</span>
                   <div v-if="!noDataChoice && schema.schema_type == 'tableschema'">
                     <br /><br />
-                    <p>Notre outils vous aide à construire votre fichier !</p>
+                    <p>Notre outil vous aide à construire votre fichier !</p>
                     <p>Comment souhaitez-vous procéder ?</p>
                     <br />
                     <span @click="goto('form')" class="choice-no-selected">Remplir un formulaire</span>
@@ -42,14 +42,14 @@
                   <div class="infobox">
                     <div class="infobox-title">Ressources utiles</div>
                     <div class="infobox-content">
+                      <div class="infobox-content-item">
+                        <p @click="btnDocClick()">
+                            <img src="../static/images/foreign.png" width="12" />
+                            &nbsp;
+                            <u>Lire la documentation</u> du schéma
+                        </p>
+                      </div>
                       <div v-for="item in this.schema.examples" v-bind:key="item.title">
-                        <div class="infobox-content-item">
-                          <p @click="btnDocClick()">
-                              <img src="../static/images/foreign.png" width="12" />
-                              &nbsp;
-                              <u>Lire la documentation</u> du schéma
-                          </p>
-                        </div>
                         <div class="infobox-content-item">
                           <span @click="gotoExemple(item.path)">
                               <img src="../static/images/download.png" width="12" />

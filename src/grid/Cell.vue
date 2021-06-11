@@ -39,8 +39,14 @@ td.cell.noselectx(
   span(
      v-if='column.type === "geopoint"'
   ) 
-    a(@click="showGeopoint(rowIndex,columnIndex,column.headerName, row[column.field])")
+    a(style="cursor: pointer" @click="showGeopoint(rowIndex,columnIndex,column.headerName, row[column.field])")
       img(src='../static/images/worldwide.png',width="20px",height="20px")
+      span &nbsp;&nbsp;
+  span(
+     v-if='(row[column.field] == "" && (column.headerName == "id" || column.headerName == "ID" || column.headerName.includes("id_") || column.headerName.includes("ID_")))'
+  ) 
+    a(style="cursor: pointer"  @click="getIdentifier(rowIndex,columnIndex,column.headerName, row[column.field])")
+      img(src='../static/images/fingerprint-scan.png',width="20px",height="20px")
       span &nbsp;&nbsp;
   span(v-if='column.type != "arrayEnum"')
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
@@ -166,6 +172,9 @@ export default {
     },
   },
   methods: {
+    getIdentifier(row,col, column, val){
+      this.$emit("get-identifier", row, col, column, val);
+    },
     showGeopoint(row,col, column, val){
       this.$emit("show-geopoint", row, col, column, val);
     },
