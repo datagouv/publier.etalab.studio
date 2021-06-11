@@ -33,7 +33,7 @@ td.cell.noselectx(
       class="arrayEnumCell"
       v-if='column.type === "arrayEnum"'
       :style='{width: `100%`}'
-    )
+  )
     a(@click="showArrayEnum(rowIndex,columnIndex,column.headerName, row[column.field])")
       img(src='../static/images/down-arrow-black.png',width="10px",height="10px")
     span(v-for='obj in row[column.field]') &nbsp;{{ obj }},
@@ -49,8 +49,7 @@ td.cell.noselectx(
     a(style="cursor: pointer"  @click="getIdentifier(rowIndex,columnIndex,column.headerName, row[column.field])")
       img(src='../static/images/fingerprint-scan.png',width="20px",height="20px")
       span &nbsp;&nbsp;
-  span(v-if='column.type != "arrayEnum"')
-    v-if='column.type != "arrayEnum"'
+  span(v-if='column.type != "arrayEnum"'
     :style='{ width: `100%`}'
   )
     span.editable-field(v-if='cellEditing[0] === rowIndex && cellEditing[1] === columnIndex')
@@ -77,8 +76,6 @@ td.cell.noselectx(
 
 <script>
 import Vue from 'vue';
-import { format } from 'date-fns';
-// eslint-disable-next-line import/extensions
 import { cellFormatter } from './vue-filters.js';
 import { cellValueParser } from './helpers';
 
