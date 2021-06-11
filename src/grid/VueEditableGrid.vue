@@ -33,7 +33,11 @@ div.vue-editable-grid
             span.resize-handle(@mousedown='initResize(column, $event)' @click.stop)
       tbody(ref='body', id='body', v-on="handleScroll()")
         div(:style=' { "min-height": `${rowDataPage.length * itemHeight}px` }')
-          tr.gridrow(v-for='(row, rowIndex) in visibleRows' :key='row[rowDataKey]' :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px` }')
+          tr.gridrow(
+            v-for='(row, rowIndex) in visibleRows' 
+            :key='row[rowDataKey]' 
+            :style='{ "grid-template-columns": gridTemplateColumns, transform: `translateY(${(itemHeight * rowIndex) + ((itemHeight * offsetRows))}px)`, height: `${itemHeight}px`, width: `100%` }'
+          )
             cell(
               v-for='(column, columnIndex) in columnDefs'
               v-bind:style='rowDataColor[rowIndex][fieldNames[columnIndex-1]] ? {"border": `2px solid ${rowDataColor[rowIndex][fieldNames[columnIndex-1]]}`, "border-collapse": "collapse" } : {}'
