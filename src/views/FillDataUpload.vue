@@ -342,7 +342,7 @@ export default {
         this.$store.dispatch('data/fillFileNbRowsData', prepareRows.length)
 
         if(this.schemaName) this.$router.push(`table?schema=${this.schemaName}&fromFile=yes`);
-        if(this.schemaURl) this.$router.push(`table?schema_url=${this.schemaUrl}&fromFile=yes`);
+        if(this.schemaUrl) this.$router.push(`table?schema_url=${this.schemaUrl}&fromFile=yes`);
         
       }
       reader.readAsText(this.$refs.file.files[0]);
