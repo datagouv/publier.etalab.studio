@@ -336,7 +336,7 @@ export default {
           }
         });
 
-        this.$store.dispatch('data/fillSchemaNameData', this.schemaName)
+        this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
         this.$store.dispatch('data/fillFileHeaderData', prepareHeaders)
         this.$store.dispatch('data/fillFileRowsData', prepareRows)
         this.$store.dispatch('data/fillFileNbRowsData', prepareRows.length)
