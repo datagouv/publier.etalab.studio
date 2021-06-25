@@ -277,6 +277,7 @@
                 v-model="dataToPublish"
                 :filename="filename"
                 :schemaName="schemaName"
+                :schemaMeta="schemaMeta"
                 :organizations="userOrganizations"
                 :publicationIntro="publicationIntro"
                 v-on:form-state-change="togglePublishButtonState"

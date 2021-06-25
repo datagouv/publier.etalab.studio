@@ -6,7 +6,14 @@
       </p>
       <div class="radio-boxes">
         <div class="radio-box">
-          <p style="line-height: 50px;">Je souhaite publier :</p>
+          <p style="line-height: 50px;">Je souhaite publier : <span class="text-danger">*</span></p>
+          
+        </div>
+        <div class="radio-box" @click="radioclick('org')">
+          <input type="radio" id="two" value="org" v-model="whoPicked">
+          <label for="two">&nbsp;au nom de mon organisation
+          &nbsp;&nbsp;&nbsp;
+          <img src="../static/images/group.png" width="50" height="50"/></label>
         </div>
         <div class="radio-box" @click="radioclick('me')">
           <input type="radio" id="one" value="me" v-model="whoPicked">
@@ -14,12 +21,6 @@
           &nbsp;&nbsp;&nbsp;
           <img src="../static/images/man.png" width="50" height="50"/></label>
         </div>
-        <div class="radio-box" @click="radioclick('org')">
-          <input type="radio" id="two" value="org" v-model="whoPicked">
-          <label for="two">&nbsp;au nom de mon organisation
-          &nbsp;&nbsp;&nbsp;
-          <img src="../static/images/group.png" width="50" height="50"/></label>
-        </div><span class="text-danger">*</span>
       </div>
 
       <!-- Organisation -->
@@ -41,6 +42,10 @@
             required
           ></b-form-select>
       </b-form-group>
+
+      <div v-if="jddShow && !orgaShow" class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
+        <span>Attention, il est conseillé de publier vos données depuis une organisation plutôt qu'avec son compte personnel.</span>
+      </div>
 
       <div v-if="jddShow" class="radio-boxes">
         <div class="radio-box">
@@ -209,6 +214,7 @@ import $api from '../services/Api';
 export default {
   props: {
     schemaName: String,
+    schemaMeta: Object,
     organizations: Array,
     publicationIntro: String,
     filename: String,
@@ -315,6 +321,39 @@ export default {
         }
       });
     },
+    generateDatasetTitle(){
+      var org = null
+      this.organizations.forEach((o) => {
+        if(this.form.org == o.value){
+          org = o.text;
+        }
+      });
+      if(org){
+        org = " (organisation "+org+")"
+      }else{
+        org = ''
+      }
+      return this.schemaMeta.title+org;
+    },
+    generateDatasetDescription(){
+      var today = new Date().toISOString().slice(0, 10)
+      var desc = ''
+      if(this.schemaMeta.schema_url.includes('schema.data.gouv.fr')){
+        desc = 'Ce jeu de données répond au spécifications du schéma "'
+          +this.schemaMeta.title
+          +'" disponible sur le site [schema.data.gouv.fr](https://schema.data.gouv.fr/'
+          +this.schemaName
+          +'/latest.html)\nPublié le '
+          +today 
+      } else {
+        desc = 'Ce jeu de données répond au spécifications du schéma "'
+          +this.schemaMeta.title
+          +'" (spécification disponible [ici]('
+          +this.schemaMeta.schema_url+'))'
+          +'\nPublié le '+today 
+      }
+      return desc
+    },
     radioclick(who) {
       this.form.org = '';
       this.form.dataset.title = '';
@@ -341,8 +380,7 @@ export default {
       }
     },
     radioclickJDD(type) {
-      this.form.dataset.title = '';
-      this.form.dataset.description = '';
+      this.form.dataset.title = this.generateDatasetTitle();
       this.form.resource.title = this.filename;
       this.form.existingDataset = '';
       this.form.resource.title = this.filename;
@@ -352,16 +390,19 @@ export default {
       if (type === 'existing') {
         this.newJDDShow = false;
         this.editJDDShow = true;
+        this.form.dataset.description = '';
         if (this.orgaShow) {
           this.getMyDatasetsOrg();
         } else {
           this.getMyDatasetsMe();
         }
       } else {
+        this.form.dataset.description = this.generateDatasetDescription();
         this.newJDDShow = true;
         this.editJDDShow = false;
         this.datasetsMe = [];
       }
+      this.onChange();
     },
     radioclickRes(type) {
       this.form.resource.title = this.filename;
