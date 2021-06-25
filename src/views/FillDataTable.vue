@@ -642,8 +642,13 @@ export default {
         this.addEmptyRow()
       }
     },
-    addNewField() {
-        var new_name = "nouvelle_colonne_"+this.columnDefs.length.toString()
+    addNewField(header=null) {
+        var new_name = ''
+        if(header) {
+          new_name = header
+        } else {
+          new_name = "nouvelle_colonne_"+this.columnDefs.length.toString()
+        }
         this.fieldNames.push(new_name);
         const myobj = {};
         myobj.sortable = false;
@@ -752,7 +757,7 @@ export default {
               this.ongoingData.fileHeader.forEach((header) => {
                 if(!this.fieldNames.includes(header)){
                   this.newFieldName = header;
-                  this.addNewField();
+                  this.addNewField(header);
                 }
               });
               var rowNb = 0;
