@@ -36,13 +36,21 @@
               <div class="infobox-content">
                 <div v-if="infoboxType != 1">
                   {{ infoboxContent }}
+                  <span v-if="tooMuchLines">
+                    <br /><br /><i>Votre fichier contient trop de lignes pour être édité dans cet outil.</i>
+                  </span>
                   <br /><br />
                 </div>
-                <b-button @click="editFile()" v-if="(infoboxType == 1 || infoboxType == 2 || infoboxType == 3) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
+                <b-button @click="editFile()" v-if="!tooMuchLines && (infoboxType == 1 || infoboxType == 2 || infoboxType == 3) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
                   {{ editButtonTitle }}
                   &nbsp;
                   <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/view.png" width="20" />
                   <img v-if="infoboxType == 3" src="../static/images/pen.png" width="20" />
+                </b-button>
+                <b-button @click="editFile()" v-if="!tooMuchLines && (infoboxType == 1 || infoboxType == 2) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
+                  Editer le fichier
+                  &nbsp;
+                  <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/pen.png" width="20" />
                 </b-button>
                 <b-button @click="showReport = !showReport" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
                   Voir le rapport d'erreur

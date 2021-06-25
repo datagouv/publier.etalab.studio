@@ -23,7 +23,8 @@ export default {
       validBox: true,
       infoboxType: 1,
       infoboxContent: '',
-      editButtonTitle: 'Prévisualiser le fichier'
+      editButtonTitle: 'Prévisualiser le fichier',
+      tooMuchLines: false,
     };
   },
   mounted() {
@@ -41,6 +42,12 @@ export default {
             this.validBox = false;
             this.infoboxType = 4;
             this.badgeUrl = lkInvalide;
+        }
+        
+        if(data.report && data.report.tables[0] && data.report.tables[0].stats && data.report.tables[0].stats.rows > 300) {
+            this.tooMuchLines = true
+        } else {
+            this.tooMuchLines = false
         }
 
         if (data.report.errors.length > 0) {
@@ -67,7 +74,7 @@ export default {
                 this.validBox = false;
                 this.infoboxType = 3;
                 this.ext = "csv"
-                if(data.report.tables[0].errors.length > 20){
+                if(data.report.tables[0].errors.length+data.report.tables[0].structure_warnings.length > 20){
                     this.reportValidStatus = 'Votre fichier contient de nombreuses erreurs.'
                     this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'
                     this.infoboxType = 4;
