@@ -33,7 +33,7 @@ export default {
   },
   methods: {
       getValidataReport(data) {
-        
+        console.log(data)
         this.report = data;
 
         if (!data.report) {
@@ -43,14 +43,8 @@ export default {
             this.infoboxType = 4;
             this.badgeUrl = lkInvalide;
         }
-        
-        if(data.report && data.report.tables[0] && data.report.tables[0].stats && data.report.tables[0].stats.rows > 300) {
-            this.tooMuchLines = true
-        } else {
-            this.tooMuchLines = false
-        }
-
         if (data.report.errors.length > 0) {
+            
             this.reportValidStatus = 'Votre fichier contient des erreurs bloquantes.'
             this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'
             this.editButtonTitle = 'Corriger le fichier';
@@ -66,27 +60,27 @@ export default {
             });
 
 
-        } else if (data.report.tables[0].errors) {
-            if (data.report.tables[0].errors.length > 0) {
+        } else if (data.report.tasks[0].errors) {
+            if (data.report.tasks[0].errors.length > 0) {
                 this.reportValidStatus = 'Votre fichier contient des erreurs.';
-                this.infoboxContent = 'Nous avons trouvé '+data.report.tables[0].errors.length+' erreur(s). Vous pouvez voir la liste des erreurs et corriger le fichier.'
+                this.infoboxContent = 'Nous avons trouvé '+data.report.tasks[0].errors.length+' erreur(s). Vous pouvez voir la liste des erreurs et corriger le fichier.'
                 this.editButtonTitle = 'Corriger le fichier';
                 this.validBox = false;
                 this.infoboxType = 3;
                 this.ext = "csv"
-                if(data.report.tables[0].errors.length+data.report.tables[0].structure_warnings.length > 20){
+                if(data.report.tasks[0].errors.length+data.report.tasks[0].structure_warnings.length > 20){
                     this.reportValidStatus = 'Votre fichier contient de nombreuses erreurs.'
                     this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'
                     this.infoboxType = 4;
                 }
                 this.badgeUrl = lkInvalide;
-                this.reportErrors = data.report.tables[0].errors;
+                this.reportErrors = data.report.tasks[0].errors;
 
-                data.report.tables[0].errors.forEach((error) => {
-                if ((error.tags.includes('#content') && !error.tags.includes('#integrity')) || error.tags.includes('#body')) {
+                data.report.tasks[0].errors.forEach((error) => {
+                if ((error.tags.length > 0) && ((!error.tags.includes('#integrity')) && (!error.tags.includes('#structure')))) {
                     this.reportContentErrors.push(error);
                 }
-                if (error.tags.includes('#structure')) {
+                if (error.tags.length == 0 || error.tags.includes('#structure')) {
                     this.reportStructureErrors.push(error);
                 }
                 if (error.tags.includes('#integrity')) {
@@ -94,16 +88,16 @@ export default {
                 }
                 });
 
-                if (data.report.tables[0].structure_warnings.length > 0) {
-                this.reportRecos = data.report.tables[0].structure_warnings;
+                if (data.report.tasks[0].structure_warnings.length > 0) {
+                this.reportRecos = data.report.tasks[0].structure_warnings;
                 }
-            } else if (data.report.tables[0].structure_warnings.length > 0) {
+            } else if (data.report.tasks[0].structure_warnings.length > 0) {
                 this.reportValidStatus = 'Votre fichier est conforme.';
                 this.infoboxContent = 'Votre fichier est conforme bien qu\'il ne respecte pas totalement la spécification du schéma de données.'
                 this.infoboxType = 2;
                 this.validBox = true;
                 this.badgeUrl = lkPartiellementValide;
-                this.reportRecos = data.report.tables[0].structure_warnings;
+                this.reportRecos = data.report.tasks[0].structure_warnings;
                 this.publication = true;
                 this.publicationMessage = 'Malgré les recommandations, publier sur datagouv';
                 this.ext = "csv"
