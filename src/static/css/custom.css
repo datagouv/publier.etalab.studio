@@ -155,6 +155,16 @@
 .title-page{
   font-weight: bold;
   font-size: 45px;
+  margin-bottom: 20px;
+}
+
+.title-page-no-select{
+  font-style: italic;
+  font-size: 45px;
+  border: 1px solid #ebebeb;
+  color: grey;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }
 
 .subtitle-page{

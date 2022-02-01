@@ -90,12 +90,11 @@
       <div>
         <input
           v-model="filename"
-          class="title-page title-input"
+          :class="this.filename == this.filenameDefault ? 'title-page-no-select' : 'title-page title-input'"
           :placeholder="filename"
           id="filename-input"
           name="filename-input"
-          style="font-size: 35px; min-width: 200px;"
-          onkeypress="this.style.width = ((this.value.length + 1) * 18) + 'px';"
+          :style="{ fontSize: '35px', minWidth: '200px', width: `${filenameLength}px` }"
         >
         <span @click="csvLinkData" class="title-box"><img src="../static/images/download-blue.png" width="20" /></span>
         <span  @click="showModalDelete()" class="title-box"><img src="../static/images/trash.png" width="20" /></span>
@@ -457,7 +456,6 @@ export default {
       columnModalP: "",
       shouldRenameColumn: false,
       oldColumnName: "",
-      filename: "Monfichier",
       topDiv: "200",
       leftDiv: "200",
       menuSelected: false,
@@ -504,11 +502,17 @@ export default {
                      class="osm-attrib">&copy; OSM contributors</a>`,
       value: '',
       floatPrecision: GEO_DECIMAL_COUNT,
+      filename: 'donnees.csv',
+      filenameDefault: 'donnees.csv',
+      filenameLength: 350,
     };
   },
   watch: {
     schemaMeta() {
       this.buildForm();
+    },
+    filenameLength(){
+      return (this.filename.length+1) * 18
     },
   },
   mounted() {
@@ -668,11 +672,26 @@ export default {
         this.columnDefs.push(myobj);
         
     },
+    buildFileName(schema){
+      let filename = 'donnees'
+      if(schema && schema.name){
+        filename = filename + '-' + this.schema.name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll(' ','-')
+      }
+      if(this.user && this.user.data && this.user.data.organizations && this.user.data.organizations[0] && this.user.data.organizations[0].name){
+        filename = filename + '-' + this.user.data.organizations[0].name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll(' ','-')
+      }
+      this.filename = filename + '.csv'
+      this.filenameDefault = filename + '.csv'
+      this.filenameLength = (this.filename.length + 1) * 18
+      
+    },
     buildForm() {
       const loader = this.$loading.show();
 
       fetch(this.schemaMeta.schema_url).then((r) => r.json()).then((data) => {
         this.schema = data;
+        
+        this.buildFileName(data);
 
         this.schema.fields.forEach((field) => {
           this.fieldNames.push(field.name);
