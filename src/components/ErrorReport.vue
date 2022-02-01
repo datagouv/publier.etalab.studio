@@ -19,7 +19,7 @@
             </vsa-heading>
             <vsa-content>
                 <ul v-bind:key="error.name" v-for="error in reportStructureErrors">
-                    <li><b>{{ error.name }}</b> : {{ error.note }}</li>
+                    <li><b>{{ error.name }}</b> :</li>
                     <span v-if="error.message"><vue-markdown :source='error.message.replace("##","")' /></span>
                 </ul>
             </vsa-content>

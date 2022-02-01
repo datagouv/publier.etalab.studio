@@ -4,7 +4,6 @@ Cet outil vous permet de saisir, valider et publier des données structurées su
 
 ![](./screenshot.png)
 
-
 Les types de données aujourd'hui proposés sont référencés sur la plateforme schema.data.gouv.fr.
 
 ## Déploiement
