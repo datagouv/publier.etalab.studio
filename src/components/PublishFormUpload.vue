@@ -343,14 +343,11 @@ export default {
           +this.schemaMeta.title
           +'" disponible sur le site [schema.data.gouv.fr](https://schema.data.gouv.fr/'
           +this.schemaName
-          +'/latest.html)\nPublié le '
-          +today 
       } else {
         desc = 'Ce jeu de données répond au spécifications du schéma "'
           +this.schemaMeta.title
           +'" (spécification disponible [ici]('
           +this.schemaMeta.schema_url+'))'
-          +'\nPublié le '+today 
       }
       return desc
     },
