@@ -4,9 +4,11 @@
       <p class="text-muted">
         {{ publicationIntro }}
       </p>
+      <!---
       <div class="radio-boxes">
+
         <div class="radio-box">
-          <p style="line-height: 50px;">Je souhaite publier : <span class="text-danger">*</span></p>
+          <p style="">Je souhaite publier au nom de mon organisation<span class="text-danger">*</span></p>
           
         </div>
         <div class="radio-box" @click="radioclick('org')">
@@ -22,6 +24,7 @@
           <img src="../static/images/man.png" width="50" height="50"/></label>
         </div>
       </div>
+        -->
 
       <!-- Organisation -->
       <b-form-group
@@ -31,20 +34,47 @@
         description="Choisissez l'organisation dans laquelle sera créé le jeu de données"
       >
         <template v-slot:label>
-          Organisation <span class="text-danger">*</span>
+          Organisation productrice des données<span class="text-danger">*</span>
         </template>
-        <b-form-select
-            id="input-org"
-            v-model="form.org"
-            :options="organizations"
-            v-on:change="onChange"
-            class="rf-select"
-            required
+        <div v-if="organizations.length > 0">
+          <br />
+          <b-form-select
+              id="input-org"
+              v-model="form.org"
+              :options="organizations"
+              v-on:change="onChange"
+              class="rf-select"
+              required
           ></b-form-select>
+          <div style="font-size: 12px">
+            <i>Je ne trouve <span style="cursor: pointer; text-decoration: underline" @click="orgaNotFound = true">pas mon organisation.</span></i>
+          </div>
+        </div>
+        <div v-if="organizations.length == 0 || orgaNotFound">
+          <br />
+          <div class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
+            <span  v-if="organizations.length == 0">Vous n'êtes pas rattaché à une organisation sur data.gouv.fr. </span>
+            <span  v-else>Vous ne trouvez pas votre organisation.</span>
+            <br />Pour publier vos données depuis votre organisation, suivez la procédure suivante :
+            <ul>
+              <li>Sauvegarder vos données sur votre ordinateur.</li>
+              <li><a href="https://www.data.gouv.fr/fr/">Connectez-vous à votre compte data.gouv.fr</a></li>
+              <li>Rendez-vous sur la <a href="https://www.data.gouv.fr/fr/admin/organization/new/">page de création d’une organisation</a>, en cliquant sur le lien <b>Créez ou trouvez votre organisation</b> dans le bandeau <b>Participez</b> en bas de page.</li>
+              <li>Déconnectez-vous de ce site puis reconnectez-vous.</li>
+            </ul>
+            Une fois ces étapes réalisées, vous devriez voir apparaître votre organisation ci-dessous.
+            <br /><br />
+            <div style="font-size: 12px">PS : Vous pouvez publier vos données <span style="cursor: pointer; text-decoration: underline" @click="radioclick('me')">en votre nom propre</span> mais ce mode de publication est <b>fortement déconseillé.</b></div>
+          </div>
+        </div>
       </b-form-group>
+
 
       <div v-if="jddShow && !orgaShow" class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
         <span>Attention, il est conseillé de publier vos données depuis une organisation plutôt qu'avec son compte personnel.</span>
+        <br />
+        <br />
+        <div>Publier vos données <span style="cursor: pointer; text-decoration: underline" @click="radioclick('org')">via votre organisation</span></b></div>
       </div>
 
       <div v-if="jddShow" class="radio-boxes">
@@ -240,7 +270,7 @@ export default {
       whoPicked: '',
       typePicked: '',
       typeResPicked: '',
-      orgaShow: false,
+      orgaShow: true,
       jddShow: false,
       descShow: false,
       filenameShow: false,
@@ -248,10 +278,11 @@ export default {
       editJDDShow: false,
       datasetsMe: [],
       selectMe: false,
-      selectOrg: false,
+      selectOrg: true,
       datasetsOrg: [],
       resources: [],
       editResShow: false,
+      orgaNotFound: false,
     };
   },
   mounted() {
@@ -343,6 +374,7 @@ export default {
           +this.schemaMeta.title
           +'" disponible sur le site [schema.data.gouv.fr](https://schema.data.gouv.fr/'
           +this.schemaName
+          +')'
       } else {
         desc = 'Ce jeu de données répond au spécifications du schéma "'
           +this.schemaMeta.title
