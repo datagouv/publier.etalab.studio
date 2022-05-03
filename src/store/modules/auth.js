@@ -9,6 +9,7 @@ const module = {
         token: '',
         data: {},
         lastPage: '/',
+        organizations: []
       },
     };
   },
@@ -48,7 +49,11 @@ const actions = {
   checkToken({ dispatch }) {
     $api.get('me', {}, () => {
       dispatch('logout');
-    });
+    }).then(
+      (response) => {
+        dispatch('fillUserData', response.data)
+      }
+    );
   },
   logout({ commit }) {
     commit('unsetLoggedIn');

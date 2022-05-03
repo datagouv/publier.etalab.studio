@@ -60,9 +60,8 @@
               <li>Sauvegarder vos données sur votre ordinateur.</li>
               <li><a href="https://www.data.gouv.fr/fr/">Connectez-vous à votre compte data.gouv.fr</a></li>
               <li>Rendez-vous sur la <a href="https://www.data.gouv.fr/fr/admin/organization/new/">page de création d’une organisation</a>, en cliquant sur le lien <b>Créez ou trouvez votre organisation</b> dans le bandeau <b>Participez</b> en bas de page.</li>
-              <li>Déconnectez-vous de ce site puis reconnectez-vous.</li>
             </ul>
-            Une fois ces étapes réalisées, vous devriez voir apparaître votre organisation ci-dessous.
+            Une fois ces étapes réalisées, cette page devrait se rafraîchir automatiquement et vous devriez être capable de sélectionner votre organisation.
             <br /><br />
             <div style="font-size: 12px">PS : Vous pouvez publier vos données <span style="cursor: pointer; text-decoration: underline" @click="radioclick('me')">en votre nom propre</span> mais ce mode de publication est <b>fortement déconseillé.</b></div>
           </div>
@@ -289,6 +288,9 @@ export default {
     this.$emit('form-state-change', this.okState);
   },
   computed: {
+    user() {
+      return this.$store.state.auth.user;
+    },
     okState() {
       return (
         this.form.org !== ''
