@@ -58,7 +58,7 @@
             <br />Pour publier vos données depuis votre organisation, suivez la procédure suivante :
             <ul>
               <li>Sauvegarder vos données sur votre ordinateur.</li>
-              <li><a href="https://www.data.gouv.fr/fr/">Connectez-vous à votre compte data.gouv.fr</a></li>
+              <li><a target="_blank" href="https://www.data.gouv.fr/fr/">Connectez-vous à votre compte data.gouv.fr</a></li>
               <li>Rendez-vous sur la <a href="https://www.data.gouv.fr/fr/admin/organization/new/">page de création d’une organisation</a>, en cliquant sur le lien <b>Créez ou trouvez votre organisation</b> dans le bandeau <b>Participez</b> en bas de page.</li>
             </ul>
             Une fois ces étapes réalisées, cette page devrait se rafraîchir automatiquement et vous devriez être capable de sélectionner votre organisation.
