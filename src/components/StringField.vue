@@ -93,28 +93,28 @@ export default {
       this.siretDescription = null;
       if (value.length !== 14) return;
 
-      fetch(`https://entreprise.data.gouv.fr/api/sirene/v3/etablissements/${value}`).then((r) => {
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${value}`).then((r) => {
         if (!r.ok) {
           this.siretDescription = null;
           throw new Error('Not 200 response');
         }
         return r.json();
       }).then((data) => {
-        this.siretDescription = data.etablissement.unite_legale.denomination;
+        this.siretDescription = data['results'][0]['nom_raison_sociale'];
       }).catch((_) => _);
     },
     handleSirenInput(value) {
       this.sirenDescription = null;
       if (value.length !== 9) return;
 
-      fetch(`https://entreprise.data.gouv.fr/api/sirene/v3/unites_legales/${value}`).then((r) => {
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${value}`).then((r) => {
         if (!r.ok) {
           this.sirenDescription = null;
           throw new Error('Not 200 response');
         }
         return r.json();
       }).then((data) => {
-        this.sirenDescription = data.unite_legale.denomination;
+        this.sirenDescription = data['results'][0]['nom_raison_sociale'];
       }).catch((_) => _);
     },
     handlePostcodeInput(value) {

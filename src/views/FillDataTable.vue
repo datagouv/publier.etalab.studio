@@ -1173,15 +1173,15 @@ export default {
       this.siretDescription = null;
       if (event.value.length !== 14) return;
 
-      fetch(`https://entreprise.data.gouv.fr/api/sirene/v3/etablissements/${event.value}`).then((r) => {
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`).then((r) => {
         if (!r.ok) {
           this.siretDescription = null;
           throw new Error('Not 200 response');
         }
         return r.json();
       }).then((data) => {
-        this.siretDescription = data.etablissement.unite_legale.denomination;
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIRET correspond à ${data.etablissement.unite_legale.denomination}.`;
+        this.siretDescription = data['results'][0]['nom_raison_sociale'];
+        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIRET correspond à ${data['results'][0]['nom_raison_sociale']}.`;
 
         this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
       }).catch((_) => _);
@@ -1190,15 +1190,15 @@ export default {
       this.sirenDescription = null;
       if (event.value.length !== 9) return;
 
-      fetch(`https://entreprise.data.gouv.fr/api/sirene/v3/unites_legales/${event.value}`).then((r) => {
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`).then((r) => {
         if (!r.ok) {
           this.sirenDescription = null;
           throw new Error('Not 200 response');
         }
         return r.json();
       }).then((data) => {
-        this.sirenDescription = data.unite_legale.denomination;
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIREN correspond à ${data.unite_legale.denomination}.`;
+        this.sirenDescription = data['results'][0]['nom_raison_sociale'];
+        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIREN correspond à ${data['results'][0]['nom_raison_sociale']}.`;
 
         this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
       }).catch((_) => _);
