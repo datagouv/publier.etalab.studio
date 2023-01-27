@@ -127,8 +127,8 @@ export default {
   mounted() {
     const loader = this.$loading.show();
     fetch(`${SCHEMAS_CATALOG_URL}`).then((r) => r.json()).then((data) => {
-      this.schemas = data.schemas;
-      this.schemasToShow = data.schemas;
+      this.schemas = data.schemas.filter(s => s.schema_type != "datapackage");
+      this.schemasToShow = this.schemas;
     }).finally(() => {
       loader.hide();
     });
