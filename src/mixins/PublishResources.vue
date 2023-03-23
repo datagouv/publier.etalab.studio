@@ -1,4 +1,5 @@
 <script>
+import { sl } from 'date-fns/locale';
 import { EventBus } from '../event-bus.js';
 
 import $api from '../services/Api';
@@ -42,7 +43,9 @@ export default {
         text: s.title || s.name 
       }));
       this.schema = this.schemas.find((s) => (s.name === this.schemaName || s.schema_url === this.schemaUrl));
-      if(this.schema && !this.schemaName) this.schemaName = this.schema.name
+      if(this.schema && !this.schemaName) {
+        this.schemaName = this.schema.name
+      }
       if(this.schema) this.schema.version = this.schema.versions[this.schema.versions.length - 1]['version_name']
       if(!this.schema) {
         fetch(this.schemaUrl).then((r) => r.json()).then((data2) => {
@@ -116,9 +119,6 @@ export default {
     },
   },
   methods: {
-    testMixin(){
-        console.log('hello world')
-    },
     // in a method because of {} binding not allowed
     computeHasValues() {
       this.hasValues = Object.keys(this.values).length > 0
@@ -148,6 +148,13 @@ export default {
     },
     togglePublishButtonState(formState) {
       this.publishButtonDisabled = !formState;
+    },
+    clean_version(version){
+      let values = ["v", "V"]
+      if (values.includes(version.charAt(0))) {
+        version = version.substring(1)
+      }
+      return version
     },
     updateDatasetUpdateResource(publishContent, dataBlob, ext="csv") {
       $api
@@ -193,7 +200,7 @@ export default {
                     title: publishContent.resource.title,
                     schema: {
                       name: this.schemaName,
-                      version: this.schema.version
+                      version: this.clean_version(this.schema.version)
                     },
                     extras: {
                       publish_source: "publier.etalab.studio"
@@ -220,7 +227,7 @@ export default {
               }
               $api
                 .put(
-                  `datasets/${datasetId}/resources/${resourceId}/`,
+                  `datasets/${datasetId}/resources/${resourceId}`,
                   payload,
                   (err) => {
                     // eslint-disable-next-line no-alert
@@ -282,7 +289,7 @@ export default {
                     title: publishContent.resource.title,
                     schema: {
                       name: this.schemaName,
-                      version: this.schema.version
+                      version: this.clean_version(this.schema.version)
                     },
                     extras: {
                       publish_source: "publier.etalab.studio"
@@ -310,7 +317,7 @@ export default {
 
               $api
                 .put(
-                  `datasets/${datasetId}/resources/${resourceId}/`,
+                  `datasets/${datasetId}/resources/${resourceId}`,
                   payload,
                   (err) => {
                     // eslint-disable-next-line no-alert
@@ -380,7 +387,7 @@ export default {
                     title: publishContent.resource.title,
                     schema: {
                       name: this.schemaName,
-                      version: this.schema.version
+                      version: this.clean_version(this.schema.version)
                     },
                     extras: {
                       publish_source: "publier.etalab.studio"
@@ -408,7 +415,7 @@ export default {
 
               $api
                 .put(
-                  `datasets/${datasetId}/resources/${resourceId}/`,
+                  `datasets/${datasetId}/resources/${resourceId}`,
                   payload,
                   (err) => {
                     // eslint-disable-next-line no-alert
