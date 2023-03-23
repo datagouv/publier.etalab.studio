@@ -85,7 +85,7 @@ export default {
       return this.user && this.user.loggedIn;
     },
     userLoggedInWithSomeOrganizations() {
-      return this.userLoggedIn && this.user.data.organizations.length > 0;
+      return this.userLoggedIn;
     },
     fields() {
       return [...this.fieldNames.map((f) => ({
