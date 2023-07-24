@@ -21,7 +21,7 @@ export default class Auth {
     return { Authorization: `Basic ${headerStr}` };
   }
 
-  authUrl() {
+  authUrl(lang) {
     const pkcePair = create();
     // eslint-disable-next-line prefer-destructuring
     const codeVerifier = pkcePair.codeVerifier;
@@ -31,23 +31,25 @@ export default class Auth {
 
     const state = this.generateRandomString();
     localStorage.setItem('pkceState', state);
-
-    const redirectURI = encodeURIComponent(this.redirectURI);
+    console.log(lang)
+    let redirect_uri = this.redirectURI + lang + '/login'
+    const redirectURI = encodeURIComponent(redirect_uri);
     const encodedState = encodeURIComponent(state);
     const encodedCC = encodeURIComponent(codeChallenge);
 
     return `${this.BASE_URL}/oauth/authorize?redirect_uri=${redirectURI}&response_type=code&state=${encodedState}&client_id=${this.clientId}&scope=default&code_challenge=${encodedCC}&code_challenge_method=S256`;
   }
 
-  async retrieveToken(queryObject) {
+  async retrieveToken(queryObject, lang) {
     if (localStorage.getItem('pkceState') !== queryObject.state) {
       // eslint-disable-next-line no-throw-literal
       throw 'States are not matching';
     }
     const bodyFormData = new FormData();
+    let redirect_uri = this.redirectURI + lang + '/login'
     bodyFormData.append('grant_type', 'authorization_code');
     bodyFormData.append('code', queryObject.code);
-    bodyFormData.append('redirect_uri', this.redirectURI);
+    bodyFormData.append('redirect_uri', redirect_uri);
     bodyFormData.append('client_id', this.clientId);
     bodyFormData.append('client_secret', this.clientSecret);
     bodyFormData.append('code_verifier', localStorage.getItem('pkceCodeVerifier'));

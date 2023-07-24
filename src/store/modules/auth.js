@@ -61,6 +61,7 @@ const actions = {
     commit('setUserData', {});
   },
   fillLastPage({ commit }, data) {
+    console.log('filllll', data)
     commit('setLastPage', data);
   },
 };

@@ -1,15 +1,15 @@
 <template>
     <div style="min-height: 500px" >
-        <div class="rf-container">
+        <div class="fr-container">
           <p style="font-size: 14px; cursor: pointer;">
-            <a @click="gotoHomePage()" >Accueil</a>
+            <a @click="gotoHomePage()" style="cursor: pointer;">Accueil</a>
             &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-            <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+            <a @click="gotoSelectPage()" style="cursor: pointer;">{{ schema.title }}</a>
             &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
             Chargement des données
           </p>
         </div>
-        <div v-if="schema && !publicationReady" class="rf-container rf-pb-6w rf-pt-2w">
+        <div v-if="schema && !publicationReady" class="fr-container fr-pb-6w fr-pt-2w">
             <p class="title-page">Vérifier un fichier existant</p>
             <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
             
@@ -100,7 +100,7 @@
             </div>
         </div>
 
-        <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+        <div v-if="publicationReady && !publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
             <p class="title-page">Publier vos données sur data.gouv.fr</p>
             <publish-form-upload
                 :filename="filename"
@@ -114,7 +114,7 @@
             <div v-if="!publishButtonDisabled">
                 <button
                   type="submit"
-                  class="rf-btn"
+                  class="fr-btn"
                   title="Publier sur datagouv"
                   @click="publishDataset()"
                 >
@@ -124,7 +124,7 @@
             <div v-if="publishButtonDisabled">
                 <button
                   type="submit"
-                  class="rf-btn-light"
+                  class="fr-btn-light"
                   title="Publier sur datagouv"
                 >
                   Publier
@@ -132,13 +132,13 @@
             </div>
         </div>
 
-        <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+        <div v-if="publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
             <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
             <br/><br/><br/>
             <div style="text-align: center;">
                 <button
                   @click="btnClick()"
-                  class="rf-btn"
+                  class="fr-btn"
                   title="Voir le jeu de données sur Datagouv"
                 >
                   Voir le jeu de données sur Datagouv
@@ -148,7 +148,7 @@
 
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modalConnectLaunch"
       id="modalConnectLaunch"
       hide-footer
@@ -160,7 +160,7 @@
         <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
         <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
         <br />
-        <b-button class="rf-btn" @click="submitLogin">
+        <b-button class="fr-btn" @click="submitLogin">
           Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
         </b-button>
         &nbsp;&nbsp;&nbsp;
@@ -173,20 +173,17 @@
 </template>
 
 <script>
-import PublishFormUpload from '../components/PublishFormUpload.vue';
-import ErrorReport from '../components/ErrorReport.vue';
+import PublishFormUpload from "../components/PublishFormUpload.vue";
+import ErrorReport from "../components/ErrorReport.vue";
 
-import PublishRessources from '../mixins/PublishResources.vue';
-import GetReport from '../mixins/GetReport.vue';
+import PublishRessources from "../mixins/PublishResources.vue";
+import GetReport from "../mixins/GetReport.vue";
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
 export default {
-  name: 'fillDataUpload',
-  mixins: [
-    PublishRessources,
-    GetReport,
-  ],
+  name: "fillDataUpload",
+  mixins: [PublishRessources, GetReport],
   components: {
     PublishFormUpload,
     ErrorReport,
@@ -194,42 +191,40 @@ export default {
   data() {
     return {
       schemaObject: null,
-      file: '',
+      file: "",
       publicationReady: false,
       dataToPublish: {},
       publicationOK: false,
-      linkDgv: '',
-      contentFile: '',
-      wrongFormat:false,
-      infoboxTitle: 'Bravo ! Votre fichier est parfaitement conforme.',
-      infoboxContent: '',
+      linkDgv: "",
+      contentFile: "",
+      wrongFormat: false,
+      infoboxTitle: "Bravo ! Votre fichier est parfaitement conforme.",
+      infoboxContent: "",
       infoboxType: 1,
-      editButtonTitle: 'Prévisualiser le fichier',
-      editButtonImg: 'checked.png',
+      editButtonTitle: "Prévisualiser le fichier",
+      editButtonImg: "checked.png",
       validBox: true,
       showReport: false,
       showInfobox: false,
-      filename: 'Monfichier',
+      filename: "Monfichier",
       sizeFile: null,
     };
   },
-  computed: {
-  },
-  watch: {
-  },
+  computed: {},
+  watch: {},
   methods: {
     handleFileUpload() {
       this.sizeFile = null;
-      this.filename = 'Monfichier'
+      this.filename = "Monfichier";
       this.showInfobox = true;
       this.showReport = false;
-      this.editButtonTitle = 'Prévisualiser le fichier'
+      this.editButtonTitle = "Prévisualiser le fichier";
       this.wrongFormat = false;
       this.file = this.$refs.file.files[0];
-      if(this.file.name) this.filename = this.file.name;
-      if(this.file.size) this.sizeFile = this.file.size;
+      if (this.file.name) this.filename = this.file.name;
+      if (this.file.size) this.sizeFile = this.file.size;
       this.report = null;
-      this.reportJson = []
+      this.reportJson = [];
       this.reportValidStatus = null;
       this.badgeUrl = null;
       this.publication = false;
@@ -243,58 +238,61 @@ export default {
       this.reportRecos = [];
       this.reportErrorInfo = null;
 
-
-      if (this.schema.schema_type == 'tableschema' && this.$refs.file.files[0]['name'].includes('.csv')) {
+      if (
+        this.schema.schema_type == "tableschema" &&
+        this.$refs.file.files[0]["name"].includes(".csv")
+      ) {
         // eslint-disable-next-line prefer-destructuring
         const formData = new FormData();
-        formData.append('file', this.file);
-        formData.append('schema', this.schema.schema_url);
+        formData.append("file", this.file);
+        formData.append("schema", this.schema.schema_url);
 
         fetch(`${VALIDATA_API_URL}/validate`, {
-          method: 'POST',
+          method: "POST",
           body: formData,
         })
-        .then((r) => r.json())
-        .then((data) => {
-
-          this.getValidataReport(data);
-
-          
-        }).finally(() => {
-          // eslint-disable-next-line no-console
-          console.log('finally');
-        });
-      } else if (this.schema.schema_type == 'jsonschema' && this.$refs.file.files[0]['name'].includes('json')) {
-
-
+          .then((r) => r.json())
+          .then((data) => {
+            this.getValidataReport(data);
+          })
+          .finally(() => {
+            // eslint-disable-next-line no-console
+            console.log("finally");
+          });
+      } else if (
+        this.schema.schema_type == "jsonschema" &&
+        this.$refs.file.files[0]["name"].includes("json")
+      ) {
         var reader = new FileReader();
         reader.onloadend = () => {
           this.contentFile = reader.result;
 
-          let bod = JSON.stringify({schema: this.schema.schema_url, json: JSON.parse(this.contentFile)});
+          let bod = JSON.stringify({
+            schema: this.schema.schema_url,
+            json: JSON.parse(this.contentFile),
+          });
 
-          fetch(('https://jsonschema.app.etalab.studio/validate'), {
-            method: 'POST',
+          fetch("https://jsonschema.app.etalab.studio/validate", {
+            method: "POST",
             body: bod,
           })
-          .then((r) => r.json())
-          .then((data) => {
-
-            this.getJsonSchemaReport(data);
-
-          });
-        }
+            .then((r) => r.json())
+            .then((data) => {
+              this.getJsonSchemaReport(data);
+            });
+        };
         reader.readAsText(this.$refs.file.files[0]);
-        
       } else {
         this.wrongFormat = true;
-        this.reportValidStatus = 'Votre fichier n\'est pas au format attendu.';
+        this.reportValidStatus = "Votre fichier n'est pas au format attendu.";
         this.validBox = false;
-        if(this.schema.schema_type == 'tableschema'){
-          this.infoboxContent = 'Le fichier que vous venez de charger n\'est pas au format CSV. Le format CSV est le format obligatoire pour ce type de données.'
+        if (this.schema.schema_type == "tableschema") {
+          this.infoboxContent =
+            "Le fichier que vous venez de charger n'est pas au format CSV. Le format CSV est le format obligatoire pour ce type de données.";
         }
-        if(this.schema.schema_type =='jsonschema'){
-          this.infoboxContent = 'Le fichier que venez de charger n\'est pas au format JSON. Le format JSON est le format obligatoire pour ce type de données.'
+        if (this.schema.schema_type == "jsonschema") {
+          this.infoboxContent =
+            "Le fichier que venez de charger n'est pas au format JSON. Le format JSON est le format obligatoire pour ce type de données.";
         }
         this.infoboxType = 5;
       }
@@ -309,87 +307,102 @@ export default {
       // Si resource id : on modifie resource
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
-      if (publishContent.existingResource !== '') {
-        this.updateDatasetUpdateResource(publishContent,this.file,this.ext);
-      } else if (publishContent.existingDataset !== '') {
-        this.updateDatasetCreateResource(publishContent,this.file,this.ext);
+      if (publishContent.existingResource !== "") {
+        this.updateDatasetUpdateResource(publishContent, this.file, this.ext);
+      } else if (publishContent.existingDataset !== "") {
+        this.updateDatasetCreateResource(publishContent, this.file, this.ext);
       } else {
-        this.createDatasetCreateResource(publishContent,this.file,this.ext);
+        this.createDatasetCreateResource(publishContent, this.file, this.ext);
       }
     },
-    editFile(){
-      
-      console.log('begin');
-      const Papa = require('papaparse');
+    editFile() {
+      console.log("begin");
+      const Papa = require("papaparse");
 
       var reader = new FileReader();
       reader.onloadend = () => {
         var content = reader.result;
         var csvdata = Papa.parse(content);
 
-        var prepareRows = []
-        var prepareHeaders = []
+        var prepareRows = [];
+        var prepareHeaders = [];
         var isHeader = true;
         csvdata.data.forEach((row) => {
-          if(!isHeader) {
-            var obj = {}
-            for(var itemData in row) {
+          if (!isHeader) {
+            var obj = {};
+            for (var itemData in row) {
               obj[prepareHeaders[itemData]] = row[itemData];
             }
             prepareRows.push(obj);
           } else {
-            for(var itemHeader in row) {
-              prepareHeaders.push(row[itemHeader])
+            for (var itemHeader in row) {
+              prepareHeaders.push(row[itemHeader]);
             }
             isHeader = false;
           }
         });
 
-        this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
-        this.$store.dispatch('data/fillFileHeaderData', prepareHeaders)
-        this.$store.dispatch('data/fillFileRowsData', prepareRows)
-        this.$store.dispatch('data/fillFileNbRowsData', prepareRows.length)
+        this.$store.dispatch("data/fillSchemaNameData", this.schemaMeta.name);
+        this.$store.dispatch("data/fillFileHeaderData", prepareHeaders);
+        this.$store.dispatch("data/fillFileRowsData", prepareRows);
+        this.$store.dispatch("data/fillFileNbRowsData", prepareRows.length);
 
-        if(this.schemaName) this.$router.push(`table?schema=${this.schemaName}&fromFile=yes`);
-        if(this.schemaUrl) this.$router.push(`table?schema_url=${this.schemaUrl}&fromFile=yes`);
-        
-      }
+        if (this.schemaName)
+          this.$router.push({
+            name: "table",
+            params: { lang: this.$route.params.lang },
+            query: {
+              schema: this.schemaName,
+              fromFile: "yes",
+            },
+          });
+        if (this.schemaUrl)
+          this.$router.push({
+            name: "table",
+            params: { lang: this.$route.params.lang },
+            query: {
+              schema_url: this.schemaUrl,
+              fromFile: "yes",
+            },
+          });
+      };
       reader.readAsText(this.$refs.file.files[0]);
-
     },
     btnDocClick() {
       window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
     },
-    gotoExemple(url){
-      window.open(url)
-    }
+    gotoExemple(url) {
+      window.open(url);
+    },
   },
   mounted() {
-    fetch(this.schema.schema_url).then((r) => r.json()).then((data) => {
-      this.schemaObject = data;
-    });
+    fetch(this.schema.schema_url)
+      .then((r) => r.json())
+      .then((data) => {
+        this.schemaObject = data;
+      });
   },
 };
 </script>
 
 <style>
-.vsa-list{
-    min-height: 50px;
+.vsa-list {
+  min-height: 50px;
 }
-.vsa-item{
-    border-bottom: 1px solid #ebebeb;
-    width: 100%;
-    height: 100%;
+.vsa-item {
+  border-bottom: 1px solid #ebebeb;
+  width: 100%;
+  height: 100%;
 }
-.vsa-item__trigger{
-    width: 100%;
-    height: 50px;
-    border: 0px;
-    text-align: left;
-    background-color: white;
+.vsa-item__trigger {
+  width: 100%;
+  height: 50px;
+  border: 0px;
+  text-align: left;
+  background-color: white;
 }
-.vsa-item__content{
-    margin-top: 20px;
-    margin-bottom: 20px;
+.vsa-item__content {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 </style>
