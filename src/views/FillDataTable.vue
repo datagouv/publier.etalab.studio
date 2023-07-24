@@ -1,10 +1,10 @@
 <template>
 <div @click="clickPage()">
-    <div class="rf-container">
+    <div class="fr-container">
       <p style="font-size: 14px; cursor: pointer;">
-        <a @click="gotoHomePage()" >Accueil</a>
+        <a @click="gotoHomePage()" style="cursor: pointer;">Accueil</a>
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-        <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+        <a @click="gotoSelectPage()" style="cursor: pointer;">{{ schema.title }}</a>
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
         Tableur
       </p>
@@ -86,7 +86,7 @@
       </l-map>
     </div>
 
-    <div class="rf-container">
+    <div class="fr-container">
       <div>
         <input
           v-model="filename"
@@ -112,7 +112,7 @@
               style="margin-right: 20px"
               @click="submit()"
               type="submit"
-              class="rf-btn"
+              class="fr-btn"
             >
               Vérifier le fichier
               &nbsp;
@@ -167,7 +167,7 @@
     </div>
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modalDelete"
       id="modalDelete"
       hide-footer
@@ -175,14 +175,14 @@
     >
       <p>Etes-vous sûr de vouloir effacer toutes les données contenues dans ce tableur ?</p>
       <br/>
-      <b-button @click="reinitRows()" class="rf-btn">Je suis sûr</b-button>
+      <b-button @click="reinitRows()" class="fr-btn">Je suis sûr</b-button>
       &nbsp;&nbsp;&nbsp;
       <span @click="hideModalDelete()" style="cursor: pointer;"><u>Je ne souhaite pas réinitialiser mes données</u></span>
     </b-modal>
 
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modal3"
       id="modal3"
       hide-footer
@@ -271,7 +271,7 @@
             </div>
 
 
-        <div class="rf-container rf-pb-1w rf-pt-2w" v-if="publicationReady & !publicationOK">
+        <div class="fr-container fr-pb-1w fr-pt-2w" v-if="publicationReady & !publicationOK">
             <publish-form-upload
                 v-model="dataToPublish"
                 :filename="filename"
@@ -285,7 +285,7 @@
             <div v-if="!publishButtonDisabled">
                 <button
                   type="submit"
-                  class="rf-btn"
+                  class="fr-btn"
                   title="Publier sur datagouv"
                   @click="publishDataset()"
                 >
@@ -293,17 +293,17 @@
                 </button>
             </div>
             <div v-if="publishButtonDisabled">
-                <button type="submit" class="rf-btn-light" title="Publier sur datagouv">Publier</button>
+                <button type="submit" class="fr-btn-light" title="Publier sur datagouv">Publier</button>
             </div>
         </div>
 
-        <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+        <div v-if="publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
             <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
             <br/><br/><br/>
             <div style="text-align: center;">
                 <button
                   @click="btnClick()"
-                  class="rf-btn"
+                  class="fr-btn"
                   title="Voir le jeu de données sur Datagouv"
                 >
                   Voir le jeu de données sur Datagouv
@@ -316,7 +316,7 @@
 
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modal4"
       id="modal4"
       hide-footer
@@ -328,7 +328,7 @@
         <div v-if="shouldRenameColumn">
           <input
             v-model="newFieldName"
-            class="rf-input"
+            class="fr-input"
             placeholder="Entrer le nom du champs"
             type="search" id="new-fieldname-input"
             name="new-fieldname-input"
@@ -339,7 +339,7 @@
               style="margin-right: 20px;"
               @click="renameColumn()"
               type="submit"
-              class="rf-btn"
+              class="fr-btn"
             >
               Renommer la colonne
             </button>
@@ -350,7 +350,7 @@
 
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modalConnectLaunch"
       id="modalConnectLaunch"
       hide-footer
@@ -362,7 +362,7 @@
         <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
         <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
         <br />
-        <b-button class="rf-btn" @click="submitLogin">
+        <b-button class="fr-btn" @click="submitLogin">
           Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
         </b-button>
         &nbsp;&nbsp;&nbsp;
@@ -374,36 +374,33 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import StringField from '../components/StringField.vue';
-import SelectField from '../components/SelectField.vue';
-import RadioField from '../components/RadioField.vue';
+import Vue from "vue";
+import StringField from "../components/StringField.vue";
+import SelectField from "../components/SelectField.vue";
+import RadioField from "../components/RadioField.vue";
 
-import PublishFormUpload from '../components/PublishFormUpload.vue';
-import ErrorReport from '../components/ErrorReport.vue';
+import PublishFormUpload from "../components/PublishFormUpload.vue";
+import ErrorReport from "../components/ErrorReport.vue";
 
-import VueEditableGrid from '../grid/VueEditableGrid.vue';
+import VueEditableGrid from "../grid/VueEditableGrid.vue";
 
-import PublishRessources from '../mixins/PublishResources.vue';
-import GetReport from '../mixins/GetReport.vue';
+import PublishRessources from "../mixins/PublishResources.vue";
+import GetReport from "../mixins/GetReport.vue";
 
-import { LMap, LTileLayer, LMarker, LTooltip } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LTooltip } from "vue2-leaflet";
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-const GEO_WIDGET_INITIAL_CENTER = [46.8, 2.11] // Center of France
-const GEO_DECIMAL_COUNT = 2
+const GEO_WIDGET_INITIAL_CENTER = [46.8, 2.11]; // Center of France
+const GEO_DECIMAL_COUNT = 2;
 // Geographical map is based on Jawg (https://www.jawg.io/) raster tiles
 // Request for a free API token and pass it through VUE_APP_GEO_ACCESS_TOKEN env variable
-const accessToken = process.env.VUE_APP_GEO_ACCESS_TOKEN
-const GEO_TILES_URL = `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`
+const accessToken = process.env.VUE_APP_GEO_ACCESS_TOKEN;
+const GEO_TILES_URL = `https://tile.jawg.io/jawg-sunny/{z}/{x}/{y}.png?access-token=${accessToken}`;
 
 export default {
-  name: 'fillDataTable',
-  mixins: [
-    PublishRessources,
-    GetReport,
-  ],
+  name: "fillDataTable",
+  mixins: [PublishRessources, GetReport],
   components: {
     VueEditableGrid,
     PublishFormUpload,
@@ -411,7 +408,7 @@ export default {
     LMap,
     LTileLayer,
     LMarker,
-    LTooltip
+    LTooltip,
   },
   data() {
     return {
@@ -423,10 +420,10 @@ export default {
       fieldNodes: [],
       columnDefs: [
         {
-          field: 'selectCol',
-          headerName: '',
-          size: '40px',
-          type: 'supp',
+          field: "selectCol",
+          headerName: "",
+          size: "40px",
+          type: "supp",
           rename: false,
         },
       ],
@@ -439,16 +436,16 @@ export default {
       rowsError: [],
       rowsColor: [],
       toRemove: 0,
-      messageInfo: 'Veuillez sélectionner une cellule',
-      exempleInfo: '',
+      messageInfo: "Veuillez sélectionner une cellule",
+      exempleInfo: "",
       warningInfo: null,
-      validInfo: '',
+      validInfo: "",
       errorInfo: null,
       publicationReady: false,
       publicationButtons: false,
       publicationOK: false,
       dataToPublish: {},
-      newFieldName: '',
+      newFieldName: "",
       realRowsIds: [],
       colIndex: 0,
       rowIndex: 1,
@@ -476,11 +473,11 @@ export default {
       leftDivError: "200",
       widthPlus: "400",
       validBox: true,
-      infoboxTitle: 'Bravo ! Votre fichier est parfaitement conforme.',
-      infoboxContent: '',
+      infoboxTitle: "Bravo ! Votre fichier est parfaitement conforme.",
+      infoboxContent: "",
       infoboxType: 1,
-      editButtonTitle: 'Prévisualiser le fichier',
-      editButtonImg: 'checked.png',
+      editButtonTitle: "Prévisualiser le fichier",
+      editButtonImg: "checked.png",
       showReport: false,
       showInfobox: false,
       currentArrayItems: [],
@@ -500,10 +497,10 @@ export default {
                      | <a href="https://www.openstreetmap.org/copyright"
                      title="OpenStreetMap is open data licensed under ODbL" target="_blank"
                      class="osm-attrib">&copy; OSM contributors</a>`,
-      value: '',
+      value: "",
       floatPrecision: GEO_DECIMAL_COUNT,
-      filename: 'donnees.csv',
-      filenameDefault: 'donnees.csv',
+      filename: "donnees.csv",
+      filenameDefault: "donnees.csv",
       filenameLength: 350,
     };
   },
@@ -511,8 +508,8 @@ export default {
     schemaMeta() {
       this.buildForm();
     },
-    filenameLength(){
-      return (this.filename.length+1) * 18
+    filenameLength() {
+      return (this.filename.length + 1) * 18;
     },
   },
   mounted() {
@@ -523,8 +520,8 @@ export default {
     this.rowsColor.push({ ...this.emptyRowColor });
 
     window.setInterval(() => {
-        this.saveRows()
-      }, 5000)
+      this.saveRows();
+    }, 5000);
 
     this.widthPlus = this.$refs.grid.$el.offsetWidth.toString();
   },
@@ -534,45 +531,50 @@ export default {
     },
   },
   created() {
-    window.addEventListener('scroll', this.handleScroll);
+    window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
     addArrayValue(item) {
-      if(!item.selected) {
-        if(!this.rows[this.rowCurrentArray][this.colCurrentArray]) {
-          this.rows[this.rowCurrentArray][this.colCurrentArray] = []
+      if (!item.selected) {
+        if (!this.rows[this.rowCurrentArray][this.colCurrentArray]) {
+          this.rows[this.rowCurrentArray][this.colCurrentArray] = [];
         }
         this.rows[this.rowCurrentArray][this.colCurrentArray].push(item.value);
       } else {
-        if(this.rows[this.rowCurrentArray][this.colCurrentArray]) {
-          this.rows[this.rowCurrentArray][this.colCurrentArray] = this.rows[this.rowCurrentArray][this.colCurrentArray].filter(el => el != item.value);
+        if (this.rows[this.rowCurrentArray][this.colCurrentArray]) {
+          this.rows[this.rowCurrentArray][this.colCurrentArray] = this.rows[
+            this.rowCurrentArray
+          ][this.colCurrentArray].filter((el) => el != item.value);
         }
       }
       this.currentArrayItems.forEach((el) => {
-        if(el.value == item.value) el.selected = !el.selected;
+        if (el.value == item.value) el.selected = !el.selected;
       });
-      this.$refs.grid.selectCell(this.rowCurrentArray, this.colindexCurrentArray);
+      this.$refs.grid.selectCell(
+        this.rowCurrentArray,
+        this.colindexCurrentArray
+      );
     },
-    showArrayEnum(row, col, column, val, pos){
+    showArrayEnum(row, col, column, val, pos) {
       this.displayErrorBox = false;
       this.arraySelected = false;
       this.rowCurrentArray = row;
       this.colindexCurrentArray = col;
       this.colCurrentArray = column;
-      this.topDivError = window.scrollY+pos.y+40;
+      this.topDivError = window.scrollY + pos.y + 40;
       this.leftDivError = pos.x;
       this.displayArrayBox = true;
       this.schema.fields.forEach((field) => {
-        if(field.name == column){
-          this.currentArrayItems = []
+        if (field.name == column) {
+          this.currentArrayItems = [];
           field.arrayItem.constraints.enum.forEach((el) => {
-            var obj = {}
-            if(this.rows[row][column]) {
-              obj['selected'] = this.rows[row][column].includes(el);
+            var obj = {};
+            if (this.rows[row][column]) {
+              obj["selected"] = this.rows[row][column].includes(el);
             } else {
-              obj['selected'] = false;
+              obj["selected"] = false;
             }
-            obj['value'] = el
+            obj["value"] = el;
             this.currentArrayItems.push(obj);
           });
         }
@@ -583,23 +585,23 @@ export default {
     // either dragging it or setting its location
     onMarkerMove(latLng) {
       // marker location
-      this.markerLocation = latLng
+      this.markerLocation = latLng;
       // formatted value: "lon, lat"
-      var format = null
-      
+      var format = null;
+
       this.columnDefs.forEach((cd) => {
-        if(cd.headerName == this.colCurrentGeopoint) {
+        if (cd.headerName == this.colCurrentGeopoint) {
           format = cd.format;
         }
       });
 
-      this.schema.fields.forEach((field) => { 
-        if(field.name == this.colCurrentGeopoint){
+      this.schema.fields.forEach((field) => {
+        if (field.name == this.colCurrentGeopoint) {
           format = field.format;
         }
       });
-      
-      const value =  this.formatLatLng(latLng, format)
+
+      const value = this.formatLatLng(latLng, format);
       // update text input
       // Hey! value has changed
       this.rows[this.rowCurrentGeopoint][this.colCurrentGeopoint] = value;
@@ -607,262 +609,296 @@ export default {
 
     // Format longLat object to string
     formatLatLng(lngLat, format) {
-      const fp = this.floatPrecision
-      const { lat, lng } = lngLat
+      const fp = this.floatPrecision;
+      const { lat, lng } = lngLat;
       if (format == "array") {
-        return `[${lng.toFixed(fp)},${lat.toFixed(fp)}]`
+        return `[${lng.toFixed(fp)},${lat.toFixed(fp)}]`;
       }
       if (format == "object") {
-        return `{"lon": ${lng.toFixed(fp)}, "lat": ${lat.toFixed(fp)}}`
+        return `{"lon": ${lng.toFixed(fp)}, "lat": ${lat.toFixed(fp)}}`;
       }
-      return `${lng.toFixed(fp)},${lat.toFixed(fp)}`
+      return `${lng.toFixed(fp)},${lat.toFixed(fp)}`;
     },
 
-    showGeopoint(row, col, column, val, pos){
+    showGeopoint(row, col, column, val, pos) {
       this.displayErrorBox = false;
       this.geopointSelected = false;
       this.rowCurrentGeopoint = row;
       this.colindexCurrentGeopoint = col;
       this.colCurrentGeopoint = column;
-      this.topDivError = window.scrollY+pos.y+40;
+      this.topDivError = window.scrollY + pos.y + 40;
       this.leftDivError = pos.x;
       this.displayGeopointBox = true;
     },
     getIdentifier(row, col, column, val, pos) {
-      fetch('https://www.uuidgenerator.net/api/version1').then((r) => r.text()).then((data) => {
-        this.rows[row][column] = data;
-      });
+      fetch("https://www.uuidgenerator.net/api/version1")
+        .then((r) => r.text())
+        .then((data) => {
+          this.rows[row][column] = data;
+        });
     },
-    handleScroll () {
+    handleScroll() {
       this.scrolled = window.scrollY > 0;
     },
-    maybeAddRow($event){
-      if ($event.rowIndex === (this.rows.length - 1)) {
-        this.addEmptyRow()
+    maybeAddRow($event) {
+      if ($event.rowIndex === this.rows.length - 1) {
+        this.addEmptyRow();
       }
     },
     addMultipleRows($event) {
-      for(let i = 0;i<$event.rowsToAdd;i++) {
-        this.addEmptyRow()
+      for (let i = 0; i < $event.rowsToAdd; i++) {
+        this.addEmptyRow();
       }
     },
-    addNewField(header=null) {
-        var new_name = ''
-        if(header) {
-          new_name = header
-        } else {
-          new_name = "nouvelle_colonne_"+this.columnDefs.length.toString()
-        }
-        this.fieldNames.push(new_name);
-        const myobj = {};
-        myobj.sortable = false;
-        myobj.filter = true;
-        myobj.field = new_name;
-        myobj.headerName = new_name;
-        myobj.editable = true;
-        myobj.optional = true;
-        myobj.rename = false;
-        var lenCharacter = new_name.length*10+70
-        myobj.size = (lenCharacter+100).toString()+"px";
+    addNewField(header = null) {
+      var new_name = "";
+      if (header) {
+        new_name = header;
+      } else {
+        new_name = "nouvelle_colonne_" + this.columnDefs.length.toString();
+      }
+      this.fieldNames.push(new_name);
+      const myobj = {};
+      myobj.sortable = false;
+      myobj.filter = true;
+      myobj.field = new_name;
+      myobj.headerName = new_name;
+      myobj.editable = true;
+      myobj.optional = true;
+      myobj.rename = false;
+      var lenCharacter = new_name.length * 10 + 70;
+      myobj.size = (lenCharacter + 100).toString() + "px";
 
-        this.emptyRow[new_name] = '';
-        this.emptyRowInfo[new_name] = '';
-        this.emptyRowError[new_name] = '';
+      this.emptyRow[new_name] = "";
+      this.emptyRowInfo[new_name] = "";
+      this.emptyRowError[new_name] = "";
 
-        this.columnDefs.push(myobj);
-        
+      this.columnDefs.push(myobj);
     },
-    buildFileName(schema){
-      let filename = 'donnees'
-      if(schema && schema.name){
-        filename = filename + '-' + this.schema.name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll(' ','-')
+    buildFileName(schema) {
+      let filename = "donnees";
+      if (schema && schema.name) {
+        filename =
+          filename +
+          "-" +
+          this.schema.name
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/\p{Diacritic}/gu, "")
+            .replaceAll(" ", "-");
       }
-      if(this.user && this.user.data && this.user.data.organizations && this.user.data.organizations[0] && this.user.data.organizations[0].name){
-        filename = filename + '-' + this.user.data.organizations[0].name.toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu, "").replaceAll(' ','-')
+      if (
+        this.user &&
+        this.user.data &&
+        this.user.data.organizations &&
+        this.user.data.organizations[0] &&
+        this.user.data.organizations[0].name
+      ) {
+        filename =
+          filename +
+          "-" +
+          this.user.data.organizations[0].name
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/\p{Diacritic}/gu, "")
+            .replaceAll(" ", "-");
       }
-      this.filename = filename + '.csv'
-      this.filenameDefault = filename + '.csv'
-      this.filenameLength = (this.filename.length + 1) * 18
-      
+      this.filename = filename + ".csv";
+      this.filenameDefault = filename + ".csv";
+      this.filenameLength = (this.filename.length + 1) * 18;
     },
     buildForm() {
       const loader = this.$loading.show();
 
-      fetch(this.schemaMeta.schema_url).then((r) => r.json()).then((data) => {
-        this.schema = data;
-        
-        this.buildFileName(data);
+      fetch(this.schemaMeta.schema_url)
+        .then((r) => r.json())
+        .then((data) => {
+          this.schema = data;
 
-        this.schema.fields.forEach((field) => {
-          this.fieldNames.push(field.name);
-          const myobj = {};
-          myobj.sortable = false;
-          myobj.filter = true;
-          myobj.field = field.name;
-          myobj.headerName = field.name;
-          myobj.editable = true;
-          
-          if(field.type == 'geopoint') { 
-            this.emptyRow[field.name] = '';
-            this.emptyRowInfo[field.name] = '';
-            this.emptyRowError[field.name] = '';
-            myobj.type = 'geopoint'
-            myobj.format = field.format;
-          }
+          this.buildFileName(data);
 
-          if(field.type == 'array') {
-            this.emptyRow[field.name] = '';
-            this.emptyRowInfo[field.name] = '';
-            this.emptyRowError[field.name] = '';
-            if(field.arrayItem && field.arrayItem.constraints && field.arrayItem.constraints.enum) {
-              myobj.type = 'arrayEnum';
-            } else {
-              myobj.type = 'array';
+          this.schema.fields.forEach((field) => {
+            this.fieldNames.push(field.name);
+            const myobj = {};
+            myobj.sortable = false;
+            myobj.filter = true;
+            myobj.field = field.name;
+            myobj.headerName = field.name;
+            myobj.editable = true;
+
+            if (field.type == "geopoint") {
+              this.emptyRow[field.name] = "";
+              this.emptyRowInfo[field.name] = "";
+              this.emptyRowError[field.name] = "";
+              myobj.type = "geopoint";
+              myobj.format = field.format;
             }
-            //myobj.enumList = field.arrayItem.constraints.enum;
-          }
 
-          if (field.type === 'string') {
-            this.emptyRow[field.name] = '';
-            this.emptyRowInfo[field.name] = '';
-            this.emptyRowError[field.name] = '';
-            if(field.constraints && field.constraints.enum) {
-              myobj.type = 'stringEnum';
-              myobj.enumList = field.constraints.enum;
-            }
-          } else if (field.type === 'date') {
-            
-            //myobj.type = 'date';
-            myobj.type = 'string';
-            //myobj.format = defaultDateTimeFormat;
-            var dateFormat = 'yyyy-MM-dd'
-            if (field.format) {
-              dateFormat = field.format.replace('%Y','yyyy').replace('%m','MM').replace('%d','dd')
-            }
-            myobj.format = dateFormat;
-            this.emptyRow[field.name] = null;
-            this.emptyRowInfo[field.name] = null;
-            this.emptyRowError[field.name] = null;
-          } else if (field.type === 'number') {
-            myobj.type = 'numeric';
-            this.emptyRow[field.name] = null;
-            this.emptyRowInfo[field.name] = null;
-            this.emptyRowError[field.name] = null;
-          } else if (field.type === 'integer') {
-            myobj.type = 'numeric';
-            this.emptyRow[field.name] = null;
-            this.emptyRowInfo[field.name] = null;
-            this.emptyRowError[field.name] = null;
-          }
-
-          var lenCharacter = field.name.length*10+70;
-          myobj.size = lenCharacter.toString()+"px";
-          this.columnDefs.push(myobj);
-        });
-        const uniqueid = this.makeid(15);
-        this.emptyRow.idRowVEG = uniqueid;
-        this.emptyRowInfo.idRowVEG = uniqueid;
-        this.emptyRowError.idRowVEG = uniqueid;
-        this.emptyRowColor.idRowVEG = '#ebebeb';
-
-        for(var i = 0; i<25; i++){
-          this.addEmptyRow()
-        }
-
-        if(this.ongoingData) {
-          if(this.ongoingData.schema === this.schemaMeta.name) {
-            if(this.fromFile == 'yes'){
-              //var diff = this.ongoingData.fileHeader.filter(x => !this.fieldNames.includes(x));
-              this.ongoingData.fileHeader.forEach((header) => {
-                if(!this.fieldNames.includes(header)){
-                  this.newFieldName = header;
-                  this.addNewField(header);
-                }
-              });
-              var rowNb = 0;
-              if(this.ongoingData.fileNbRows > 25){
-                var max = 2500
-                if (this.ongoingData.fileNbRows < 2500) {
-                  max = this.ongoingData.fileNbRows
-                }
-                for(var k = 0; k < max; k++) {
-                  this.addEmptyRow()
-                }
+            if (field.type == "array") {
+              this.emptyRow[field.name] = "";
+              this.emptyRowInfo[field.name] = "";
+              this.emptyRowError[field.name] = "";
+              if (
+                field.arrayItem &&
+                field.arrayItem.constraints &&
+                field.arrayItem.constraints.enum
+              ) {
+                myobj.type = "arrayEnum";
+              } else {
+                myobj.type = "array";
               }
-              this.ongoingData.fileRows.forEach((row) => {
-                for(var col in row) {
-                  this.rows[rowNb][col] = row[col]; 
-                }
-                rowNb++;
-              });
-              
-              for(var l = 0; l < this.ongoingData.fileRows.length ; l++) {
-                this.realRowsIds.push(this.rows[l]['idRowVEG'])
-                this.realRowsIds = [...new Set(this.realRowsIds)];
-              }
-
-              this.submit();
+              //myobj.enumList = field.arrayItem.constraints.enum;
             }
-            else {
-              this.columnDefs = this.ongoingData.columnDefs;
-              this.rows = this.ongoingData.rows;
-              this.realRowsIds = this.ongoingData.realRowsIds;
+
+            if (field.type === "string") {
+              this.emptyRow[field.name] = "";
+              this.emptyRowInfo[field.name] = "";
+              this.emptyRowError[field.name] = "";
+              if (field.constraints && field.constraints.enum) {
+                myobj.type = "stringEnum";
+                myobj.enumList = field.constraints.enum;
+              }
+            } else if (field.type === "date") {
+              //myobj.type = 'date';
+              myobj.type = "string";
+              //myobj.format = defaultDateTimeFormat;
+              var dateFormat = "yyyy-MM-dd";
+              if (field.format) {
+                dateFormat = field.format
+                  .replace("%Y", "yyyy")
+                  .replace("%m", "MM")
+                  .replace("%d", "dd");
+              }
+              myobj.format = dateFormat;
+              this.emptyRow[field.name] = null;
+              this.emptyRowInfo[field.name] = null;
+              this.emptyRowError[field.name] = null;
+            } else if (field.type === "number") {
+              myobj.type = "numeric";
+              this.emptyRow[field.name] = null;
+              this.emptyRowInfo[field.name] = null;
+              this.emptyRowError[field.name] = null;
+            } else if (field.type === "integer") {
+              myobj.type = "numeric";
+              this.emptyRow[field.name] = null;
+              this.emptyRowInfo[field.name] = null;
+              this.emptyRowError[field.name] = null;
+            }
+
+            var lenCharacter = field.name.length * 10 + 70;
+            myobj.size = lenCharacter.toString() + "px";
+            this.columnDefs.push(myobj);
+          });
+          const uniqueid = this.makeid(15);
+          this.emptyRow.idRowVEG = uniqueid;
+          this.emptyRowInfo.idRowVEG = uniqueid;
+          this.emptyRowError.idRowVEG = uniqueid;
+          this.emptyRowColor.idRowVEG = "#ebebeb";
+
+          for (var i = 0; i < 25; i++) {
+            this.addEmptyRow();
+          }
+
+          if (this.ongoingData) {
+            if (this.ongoingData.schema === this.schemaMeta.name) {
+              if (this.fromFile == "yes") {
+                //var diff = this.ongoingData.fileHeader.filter(x => !this.fieldNames.includes(x));
+                this.ongoingData.fileHeader.forEach((header) => {
+                  if (!this.fieldNames.includes(header)) {
+                    this.newFieldName = header;
+                    this.addNewField(header);
+                  }
+                });
+                var rowNb = 0;
+                if (this.ongoingData.fileNbRows > 25) {
+                  var max = 2500;
+                  if (this.ongoingData.fileNbRows < 2500) {
+                    max = this.ongoingData.fileNbRows;
+                  }
+                  for (var k = 0; k < max; k++) {
+                    this.addEmptyRow();
+                  }
+                }
+                this.ongoingData.fileRows.forEach((row) => {
+                  for (var col in row) {
+                    this.rows[rowNb][col] = row[col];
+                  }
+                  rowNb++;
+                });
+
+                for (var l = 0; l < this.ongoingData.fileRows.length; l++) {
+                  this.realRowsIds.push(this.rows[l]["idRowVEG"]);
+                  this.realRowsIds = [...new Set(this.realRowsIds)];
+                }
+
+                this.submit();
+              } else {
+                this.columnDefs = this.ongoingData.columnDefs;
+                this.rows = this.ongoingData.rows;
+                this.realRowsIds = this.ongoingData.realRowsIds;
+              }
             }
           }
-        }
-
-      }).catch((_) => _)
+        })
+        .catch((_) => _)
         .finally(() => {
-        loader.hide();
-      });
+          loader.hide();
+        });
     },
     buildLine(line) {
-      let linecsv = '';
+      let linecsv = "";
       let cpt = 0;
       var notEmpty = false;
       this.fieldNames.forEach((field) => {
-        if(line[field] != "" && line[field] != null){
+        if (line[field] != "" && line[field] != null) {
           notEmpty = true;
         }
       });
-      if(notEmpty) {
+      if (notEmpty) {
         this.fieldNames.forEach((field) => {
           var fi = line[field];
-          if(Array.isArray(line[field])) {
-            fi = '['
-            var cpt2 = 0
+          if (Array.isArray(line[field])) {
+            fi = "[";
+            var cpt2 = 0;
             line[field].forEach((l) => {
-              if(cpt2 == 0) {
-                cpt2 = 1
-                fi = fi+'""'+l+'""'
+              if (cpt2 == 0) {
+                cpt2 = 1;
+                fi = fi + '""' + l + '""';
               } else {
-                fi = fi+',""'+l+'""'
+                fi = fi + ',""' + l + '""';
               }
             });
-            fi = fi+']'
+            fi = fi + "]";
           }
           this.columnDefs.forEach((cd) => {
-            if(cd.headerName == field) {
-              if(cd.type == 'array') {
-                if(line[field]) {
-                  var tab = line[field].replaceAll("[","").replaceAll("]","").replaceAll("'",'').replaceAll('"','').replaceAll(', ',',').replaceAll(' ',',').split(',')
-                  fi = '['
-                  var cpt2 = 0
+            if (cd.headerName == field) {
+              if (cd.type == "array") {
+                if (line[field]) {
+                  var tab = line[field]
+                    .replaceAll("[", "")
+                    .replaceAll("]", "")
+                    .replaceAll("'", "")
+                    .replaceAll('"', "")
+                    .replaceAll(", ", ",")
+                    .replaceAll(" ", ",")
+                    .split(",");
+                  fi = "[";
+                  var cpt2 = 0;
                   tab.forEach((l) => {
-                    if(cpt2 == 0) {
-                      cpt2 = 1
-                      fi = fi+'""'+l+'""'
+                    if (cpt2 == 0) {
+                      cpt2 = 1;
+                      fi = fi + '""' + l + '""';
                     } else {
-                      fi = fi+',""'+l+'""'
+                      fi = fi + ',""' + l + '""';
                     }
                   });
-                  fi = fi+']'
+                  fi = fi + "]";
                 }
               }
             }
           });
-          if(fi == null){
-            fi = ''
+          if (fi == null) {
+            fi = "";
           }
           if (cpt === 0) {
             linecsv = `"${fi}"`;
@@ -875,34 +911,38 @@ export default {
       return linecsv;
     },
     buildCurrentCsvContent() {
-      let finalcsv = '';
+      let finalcsv = "";
       var stopBuilding = false;
       finalcsv = this.buildHeaderLine();
       this.rows.forEach((row) => {
         var currentLine = this.buildLine(row);
-        if(currentLine != '' && stopBuilding == false) { 
+        if (currentLine != "" && stopBuilding == false) {
           finalcsv = `${finalcsv}\r\n`;
           finalcsv += currentLine;
-        } else{
+        } else {
           stopBuilding = true;
         }
       });
       return finalcsv;
     },
     csvLinkData() {
-      const blob = new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
-      const a = document.createElement('a');
+      const blob = new Blob([`${this.buildCurrentCsvContent()}`], {
+        type: "text/csv",
+      });
+      const a = document.createElement("a");
       const url = window.URL.createObjectURL(blob);
       a.href = url;
       a.download = this.filename;
       a.click();
     },
     getCSVBlob() {
-      return new Blob([`${this.buildCurrentCsvContent()}`], { type: 'text/csv' });
+      return new Blob([`${this.buildCurrentCsvContent()}`], {
+        type: "text/csv",
+      });
     },
     addField(field) {
       const hasEnum = field.constraints && field.constraints.enum;
-      const isBoolean = field.type === 'boolean';
+      const isBoolean = field.type === "boolean";
 
       // eslint-disable-next-line no-shadow
       const factory = (klass, field) => {
@@ -922,9 +962,8 @@ export default {
       return factory(StringField, field);
     },
     submit() {
-
       this.report = null;
-      this.reportJson = []
+      this.reportJson = [];
       this.reportValidStatus = null;
       this.badgeUrl = null;
       this.publicationMessage = null;
@@ -942,9 +981,9 @@ export default {
       this.rowsError.forEach((re) => {
         // eslint-disable-next-line no-restricted-syntax
         for (var property in re) {
-          if (property !== 'idRowVEG') {
+          if (property !== "idRowVEG") {
             // eslint-disable-next-line no-param-reassign
-            re[property] = '';
+            re[property] = "";
           }
         }
       });
@@ -952,14 +991,14 @@ export default {
       this.rowsColor.forEach((rc) => {
         // eslint-disable-next-line no-restricted-syntax
         for (var property in rc) {
-          if (property !== 'idRowVEG') {
+          if (property !== "idRowVEG") {
             // eslint-disable-next-line no-param-reassign
-            rc[property] = '';
+            rc[property] = "";
           }
         }
       });
       fetch(`${VALIDATA_API_URL}/validate`, {
-        method: 'POST',
+        method: "POST",
         body: this.buildFormData(),
       })
         .then((r) => r.json())
@@ -969,50 +1008,59 @@ export default {
             ? data.report.tasks[0].errors // new validation report
             : data.report.tables[0].errors; // legacy validation report
           if (errors && errors.length > 0) {
-            this.validInfo = 'Il y a des erreurs TBC...';
+            this.validInfo = "Il y a des erreurs TBC...";
             this.publicationReady = false;
             this.publicationButtons = false;
 
             errors.forEach((error) => {
               // eslint-disable-next-line no-bitwise
-              if (error.code === 'type-error' | error.code === 'constraint-error') {
-                this.rowsError[error.rowNumber - 1][error.fieldName] = error.name;
-                this.rowsColor[error.rowNumber - 1][error.fieldName] = '#F4CDA4';
-                this.$refs.grid.selectCell(this.rowIndex-1, this.colIndex+1);
+              if (
+                (error.code === "type-error") |
+                (error.code === "constraint-error")
+              ) {
+                this.rowsError[error.rowNumber - 1][error.fieldName] =
+                  error.name;
+                this.rowsColor[error.rowNumber - 1][error.fieldName] =
+                  "#F4CDA4";
+                this.$refs.grid.selectCell(
+                  this.rowIndex - 1,
+                  this.colIndex + 1
+                );
               }
             });
           } else {
-            this.validInfo = 'Fichier valide et prêt pour publication';
+            this.validInfo = "Fichier valide et prêt pour publication";
             this.publicationReady = false;
             this.publicationButtons = true;
             this.lines.push(this.getCurrentLine());
           }
           this.getValidataReport(data);
-        }).finally(() => {
+        })
+        .finally(() => {
           loader.hide();
         });
     },
     formatRow(row) {
-      const red = '#ffe5e5';
-      const green = '#b6f7b6';
+      const red = "#ffe5e5";
+      const green = "#b6f7b6";
       const { happiness } = row;
       const priceRateBgColor = happiness > 0.6 ? green : red;
       // eslint-disable-next-line no-param-reassign
       row.$cellStyle = {
         happiness: priceRateBgColor && { backgroundColor: priceRateBgColor },
       };
-      if (row.eyeColor === 'blue') {
+      if (row.eyeColor === "blue") {
         // eslint-disable-next-line no-param-reassign
-        row.$rowStyle = { color: 'blue' };
+        row.$rowStyle = { color: "blue" };
       }
     },
-    countLines(){
+    countLines() {
       var cpt = 0;
       var property;
       var empty = true;
       this.rows.forEach((row) => {
         for (property in row) {
-          if (property != 'idRowVEG' && row[property] && row[property] != "") {
+          if (property != "idRowVEG" && row[property] && row[property] != "") {
             empty = false;
           }
         }
@@ -1025,44 +1073,46 @@ export default {
     },
     cellUpdated($event) {
       // Reinit color once change
-      if($event.column.field in this.rowsColor[$event.rowIndex]) {
+      if ($event.column.field in this.rowsColor[$event.rowIndex]) {
         delete this.rowsColor[$event.rowIndex][$event.column.field];
         delete this.rowsError[$event.rowIndex][$event.column.field];
       }
-      
-      this.realRowsIds.push(this.rows[$event.rowIndex]['idRowVEG'])
+
+      this.realRowsIds.push(this.rows[$event.rowIndex]["idRowVEG"]);
       this.realRowsIds = [...new Set(this.realRowsIds)];
 
-
-      if ($event.column.field.toLowerCase().includes('insee')) {
+      if ($event.column.field.toLowerCase().includes("insee")) {
         this.handleInseeInput($event);
       }
-      if ($event.column.field.toLowerCase().includes('siret')) {
+      if ($event.column.field.toLowerCase().includes("siret")) {
         this.handleSiretInput($event);
       }
-      if ($event.column.field.toLowerCase().includes('siren')) {
+      if ($event.column.field.toLowerCase().includes("siren")) {
         this.handleSirenInput($event);
       }
       // eslint-disable-next-line no-bitwise
-      if ($event.column.field.toLowerCase().includes('codepostal') | $event.column.field.toLowerCase().includes('code-postal') | $event.column.field.toLowerCase().includes('code_postal')) {
+      if (
+        $event.column.field.toLowerCase().includes("codepostal") |
+        $event.column.field.toLowerCase().includes("code-postal") |
+        $event.column.field.toLowerCase().includes("code_postal")
+      ) {
         this.handlePostcodeInput($event);
       }
     },
     rowSelected($event) {
-      
       if ($event.colIndex) {
-        if(this.colIndex != $event.colIndex) {
+        if (this.colIndex != $event.colIndex) {
           this.arraySelected = true;
           this.geopointSelected = true;
         }
         this.colIndex = $event.colIndex;
       }
       if ($event.rowIndex != null) {
-        if(this.rowIndex != $event.rowIndex+1) {
+        if (this.rowIndex != $event.rowIndex + 1) {
           this.arraySelected = true;
           this.geopointSelected = true;
         }
-        this.rowIndex = $event.rowIndex+1;
+        this.rowIndex = $event.rowIndex + 1;
       }
       this.selectedRow = $event.rowData;
 
@@ -1079,20 +1129,22 @@ export default {
       if ($event.colData) {
         this.warningInfo = this.rowsInfo[$event.rowIndex][$event.colData.field];
         this.errorInfo = this.rowsError[$event.rowIndex][$event.colData.field];
-        if ($event.colData.field === 'selectCol') {
+        if ($event.colData.field === "selectCol") {
           this.removeCurrentRow();
           this.$refs.grid.selectCell(0, 1);
         }
       }
     },
-    linkClicked() {
-    },
+    linkClicked() {},
     removeCurrentRow() {
-      this.realRowsIds = this.realRowsIds.filter(e => e !== this.selectedRow.idRowVEG);
-      this.rows = this.rows.filter((row) => row.idRowVEG !== this.selectedRow.idRowVEG);
+      this.realRowsIds = this.realRowsIds.filter(
+        (e) => e !== this.selectedRow.idRowVEG
+      );
+      this.rows = this.rows.filter(
+        (row) => row.idRowVEG !== this.selectedRow.idRowVEG
+      );
     },
-    contextMenu() {
-    },
+    contextMenu() {},
     addEmptyRow() {
       const myobj = {};
       const myobjInfo = {};
@@ -1100,17 +1152,21 @@ export default {
       const myobjColor = {};
 
       this.schema.fields.forEach((field) => {
-        if (field.type === 'string' || field.type === 'stringEnum' || field.type === 'geopoint') {
-          myobj[field.name] = '';
-          myobjInfo[field.name] = '';
-          myobjError[field.name] = '';
-        } else if(field.type == 'arrayEnum') {
+        if (
+          field.type === "string" ||
+          field.type === "stringEnum" ||
+          field.type === "geopoint"
+        ) {
+          myobj[field.name] = "";
+          myobjInfo[field.name] = "";
+          myobjError[field.name] = "";
+        } else if (field.type == "arrayEnum") {
           myobj[field.name] = [];
-          myobjInfo[field.name] = '';
-          myobjError[field.name] = '';
-        } else if (field.type === 'date') {
+          myobjInfo[field.name] = "";
+          myobjError[field.name] = "";
+        } else if (field.type === "date") {
           //myobj.type = 'date';
-          
+
           myobj[field.name] = null;
           //myobjInfo.type = 'date';
           //myobjInfo.format = defaultDateTimeFormat;
@@ -1118,14 +1174,14 @@ export default {
           //myobjError.type = 'date';
           //myobjError.format = defaultDateTimeFormat;
           myobjError[field.name] = null;
-        } else if (field.type === 'number') {
+        } else if (field.type === "number") {
           //myobj.type = 'numeric';
           myobj[field.name] = null;
           //myobjInfo.type = 'numeric';
           myobjInfo[field.name] = null;
           //myobjError.type = 'numeric';
           myobjError[field.name] = null;
-        } else if (field.type === 'integer') {
+        } else if (field.type === "integer") {
           //myobj.type = 'numeric';
           myobj[field.name] = null;
           //myobjInfo.type = 'numeric';
@@ -1138,7 +1194,7 @@ export default {
       myobj.idRowVEG = uniqueid;
       myobjInfo.idRowVEG = uniqueid;
       myobjError.idRowVEG = uniqueid;
-      myobjColor.idRowVEG = '#ebebeb';
+      myobjColor.idRowVEG = "#ebebeb";
       this.rows.push(myobj);
       //console.log(myobj);
       this.rowsInfo.push(myobjInfo);
@@ -1146,81 +1202,111 @@ export default {
       this.rowsColor.push(myobjColor);
     },
     makeid(length) {
-      let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let characters =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       let charactersLength = characters.length;
-      let result = '';
+      let result = "";
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < length; i++) {
         // eslint-disable-next-line no-const-assign
-        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+        result += characters.charAt(
+          Math.floor(Math.random() * charactersLength)
+        );
       }
       return result;
     },
     handleInseeInput(event) {
-      fetch(`https://geo.api.gouv.fr/communes/${event.value}`).then((r) => {
-        if (!r.ok) {
-          this.city = null;
-          throw new Error('Not 200 response');
-        }
-        return r.json();
-      }).then((data) => {
-        this.city = data.nom;
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce code INSEE correspond à ${data.nom}.`;
-        this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
-      }).catch((_) => _);
+      fetch(`https://geo.api.gouv.fr/communes/${event.value}`)
+        .then((r) => {
+          if (!r.ok) {
+            this.city = null;
+            throw new Error("Not 200 response");
+          }
+          return r.json();
+        })
+        .then((data) => {
+          this.city = data.nom;
+          this.rowsInfo[event.rowIndex][
+            event.column.field
+          ] = `Info : Ce code INSEE correspond à ${data.nom}.`;
+          this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
+        })
+        .catch((_) => _);
     },
     handleSiretInput(event) {
       this.siretDescription = null;
       if (event.value.length !== 14) return;
 
-      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`).then((r) => {
-        if (!r.ok) {
-          this.siretDescription = null;
-          throw new Error('Not 200 response');
-        }
-        return r.json();
-      }).then((data) => {
-        this.siretDescription = data['results'][0]['nom_raison_sociale'];
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIRET correspond à ${data['results'][0]['nom_raison_sociale']}.`;
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`)
+        .then((r) => {
+          if (!r.ok) {
+            this.siretDescription = null;
+            throw new Error("Not 200 response");
+          }
+          return r.json();
+        })
+        .then((data) => {
+          this.siretDescription = data["results"][0]["nom_raison_sociale"];
+          this.rowsInfo[event.rowIndex][
+            event.column.field
+          ] = `Info : Ce SIRET correspond à ${data["results"][0]["nom_raison_sociale"]}.`;
 
-        this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
-      }).catch((_) => _);
+          this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
+        })
+        .catch((_) => _);
     },
     handleSirenInput(event) {
       this.sirenDescription = null;
       if (event.value.length !== 9) return;
 
-      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`).then((r) => {
-        if (!r.ok) {
-          this.sirenDescription = null;
-          throw new Error('Not 200 response');
-        }
-        return r.json();
-      }).then((data) => {
-        this.sirenDescription = data['results'][0]['nom_raison_sociale'];
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce SIREN correspond à ${data['results'][0]['nom_raison_sociale']}.`;
+      fetch(`https://recherche-entreprises.api.gouv.fr/search?q=${event.value}`)
+        .then((r) => {
+          if (!r.ok) {
+            this.sirenDescription = null;
+            throw new Error("Not 200 response");
+          }
+          return r.json();
+        })
+        .then((data) => {
+          this.sirenDescription = data["results"][0]["nom_raison_sociale"];
+          this.rowsInfo[event.rowIndex][
+            event.column.field
+          ] = `Info : Ce SIREN correspond à ${data["results"][0]["nom_raison_sociale"]}.`;
 
-        this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
-      }).catch((_) => _);
+          this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
+        })
+        .catch((_) => _);
     },
     handlePostcodeInput(event) {
-      fetch(`https://geo.api.gouv.fr/communes?codePostal=${event.value}&boost=population`).then((r) => {
-        if (!r.ok) {
-          this.city = null;
-          throw new Error('Not 200 response');
-        }
-        return r.json();
-      }).then((data) => {
-        this.city = data.map((c) => c.nom).join(' ou ');
-        this.rowsInfo[event.rowIndex][event.column.field] = `Info : Ce code postal correspond à ${data.map((c) => c.nom).join(' ou ')}.`;
+      fetch(
+        `https://geo.api.gouv.fr/communes?codePostal=${event.value}&boost=population`
+      )
+        .then((r) => {
+          if (!r.ok) {
+            this.city = null;
+            throw new Error("Not 200 response");
+          }
+          return r.json();
+        })
+        .then((data) => {
+          this.city = data.map((c) => c.nom).join(" ou ");
+          this.rowsInfo[event.rowIndex][
+            event.column.field
+          ] = `Info : Ce code postal correspond à ${data
+            .map((c) => c.nom)
+            .join(" ou ")}.`;
 
-        this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
-      }).catch((_) => _);
+          this.$refs.grid.selectCell(event.rowIndex, event.columnIndex);
+        })
+        .catch((_) => _);
     },
     fieldHasKeyword(keyword) {
       const name = this.field.name.toLowerCase();
-      const description = (this.field.description || '').toLowerCase();
-      return name.includes(keyword) || new RegExp(`\\b${keyword}\\b`).test(description);
+      const description = (this.field.description || "").toLowerCase();
+      return (
+        name.includes(keyword) ||
+        new RegExp(`\\b${keyword}\\b`).test(description)
+      );
     },
     publishDataset() {
       // Get structured publish form content
@@ -1229,12 +1315,12 @@ export default {
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
 
-      if (publishContent.existingResource !== '') {
+      if (publishContent.existingResource !== "") {
         // Mise à jour dataset
         // Ecrasement resource
         // Modification metadonnées
         this.updateDatasetUpdateResource(publishContent, this.getCSVBlob());
-      } else if (publishContent.existingDataset !== '') {
+      } else if (publishContent.existingDataset !== "") {
         // Mise à jour dataset
         // création nouvelle ressource
         // modiciation métaonnées
@@ -1246,20 +1332,20 @@ export default {
         this.createDatasetCreateResource(publishContent, this.getCSVBlob());
       }
     },
-    saveRows(){
-      this.$store.dispatch('data/fillSchemaNameData', this.schemaMeta.name)
-      this.$store.dispatch('data/fillSchemaRowsData', this.rows)
-      this.$store.dispatch('data/fillColumnDefsData', this.columnDefs)
-      this.$store.dispatch('data/fillRealRowsIds', this.realRowsIds)
+    saveRows() {
+      this.$store.dispatch("data/fillSchemaNameData", this.schemaMeta.name);
+      this.$store.dispatch("data/fillSchemaRowsData", this.rows);
+      this.$store.dispatch("data/fillColumnDefsData", this.columnDefs);
+      this.$store.dispatch("data/fillRealRowsIds", this.realRowsIds);
     },
-    reinitRows(){
-      this.$store.dispatch('data/reinitStateData');
+    reinitRows() {
+      this.$store.dispatch("data/reinitStateData");
       this.columnDefs = [
         {
-          field: 'selectCol',
-          headerName: '',
-          size: '40px',
-          type: 'supp',
+          field: "selectCol",
+          headerName: "",
+          size: "40px",
+          type: "supp",
           rename: false,
         },
       ];
@@ -1295,162 +1381,166 @@ export default {
       this.displayRemove = false;
       this.displayInformations = false;
       var column = this.operationHeaderColumn;
-      if(type != "default") {
+      if (type != "default") {
         var mandatory = false;
         var desc = "";
         var example = "";
         this.schema.fields.forEach((field) => {
-          if(field.name == column) {
+          if (field.name == column) {
             mandatory = true;
             desc = field.description;
             example = field.example;
           }
         });
-        if(type == "rename") {
-          this.columnModalHeader = "Renommer une colonne"
+        if (type == "rename") {
+          this.columnModalHeader = "Renommer une colonne";
           this.displayInfoBox = true;
           this.displayRename = true;
           this.infoSelected = true;
-          this.columnModalP = "Impossible de renommer la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
-        } else if(type == "remove") {
-          this.columnModalP = "Impossible de supprimer la colonne "+column+". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma."
-          this.columnModalHeader = "Supprimer une colonne"
+          this.columnModalP =
+            "Impossible de renommer la colonne " +
+            column +
+            ". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma.";
+        } else if (type == "remove") {
+          this.columnModalP =
+            "Impossible de supprimer la colonne " +
+            column +
+            ". Cette colonne doit être obligatoirement présente pour que le fichier puisse être conforme au schéma.";
+          this.columnModalHeader = "Supprimer une colonne";
           this.displayInfoBox = true;
           this.displayRemove = true;
           this.infoSelected = true;
-        } else if(type == "info") {
+        } else if (type == "info") {
           this.infoSelected = true;
           this.displayInfoBox = true;
           this.displayInformations = true;
           this.messageInfo = desc;
           this.exempleInfo = example;
         }
-        if(!mandatory){
-          if(type == "rename"){
+        if (!mandatory) {
+          if (type == "rename") {
             this.shouldRenameColumn = true;
             this.oldColumnName = column;
-            this.columnModalP = "Renommer le champs \""+column+"\"."
+            this.columnModalP = 'Renommer le champs "' + column + '".';
             this.columnDefs.forEach((c) => {
-              if(c.field == this.operationHeaderColumn) {
+              if (c.field == this.operationHeaderColumn) {
                 c.rename = true;
                 c.size = "200px";
               }
             });
-          } else if(type == "remove") {
+          } else if (type == "remove") {
             this.removeColumn(column);
-            this.columnModalP = "La colonne \""+column+"\" a été supprimée."
+            this.columnModalP = 'La colonne "' + column + '" a été supprimée.';
           }
         }
         // if(type != 'info') this.showModal4();
       }
     },
     removeColumn(column) {
-      this.columnDefs = this.columnDefs.filter(e => e.field !== column);
-      this.fieldNames = this.fieldNames.filter(e => e !== column);
-      delete this.emptyRow[column]
-      delete this.emptyRowColor[column]
-      delete this.emptyRowError[column]
-      delete this.emptyRowInfo[column]
+      this.columnDefs = this.columnDefs.filter((e) => e.field !== column);
+      this.fieldNames = this.fieldNames.filter((e) => e !== column);
+      delete this.emptyRow[column];
+      delete this.emptyRowColor[column];
+      delete this.emptyRowError[column];
+      delete this.emptyRowInfo[column];
       this.rows.forEach((row) => {
-        delete row[column]
+        delete row[column];
       });
       this.rowsColor.forEach((row) => {
-        delete row[column]
+        delete row[column];
       });
       this.rowsError.forEach((row) => {
-        delete row[column]
+        delete row[column];
       });
       this.rowsInfo.forEach((row) => {
-        delete row[column]
+        delete row[column];
       });
     },
-    renameField(newNameHeader,oldNameHeader) { 
-
-      this.columnDefs.forEach((col) =>{
-        if(col.field == oldNameHeader) {
+    renameField(newNameHeader, oldNameHeader) {
+      this.columnDefs.forEach((col) => {
+        if (col.field == oldNameHeader) {
           col.field = newNameHeader;
           col.headerName = newNameHeader;
           col.rename = false;
         }
       });
 
-      this.fieldNames = this.fieldNames.filter(e => e !== oldNameHeader);
+      this.fieldNames = this.fieldNames.filter((e) => e !== oldNameHeader);
       this.fieldNames.push(newNameHeader);
 
       this.emptyRow[newNameHeader] = this.emptyRow[oldNameHeader];
-      delete this.emptyRow[oldNameHeader]
+      delete this.emptyRow[oldNameHeader];
 
       this.emptyRowColor[newNameHeader] = this.emptyRowColor[oldNameHeader];
-      delete this.emptyRowColor[oldNameHeader]
+      delete this.emptyRowColor[oldNameHeader];
 
       this.emptyRowError[newNameHeader] = this.emptyRowError[oldNameHeader];
-      delete this.emptyRowError[oldNameHeader]
+      delete this.emptyRowError[oldNameHeader];
 
       this.emptyRowInfo[newNameHeader] = this.emptyRowInfo[oldNameHeader];
-      delete this.emptyRowInfo[oldNameHeader]
+      delete this.emptyRowInfo[oldNameHeader];
 
       this.rows.forEach((row) => {
-        row[newNameHeader] = row[oldNameHeader]
-        delete row[oldNameHeader]
+        row[newNameHeader] = row[oldNameHeader];
+        delete row[oldNameHeader];
       });
       this.rowsColor.forEach((row) => {
-        row[newNameHeader] = row[oldNameHeader]
-        delete row[oldNameHeader]
+        row[newNameHeader] = row[oldNameHeader];
+        delete row[oldNameHeader];
       });
       this.rowsError.forEach((row) => {
-        row[newNameHeader] = row[oldNameHeader]
-        delete row[oldNameHeader]
+        row[newNameHeader] = row[oldNameHeader];
+        delete row[oldNameHeader];
       });
       this.rowsInfo.forEach((row) => {
-        row[newNameHeader] = row[oldNameHeader]
-        delete row[oldNameHeader]
+        row[newNameHeader] = row[oldNameHeader];
+        delete row[oldNameHeader];
       });
       this.shouldRenameColumn = false;
       newNameHeader = "";
-      
     },
     btnDocClick() {
       window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
     },
-    moveHeaderMenu(event, column){
+    moveHeaderMenu(event, column) {
       this.operationHeaderColumn = column;
       this.menuSelected = true;
       this.displayMenuBox = true;
-      this.topDiv = window.scrollY+event.y+27;
-      this.leftDiv = event.x-10;
+      this.topDiv = window.scrollY + event.y + 27;
+      this.leftDiv = event.x - 10;
     },
-    clickPage(){
-      if(!this.menuSelected) this.displayMenuBox = false;
+    clickPage() {
+      if (!this.menuSelected) this.displayMenuBox = false;
       this.menuSelected = false;
-      if(!this.infoSelected) {
+      if (!this.infoSelected) {
         this.displayInfoBox = false;
         this.displayInformations = false;
       }
       this.infoSelected = false;
-      if(!this.errorSelected) {
+      if (!this.errorSelected) {
         this.displayErrorBox = false;
       }
       this.errorSelected = false;
-      if(this.arraySelected) {
+      if (this.arraySelected) {
         this.displayArrayBox = false;
       }
-      if(this.geopointSelected) {
+      if (this.geopointSelected) {
         this.displayGeopointBox = false;
       }
     },
-    showErrors(event,row,col,pos){
-      if(this.rowsError[row][this.columnDefs[col].field]) {
-        this.topDivError = window.scrollY+pos.y+40;
+    showErrors(event, row, col, pos) {
+      if (this.rowsError[row][this.columnDefs[col].field]) {
+        this.topDivError = window.scrollY + pos.y + 40;
         this.leftDivError = pos.x;
         this.errorSelected = true;
-        if(this.displayArrayBox != true) this.displayErrorBox = true;
-      } else{
+        if (this.displayArrayBox != true) this.displayErrorBox = true;
+      } else {
         this.displayErrorBox = false;
       }
-      if(this.arraySelected) this.displayArrayBox = false;
-      if(this.geopointSelected) this.displayGeopointBox = false;
+      if (this.arraySelected) this.displayArrayBox = false;
+      if (this.geopointSelected) this.displayGeopointBox = false;
     },
-    removeBoxes(){
+    removeBoxes() {
       this.displayErrorBox = false;
       this.displayGeopointBox = false;
       this.displayInfoBox = false;
@@ -1459,8 +1549,8 @@ export default {
       this.displayRemove = false;
       this.displayRename = false;
       this.displayArrayBox = false;
-      this.columnModalP = '';
-    }
+      this.columnModalP = "";
+    },
   },
 };
 </script>
@@ -1485,18 +1575,15 @@ export default {
 }
 
 .warningInfo {
-    color: green;
-    font-style: italic;
+  color: green;
+  font-style: italic;
 }
 .errorInfo {
-    color: red;
-    font-style: italic;
+  color: red;
+  font-style: italic;
 }
-
 
 div.modal-dialog.modal-md {
   max-width: 70%;
 }
-
-
 </style>

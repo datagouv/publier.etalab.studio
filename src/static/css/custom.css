@@ -1,8 +1,8 @@
-.rf-centered {
+.fr-centered {
   text-align: center;
 }
 
-.rf-bg--alt, .rf-bg--alt h2 {
+.fr-bg--alt, .fr-bg--alt h2 {
   background-color: var(--bf500);
   color: var(--g100);
 }
@@ -101,11 +101,11 @@
 }
 
 
-.rf-btn{
+.fr-btn{
   border-radius: 0px;
 }
 
-.rf-btn-light{
+.fr-btn-light{
   background-color: white;
   color: #060191;
   border: 1px solid #060191;

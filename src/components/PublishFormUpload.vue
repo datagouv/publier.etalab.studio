@@ -43,7 +43,7 @@
               v-model="form.org"
               :options="organizations"
               v-on:change="onChange"
-              class="rf-select"
+              class="fr-select"
               required
           ></b-form-select>
           <div style="font-size: 12px">
@@ -52,7 +52,7 @@
         </div>
         <div v-if="organizations.length == 0 || orgaNotFound">
           <br />
-          <div class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
+          <div class="fr-callout fr-mb-3w">
             <span  v-if="organizations.length == 0">Vous n'êtes pas rattaché à une organisation sur data.gouv.fr. </span>
             <span  v-else>Vous ne trouvez pas votre organisation.</span>
             <br />Pour publier vos données depuis votre organisation, suivez la procédure suivante :
@@ -69,7 +69,7 @@
       </b-form-group>
 
 
-      <div v-if="jddShow && !orgaShow" class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
+      <div v-if="jddShow && !orgaShow" class="fr-callout fr-fi-information-line fr-callout--scheme-soft-blue-soft fr-mb-3w">
         <span>Attention, il est conseillé de publier vos données depuis une organisation plutôt qu'avec son compte personnel.</span>
         <br />
         <br />
@@ -108,9 +108,9 @@
           id="input-editjdd-me"
           v-model="form.existingDataset"
           v-on:change="onChangeJDDMe"
-          class="rf-select"
+          class="fr-select"
         >
-          <option class="rf-select" v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
+          <option class="fr-select" v-for="ds in datasetsMe" v-bind:key="ds.id" :value="ds.id" >
             {{ ds.title }}
           </option>
         </b-form-select>
@@ -151,7 +151,7 @@
           v-model="form.dataset.title"
           v-on:input="onChange"
           :trim="true"
-          class="rf-input"
+          class="fr-input"
         ></b-form-input>
       </b-form-group>
 
@@ -170,7 +170,7 @@
           rows="4"
           v-on:input="onChange"
           :trim="true"
-          class="rf-input"
+          class="fr-input"
         ></b-form-textarea>
       </b-form-group>
 
@@ -205,9 +205,9 @@
         <b-form-select
           id="input-editres"
           v-model="form.existingResource"
-          class="rf-select"
+          class="fr-select"
         >
-          <option class="rf-select" v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
+          <option class="fr-select" v-for="res in resources"  v-bind:key="res.id" :value="res.id" >
             {{ res.title }}
           </option>
         </b-form-select>
@@ -227,7 +227,7 @@
           v-model="form.resource.title"
           v-on:input="onChange"
           :trim="true"
-          class="rf-input"
+          class="fr-input"
         ></b-form-input>
       </b-form-group>
       <p class="text-muted">
@@ -238,7 +238,7 @@
   </div>
 </template>
 <script>
-import $api from '../services/Api';
+import $api from "../services/Api";
 
 export default {
   props: {
@@ -255,20 +255,20 @@ export default {
   data() {
     return {
       form: {
-        org: '',
+        org: "",
         dataset: {
-          title: '',
-          description: '',
+          title: "",
+          description: "",
         },
         resource: {
-          title: '',
+          title: "",
         },
-        existingDataset: '',
-        existingResource: '',
+        existingDataset: "",
+        existingResource: "",
       },
-      whoPicked: '',
-      typePicked: '',
-      typeResPicked: '',
+      whoPicked: "",
+      typePicked: "",
+      typeResPicked: "",
       orgaShow: true,
       jddShow: false,
       descShow: false,
@@ -285,7 +285,7 @@ export default {
     };
   },
   mounted() {
-    this.$emit('form-state-change', this.okState);
+    this.$emit("form-state-change", this.okState);
   },
   computed: {
     user() {
@@ -293,10 +293,10 @@ export default {
     },
     okState() {
       return (
-        this.form.org !== ''
-        && (this.form.dataset.title !== '' || this.form.existingDataset !== '')
-        && this.form.dataset.description !== ''
-        && this.form.resource.title !== ''
+        this.form.org !== "" &&
+        (this.form.dataset.title !== "" || this.form.existingDataset !== "") &&
+        this.form.dataset.description !== "" &&
+        this.form.resource.title !== ""
       );
     },
     payload() {
@@ -317,15 +317,16 @@ export default {
   },
   methods: {
     onChange() {
-      if(this.form.resource.title == '') this.form.resource.title = this.filename;
+      if (this.form.resource.title == "")
+        this.form.resource.title = this.filename;
       // eslint-disable-next-line prefer-destructuring
       const okState = this.okState;
-      if (this.form.org !== '') {
+      if (this.form.org !== "") {
         this.jddShow = true;
       }
-      this.$emit('form-state-change', okState);
+      this.$emit("form-state-change", okState);
       if (okState) {
-        this.$emit('input', this.payload);
+        this.$emit("input", this.payload);
       }
     },
     onChangeJDDMe() {
@@ -334,9 +335,9 @@ export default {
           this.form.dataset.title = ds.title;
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
-          this.typeResPicked = '';
+          this.typeResPicked = "";
           this.form.resource.title = this.filename;
-          this.form.existingResource = '';
+          this.form.existingResource = "";
           this.editResShow = false;
         }
       });
@@ -347,63 +348,66 @@ export default {
           this.form.dataset.title = ds.title;
           this.form.dataset.description = ds.description;
           this.resources = ds.resources;
-          this.typeResPicked = '';
+          this.typeResPicked = "";
           this.form.resource.title = this.filename;
-          this.form.existingResource = '';
+          this.form.existingResource = "";
           this.editResShow = false;
         }
       });
     },
-    generateDatasetTitle(){
-      var org = null
+    generateDatasetTitle() {
+      var org = null;
       this.organizations.forEach((o) => {
-        if(this.form.org == o.value){
+        if (this.form.org == o.value) {
           org = o.text;
         }
       });
-      if(org){
-        org = " (organisation "+org+")"
-      }else{
-        org = ''
-      }
-      return this.schemaMeta.title+org;
-    },
-    generateDatasetDescription(){
-      var today = new Date().toISOString().slice(0, 10)
-      var desc = ''
-      if(this.schemaMeta.schema_url.includes('schema.data.gouv.fr')){
-        desc = 'Ce jeu de données répond au spécifications du schéma "'
-          +this.schemaMeta.title
-          +'" disponible sur le site [schema.data.gouv.fr](https://schema.data.gouv.fr/'
-          +this.schemaName
-          +')'
+      if (org) {
+        org = " (organisation " + org + ")";
       } else {
-        desc = 'Ce jeu de données répond au spécifications du schéma "'
-          +this.schemaMeta.title
-          +'" (spécification disponible [ici]('
-          +this.schemaMeta.schema_url+'))'
+        org = "";
       }
-      return desc
+      return this.schemaMeta.title + org;
+    },
+    generateDatasetDescription() {
+      var today = new Date().toISOString().slice(0, 10);
+      var desc = "";
+      if (this.schemaMeta.schema_url.includes("schema.data.gouv.fr")) {
+        desc =
+          'Ce jeu de données répond au spécifications du schéma "' +
+          this.schemaMeta.title +
+          '" disponible sur le site [schema.data.gouv.fr](https://schema.data.gouv.fr/' +
+          this.schemaName +
+          ")";
+      } else {
+        desc =
+          'Ce jeu de données répond au spécifications du schéma "' +
+          this.schemaMeta.title +
+          '" (spécification disponible [ici](' +
+          this.schemaMeta.schema_url +
+          "))";
+      }
+      return desc;
     },
     radioclick(who) {
-      this.form.org = '';
-      this.form.dataset.title = '';
-      this.form.dataset.description = '';
+      this.form.org = "";
+      this.form.dataset.title = "";
+      this.form.dataset.description = "";
       this.form.resource.title = this.filename;
-      this.form.existingDataset = '';
+      this.form.existingDataset = "";
       this.editJDDShow = false;
       this.newJDDShow = false;
-      this.typePicked = '';
+      this.typePicked = "";
       this.onChange();
 
-      if (who === 'me') {
+      if (who === "me") {
         this.orgaShow = false;
         this.jddShow = true;
-        this.form.org = 'me';
+        this.form.org = "me";
         this.selectMe = true;
         this.selectOrg = false;
       }
-      if (who === 'org') {
+      if (who === "org") {
         this.orgaShow = true;
         this.jddShow = false;
         this.selectMe = false;
@@ -413,15 +417,15 @@ export default {
     radioclickJDD(type) {
       this.form.dataset.title = this.generateDatasetTitle();
       this.form.resource.title = this.filename;
-      this.form.existingDataset = '';
+      this.form.existingDataset = "";
       this.form.resource.title = this.filename;
-      this.typeResPicked = '';
-      this.form.existingResource = '';
+      this.typeResPicked = "";
+      this.form.existingResource = "";
       this.editResShow = false;
-      if (type === 'existing') {
+      if (type === "existing") {
         this.newJDDShow = false;
         this.editJDDShow = true;
-        this.form.dataset.description = '';
+        this.form.dataset.description = "";
         if (this.orgaShow) {
           this.getMyDatasetsOrg();
         } else {
@@ -437,9 +441,9 @@ export default {
     },
     radioclickRes(type) {
       this.form.resource.title = this.filename;
-      this.typeResPicked = '';
-      this.form.existingResource = '';
-      if (type === 'existing') {
+      this.typeResPicked = "";
+      this.form.existingResource = "";
+      if (type === "existing") {
         this.editResShow = true;
       } else {
         this.editResShow = false;
@@ -448,28 +452,20 @@ export default {
     },
     getMyDatasetsMe() {
       $api
-        .get(
-          'me/datasets',
-          {},
-          (err) => {
-            // eslint-disable-next-line no-alert
-            alert(`Erreur lors de la publication du jeu de données : ${err}`);
-          },
-        )
+        .get("me/datasets", {}, (err) => {
+          // eslint-disable-next-line no-alert
+          alert(`Erreur lors de la publication du jeu de données : ${err}`);
+        })
         .then((response) => {
           this.datasetsMe = response.data;
         });
     },
     getMyDatasetsOrg() {
       $api
-        .get(
-          `organizations/${this.form.org}/datasets`,
-          {},
-          (err) => {
-            // eslint-disable-next-line no-alert
-            alert(`Erreur lors de la publication du jeu de données : ${err}`);
-          },
-        )
+        .get(`organizations/${this.form.org}/datasets`, {}, (err) => {
+          // eslint-disable-next-line no-alert
+          alert(`Erreur lors de la publication du jeu de données : ${err}`);
+        })
         .then((response) => {
           this.datasetsOrg = response.data.data;
         });
@@ -477,3 +473,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.fr-callout {
+  background-color: #d5dbef;
+}
+</style>
