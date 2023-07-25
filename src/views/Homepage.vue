@@ -112,17 +112,11 @@
 <script>
 import latinize from "latinize";
 
-import { VsaItem, VsaHeading, VsaContent } from "vue-simple-accordion";
-
 const SCHEMAS_CATALOG_URL = process.env.VUE_APP_SCHEMAS_CATALOG_URL;
 
 export default {
   name: "homepage",
-  components: {
-    VsaItem,
-    VsaHeading,
-    VsaContent,
-  },
+  components: {},
   data() {
     return {
       schemas: null,
