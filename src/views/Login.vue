@@ -6,8 +6,8 @@
 </template>
 
 <script>
-import $api from '../services/Api';
-import Auth from '../services/Auth';
+import $api from "../services/Api";
+import Auth from "../services/Auth";
 
 const $auth = new Auth();
 export default {
@@ -27,31 +27,79 @@ export default {
         await this.getToken();
       } catch (e) {
         // console.error(e.response.data)
-        this.$router.push('/');
+        console.log("erreurrrr");
+        this.$router.push({
+          name: "home",
+          params: { lang: this.$route.params.lang },
+        });
       }
-      this.$store.dispatch('auth/login', this.token).then(() => {
-        $api.get('me').then(
+      this.$store.dispatch("auth/login", this.token).then(() => {
+        $api.get("me").then(
           (response) => {
             this.$store
-              .dispatch('auth/fillUserData', response.data)
+              .dispatch("auth/fillUserData", response.data)
               .then(() => {
-                this.$router.push(this.user.lastPage);
+                let page = this.user.lastPage.split("?")[0];
+                if (page == "/") {
+                  page = "home";
+                }
+                let obj = {};
+                if (this.user.lastPage.split("?").length > 1) {
+                  this.user.lastPage
+                    .split("?")[1]
+                    .split("&")
+                    .forEach((item) => {
+                      obj[item.split("=")[0]] = item.split("=")[1];
+                    });
+                }
+                this.$router.push({
+                  name: page,
+                  params: { lang: this.$route.params.lang },
+                  query: obj,
+                });
               });
           },
           (err) => {
             // eslint-disable-next-line
-            console.log({ err })
-          },
+            console.log({ err });
+          }
         );
       });
     } else {
       // console.log("Logged in", this.$store.state.auth.user)
-      this.$router.push(this.user.lastPage);
+      let page = this.user.lastPage.split("?")[0];
+      if (page == "/") {
+        page = "home";
+      }
+      let obj = {};
+      if (this.user.lastPage.split("?").length > 1) {
+        this.user.lastPage
+          .split("?")[1]
+          .split("&")
+          .forEach((item) => {
+            obj[item.split("=")[0]] = item.split("=")[1];
+          });
+      }
+      this.$router.push({
+        name: page,
+        params: { lang: this.$route.params.lang },
+        query: obj,
+      });
+
+      this.$router.push({
+        name: page,
+        params: { lang: lang },
+        query: obj,
+      });
+      //this.$router.push(this.user.lastPage);
     }
   },
   methods: {
     async getToken() {
-      this.token = await $auth.retrieveToken({ ...this.$route.query });
+      this.token = await $auth.retrieveToken(
+        { ...this.$route.query },
+        this.$route.params.lang
+      );
     },
   },
 };

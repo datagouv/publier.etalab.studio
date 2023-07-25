@@ -1,20 +1,20 @@
 <template>
   <div>
-    <div class="rf-container">
+    <div class="fr-container">
       <p style="font-size: 14px; cursor: pointer;">
-        <a @click="gotoHomePage()" >Accueil</a>
+        <a @click="gotoHomePage()" style="cursor: pointer;" >Accueil</a>
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-        <a @click="gotoSelectPage()" >{{ schema.title }}</a>
+        <a @click="gotoSelectPage()" style="cursor: pointer;">{{ schema.title }}</a>
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
         Formulaire
       </p>
     </div>
-  <div class="rf-container rf-pb-6w rf-pt-2w">
+  <div class="fr-container fr-pb-6w fr-pt-2w">
 
       <div v-if="!publicationReady">
         <h3>Saisir vos données via un formulaire</h3>
         <br />
-        <div class="rf-callout rf-fi-information-line rf-callout--scheme-soft-blue-soft rf-mb-3w">
+        <div class="fr-callout fr-mb-3w">
           <p>
             Cet outil vous permet de créer un fichier CSV en vous assurant qu'il est conforme
             à un schéma, c'est-à-dire que ses données sont complètes, valides et structurées.
@@ -79,13 +79,13 @@
         :href="csvLink"
         :download="filename"
         type="button"
-        class="rf-btn"
+        class="fr-btn"
         style="margin-right: 20px"
         >Télécharger le CSV</b-button
       >
       <b-button
         type="button"
-        class="rf-btn"
+        class="fr-btn"
         style="margin-right: 20px"
         :disabled="!userLoggedInWithSomeOrganizations"
         :title="publishButtonTitle"
@@ -96,7 +96,7 @@
         @click.prevent="addLine"
         :disabled="addingLine"
         type="button"
-        class="rf-btn"
+        class="fr-btn"
         style="margin-right: 20px"
         >Ajouter une ligne</b-button
       >
@@ -110,7 +110,7 @@
       <div ref="container"></div>
       <b-button
         type="submit"
-        class="rf-btn"
+        class="fr-btn"
         style="margin-right: 20px"
         :disabled="!hasValues"
       >
@@ -119,7 +119,7 @@
     </b-form>
 
     <div>
-      <div v-if="publicationReady && !publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+      <div v-if="publicationReady && !publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
          <p class="title-page">Publier vos données sur data.gouv.fr</p>
         <publish-form-upload
             :filename="filename"
@@ -133,7 +133,7 @@
         <div v-if="!publishButtonDisabled">
             <button
               type="submit"
-              class="rf-btn"
+              class="fr-btn"
               title="Publier sur datagouv"
               @click="publishDataset()"
             >
@@ -141,17 +141,17 @@
             </button>
         </div>
         <div v-if="publishButtonDisabled">
-            <button type="submit" class="rf-btn-light" title="Publier sur datagouv">Publier</button>
+            <button type="submit" class="fr-btn-light" title="Publier sur datagouv">Publier</button>
         </div>
       </div>
 
-      <div v-if="publicationOK" class="rf-container rf-pb-6w rf-pt-2w">
+      <div v-if="publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
           <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
           <br/><br/><br/>
           <div style="text-align: center;">
               <button
                 @click="btnClick()"
-                class="rf-btn"
+                class="fr-btn"
                 title="Voir le jeu de données sur Datagouv"
               >
                 Voir le jeu de données sur Datagouv
@@ -162,7 +162,7 @@
 
 
     <b-modal
-      class="rf-container rf-pb-6w rf-pt-2w"
+      class="fr-container fr-pb-6w fr-pt-2w"
       ref="modalConnectLaunch"
       id="modalConnectLaunch"
       hide-footer
@@ -174,7 +174,7 @@
         <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
         <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
         <br />
-        <b-button class="rf-btn" @click="submitLogin">
+        <b-button class="fr-btn" @click="submitLogin">
           Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
         </b-button>
         &nbsp;&nbsp;&nbsp;
@@ -188,24 +188,23 @@
 </template>
 
 <script>
-import Vue from 'vue';
-import StringField from '../components/StringField.vue';
-import SelectField from '../components/SelectField.vue';
-import RadioField from '../components/RadioField.vue';
-import AddressField from '../components/AddressField.vue';
-import GeoPointField from '@/components/GeoPointField.vue'
+import Vue from "vue";
+import StringField from "../components/StringField.vue";
+import SelectField from "../components/SelectField.vue";
+import RadioField from "../components/RadioField.vue";
+import AddressField from "../components/AddressField.vue";
+import GeoPointField from "@/components/GeoPointField.vue";
 
-import PublishFormUpload from '../components/PublishFormUpload.vue';
+import PublishFormUpload from "../components/PublishFormUpload.vue";
 
-import { EventBus } from '../event-bus.js';
+import { EventBus } from "../event-bus.js";
 
-import PublishRessources from '../mixins/PublishResources.vue';
+import PublishRessources from "../mixins/PublishResources.vue";
 
 const VALIDATA_API_URL = process.env.VUE_APP_VALIDATA_API_URL;
 
-
 export default {
-  name: 'fillDataForm',
+  name: "fillDataForm",
   mixins: [PublishRessources],
   components: {
     PublishFormUpload,
@@ -221,7 +220,7 @@ export default {
       publicationOK: false,
       publicationReady: false,
       dataToPublish: {},
-      filename: 'Monfichier',
+      filename: "Monfichier",
     };
   },
   watch: {
@@ -248,9 +247,9 @@ export default {
     csvBlob() {
       // Build CSV content
       const lines = this.lines.map((l) => this.buildLine(l));
-      const csv = [this.buildHeaderLine(), ...lines].join('\r\n');
+      const csv = [this.buildHeaderLine(), ...lines].join("\r\n");
       // Forcing UTF-8 encoding. See https://stackoverflow.com/questions/17879198
-      return new Blob([`${csv}`], { type: 'text/csv' });
+      return new Blob([`${csv}`], { type: "text/csv" });
     },
     csvLink() {
       return window.URL.createObjectURL(this.csvBlob);
@@ -282,18 +281,18 @@ export default {
         });
     },
     buildLine(line) {
-      return line.map((v) => `"${v}"`).join(',');
+      return line.map((v) => `"${v}"`).join(",");
     },
     buildCurrentCsvContent() {
       return [
         this.buildHeaderLine(),
         this.buildLine(this.getCurrentLine()),
-      ].join('\r\n');
+      ].join("\r\n");
     },
     addField(field) {
       const hasEnum = field.constraints && field.constraints.enum;
-      const isBoolean = field.type === 'boolean';
-      const isGeoPoint = field.type === "geopoint"
+      const isBoolean = field.type === "boolean";
+      const isGeoPoint = field.type === "geopoint";
       // eslint-disable-next-line no-shadow
       const factory = (klass, field) => {
         const className = Vue.extend(klass);
@@ -307,9 +306,9 @@ export default {
       }
       if (isBoolean) {
         return factory(RadioField, field);
-      } 
+      }
       if (isGeoPoint) {
-        return factory(GeoPointField, field)
+        return factory(GeoPointField, field);
       }
       if (this.isAddressField(field)) {
         return factory(AddressField, field);
@@ -325,27 +324,27 @@ export default {
     dispatchError(error) {
       const index = error.fieldNumber
         ? error.fieldNumber // new validation report
-        : error['column-number']; // legacy validation report
+        : error["column-number"]; // legacy validation report
       this.faultyFields.push(this.fieldNames[index - 1]);
-      EventBus.$emit('field-error', this.fieldNames[index - 1], error);
+      EventBus.$emit("field-error", this.fieldNames[index - 1], error);
     },
     dispatchNoError() {
       this.fieldNames.forEach((field) => {
         if (this.faultyFields.indexOf(field) === -1) {
-          EventBus.$emit('field-no-error', field);
+          EventBus.$emit("field-no-error", field);
         }
       });
     },
     dispatchFormValidated() {
-      EventBus.$emit('form-validated');
+      EventBus.$emit("form-validated");
     },
     dispatchReset() {
-      EventBus.$emit('form-reset');
+      EventBus.$emit("form-reset");
     },
     submit() {
       const loader = this.$loading.show();
       fetch(`${VALIDATA_API_URL}/validate`, {
-        method: 'POST',
+        method: "POST",
         body: this.buildFormData(),
       })
         .then((r) => r.json())
@@ -389,9 +388,9 @@ export default {
       // Si resource id : on modifie resource
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
-      if (publishContent.existingResource !== '') {
+      if (publishContent.existingResource !== "") {
         this.updateDatasetUpdateResource(publishContent, this.csvBlob);
-      } else if (publishContent.existingDataset !== '') {
+      } else if (publishContent.existingDataset !== "") {
         this.updateDatasetCreateResource(publishContent, this.csvBlob);
       } else {
         this.createDatasetCreateResource(publishContent, this.csvBlob);
@@ -400,3 +399,9 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.fr-callout {
+  background-color: #d5dbef;
+}
+</style>

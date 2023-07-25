@@ -22,9 +22,11 @@ import 'leaflet/dist/leaflet.css'
 
 import VueClipboard from 'vue-clipboard2'
 
-import '@gouvfr/all/dist/js/all.js';
-import '@gouvfr/all/dist/css/all.css';
+import '@gouvfr/dsfr/dist/dsfr.min.css';
+import '@gouvfr/dsfr/dist/dsfr.module.min.js';
+
 import './static/css/custom.css';
+import i18n from './i18n'
 
 delete Icon.Default.prototype._getIconUrl
 Icon.Default.mergeOptions({
@@ -52,10 +54,13 @@ new Vue({
   router,
   render: (h) => h(App),
   store,
+
   mounted() {
     this.$store.subscribe((mutation, state) => {
       localStorage.setItem('store', JSON.stringify(state));
     });
   },
-  beforeCreate() { this.$store.commit('initialiseStore'); },
+
+  i18n,
+  beforeCreate() { this.$store.commit('initialiseStore'); }
 }).$mount('#app');
