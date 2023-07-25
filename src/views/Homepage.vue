@@ -177,7 +177,7 @@ export default {
     },
     btnGuideClick() {
       window.open(
-        "https://guides.etalab.gouv.fr/producteurs-schemas/#a-qui-s-adresse-ce-guide"
+        "https://guides.data.gouv.fr/publier-des-donnees/guide-qualite/maitriser-les-schemas-de-donnees"
       );
     },
   },
