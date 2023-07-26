@@ -6,20 +6,20 @@
             &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
             <a @click="gotoSelectPage()" style="cursor: pointer;">{{ schema.title }}</a>
             &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-            Chargement des données
+            {{ $t("upload.title") }}
           </p>
         </div>
         <div v-if="schema && !publicationReady" class="fr-container fr-pb-6w fr-pt-2w">
-            <p class="title-page">Vérifier un fichier existant</p>
+            <p class="title-page">{{ $t("upload.check_existing") }}</p>
             <span @click="btnDocClick()" class="schema-box"><img src="../static/images/foreign-blue.png" width="10" />&nbsp;&nbsp;{{ this.schema.title }}</span>
             
             <input class="inputfile" type="file" ref="file" name="file" id="file" v-on:change="handleFileUpload()"/>
-            <label v-if="!showInfobox" for="file"><img src="../static/images/upload.png" width="40" /><br /><br />Charger votre fichier</label>
+            <label v-if="!showInfobox" for="file"><img src="../static/images/upload.png" width="40" /><br /><br />{{ $t("upload.upload_file") }}</label>
             <label v-if="showInfobox" for="file">
               <img src="../static/images/upload.png" width="40" />
               <br /><br />
-              Nom du fichier : {{ filename }}
-              <span v-if="sizeFile"><br />Taille : {{ sizeFile/1000 }} ko</span>
+              {{ $t("upload.file_name") }} : {{ filename }}
+              <span v-if="sizeFile"><br />{{ $t("upload.file_size") }} : {{ sizeFile/1000 }} ko</span>
             </label>
 
             <div v-if="showInfobox" :class="validBox ? 'valid-box' : 'invalid-box'">
@@ -37,7 +37,7 @@
                 <div v-if="infoboxType != 1">
                   {{ infoboxContent }}
                   <span v-if="tooMuchLines">
-                    <br /><br /><i>Votre fichier contient trop de lignes pour être édité dans cet outil.</i>
+                    <br /><br /><i>{{ $t("upload.too_many_rows") }}</i>
                   </span>
                   <br /><br />
                 </div>
@@ -48,22 +48,22 @@
                   <img v-if="infoboxType == 3" src="../static/images/pen.png" width="20" />
                 </b-button>
                 <b-button @click="editFile()" v-if="!tooMuchLines && (infoboxType == 1 || infoboxType == 2) && schema.schema_type && schema.schema_type == 'tableschema'" class="infobox-button">
-                  Editer le fichier
+                  {{ $t("upload.edit_file") }}
                   &nbsp;
                   <img v-if="infoboxType == 1 || infoboxType == 2" src="../static/images/pen.png" width="20" />
                 </b-button>
                 <b-button @click="showReport = !showReport" v-if="infoboxType == 3 || infoboxType == 4" class="infobox-button">
-                  Voir le rapport d'erreur
+                  {{ $t("upload.see_report") }}
                   &nbsp;
                   <img src="../static/images/align-left.png" width="15" />
                 </b-button>
                 <b-button @click="publicationReady = true" v-if="infoboxType == 1 || infoboxType == 2" class="infobox-button">
-                  Publier sur data.gouv.fr
+                  {{ $t("global.publish") }}
                   &nbsp;
                   <img src="../static/images/link.png" width="15" />
                 </b-button>
                 <b-button @click="btnDocClick()" v-if="infoboxType == 4 || infoboxType == 5" class="infobox-button">
-                  Lire la documentation liée au schéma
+                  {{ $t("upload.read_doc") }}
                   &nbsp;
                   <img src="../static/images/foreign.png" width="15" />
                 </b-button>
@@ -86,22 +86,22 @@
             </div>
             <div v-if="this.infoboxType == 4">
               <br />
-              <p v-if="schema.examples.length > 0">Vous pouvez vous appuyer sur <span v-if="schema.examples.length > 1">les fichiers suivants :</span> <span v-if="schema.examples.length = 1">le fichier suivant :</span></p>
+              <p v-if="schema.examples.length > 0">{{ $t("upload.see_example1") }} <span v-if="schema.examples.length > 1">{{ $t("upload.see_example2") }} :</span> <span v-if="schema.examples.length = 1">{{ $t("upload.see_example3") }} :</span></p>
               <ul v-for="example in schema.examples" v-bind:key="example.title">
                 <li @click="gotoExemple(example.path)" style="cursor: pointer;"><u>{{ example.title }}</u></li>
               </ul>
             </div>
             <div v-if="(this.infoboxType == 3 || this.infoboxType == 4 || this.infoboxType == 5) && this.schema.contact && this.schema.contact != ''">
               <p>
-                En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données : 
+                {{ $t("upload.if_issues") }} : 
                 <a :href="'mailto:'+this.schema.contact">{{ this.schema.contact }}</a>
               </p>
-              <p>Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma) <a @click="publicationReady = true; publishWithSchema = false;" style="cursor: pointer;">en cliquant ici</a></p>
+              <p>{{ $t("upload.publish_anyway1") }} <a @click="publicationReady = true; publishWithSchema = false;" style="cursor: pointer;"> <u>{{ $t("upload.publish_anyway2") }}</u> </a></p>
             </div>
         </div>
 
         <div v-if="publicationReady && !publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
-            <p class="title-page">Publier vos données sur data.gouv.fr</p>
+            <p class="title-page">{{ $t("global.publish") }}</p>
             <publish-form-upload
                 :filename="filename"
                 v-model="dataToPublish"
@@ -118,7 +118,7 @@
                   title="Publier sur datagouv"
                   @click="publishDataset()"
                 >
-                  Publier
+                {{ $t("global.publish_short") }}
                 </button>
             </div>
             <div v-if="publishButtonDisabled">
@@ -127,21 +127,21 @@
                   class="fr-btn-light"
                   title="Publier sur datagouv"
                 >
-                  Publier
+                {{ $t("global.publish_short") }}
                 </button>
             </div>
         </div>
 
         <div v-if="publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
-            <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
+            <h3>{{ $t("global.congrats") }}</h3>
             <br/><br/><br/>
             <div style="text-align: center;">
                 <button
                   @click="btnClick()"
                   class="fr-btn"
-                  title="Voir le jeu de données sur Datagouv"
+                  :title="$t('global.see_datagouv')"
                 >
-                  Voir le jeu de données sur Datagouv
+                {{ $t("global.see_datagouv") }}
                 </button>
             </div>
         </div>
@@ -152,19 +152,19 @@
       ref="modalConnectLaunch"
       id="modalConnectLaunch"
       hide-footer
-      title="Autoriser publier.etalab.studio"
+      :title="$t('global.authorize_publier')"
     >
-      <div>
+    <div>
         <br />
-        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;Vous n'avez pas autorisé <b>publier.etalab.studio</b> à accéder à votre compte <b>data.gouv.fr</b>.</p>
-        <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
-        <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
+        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;{{ $t("global.access_forbidden") }}</p>
+        <p>{{ $t("global.publier_needs1") }}<ul><li>{{ $t("global.publier_needs2") }}</li><li>{{ $t("global.publier_needs3") }}</li></ul></p>
+        <p>{{ $t("global.please_click") }}</p>
         <br />
         <b-button class="fr-btn" @click="submitLogin">
-          Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
+          {{ $t("global.connect") }}&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
         </b-button>
         &nbsp;&nbsp;&nbsp;
-        <span @click="hideModal()" style="cursor: pointer;"><u>Je ne souhaite pas publier mes données sur data.gouv.fr</u></span>
+        <span @click="hideModal()" style="cursor: pointer;"><u>{{ $t("global.not_datagouv") }}</u></span>
       </div>
     </b-modal>
 
@@ -218,7 +218,7 @@ export default {
       this.filename = "Monfichier";
       this.showInfobox = true;
       this.showReport = false;
-      this.editButtonTitle = "Prévisualiser le fichier";
+      this.editButtonTitle = this.$t('error.preview');
       this.wrongFormat = false;
       this.file = this.$refs.file.files[0];
       if (this.file.name) this.filename = this.file.name;

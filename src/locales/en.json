@@ -1,5 +1,101 @@
 {
+  "global": {
+    "yes": "Yes",
+    "no": "No",
+    "publish_short": "Publish",
+    "publish": "Publish on data.gouv.fr",
+    "congrats": "Congratulations, your file has been successfully uploaded on data.gouv.fr!",
+    "see_datagouv": "See the dataset on data.gouv.fr",
+    "authorize_publier": "Autorize publier.etalab.studio",
+    "access_forbidden": "You have not authorized publier.etalab.studio to access your data.gouv.fr account.",
+    "publier_needs1": "To publish data, publier.etalab.studio requires:",
+    "publier_needs2": "access to your profile and organizations on data.gouv.fr",
+    "publier_needs3": "to publish data in your name on data.gouv.fr",
+    "please_click": "Please click on the button below and accept these conditions if you wish to publish your data on data.gouv.fr.",
+    "connect": "Log in",
+    "not_datagouv": "I do not wish to publish my data on data.gouv.fr."
+  },
   "connect": {
-    "label": "Connect"
+    "label": "Log in"
+  },
+  "header": {
+    "description": "Towards quality data"
+  },
+  "footer": {
+    "contribute": "The code is open source and contributions are most welcome.",
+    "see_code": "See source code",
+    "contact": "Contact us"
+  },
+  "home": {
+    "catchline": "Enter, validate and publish your structured data",
+    "description": "You are using a schema as a reference? Validate and amend your files, and publish them directly on",
+    "select_button": "Select a schema",
+    "process_caption": "Produce quality data in 4 steps!",
+    "select_title": "Select a schema",
+    "search_bar_label": "Search bar label",
+    "search_bar_placeholder": "Look up a schema"
+  },
+  "selected": {
+    "title": "Enter or load data",
+    "subtitle": "Is you data already structured?",
+    "already_yes": "If you already have a file, answer yes.",
+    "already_no": "If you are starting from scratch, answer no.",
+    "tool_description": "Our tool helps you build your file!",
+    "proceed_question": "How would you like to proceed?",
+    "fill_form": "Fill in a form",
+    "fill_spreadsheet": "Use a spreadsheet",
+    "json_unable": "We don't provide tools for jsonschema yet.",
+    "already_file": "If you already have a file, you can upload your data (by clicking 'yes' above).",
+    "other_schema": "This schema is ruled by an independant standard, our tool isn't compatible for now.",
+    "useful_resources": "Useful resources",
+    "read_doc": "Read the schema documentation",
+    "explore_files": "Explore the related files on data.gouv.fr"
+  },
+  "form": {
+    "title": "Form",
+    "subtitle": "Enter your data with a form",
+    "description": "This tool helps you create a CSV file and make sure it is consistent with a schema (i.e. that its content is complete, valid, and structured):",
+    "guideline1": "Fill in the form with the help field descriptions and the examples. Fields that have a red asterisk are mandatory,",
+    "guideline2": "The tool warns you if any validation error is detected, and lets you amend it if so,",
+    "guideline3": "Once the form is properly filled, the values will appear in a single row in a summary table,",
+    "guideline4": "You can then choose to add one or more rows (repeat steps 1 to 4),",
+    "guideline5": "Finally, you can download the CSV file or upload it directly on data.gouv.fr.",
+    "delete": "Delete",
+    "add_row": "Add another row",
+    "download_csv": "Download the CSV",
+    "validate_row": "Validate the row"
+  },
+  "upload": {
+    "title": "Uploading data",
+    "check_existing": "Check and upload an existing file",
+    "file_name": "Name of the file",
+    "file_size": "Size",
+    "upload_file": "Upload your file",
+    "too_many_rows": "This tool cannot handle files with that many rows.",
+    "edit_file": "Edit the file",
+    "see_report": "See the error report",
+    "read_doc": "Read the schema documentation",
+    "delete": "Delete",
+    "see_example1": "You can click on",
+    "see_example2": "the following files",
+    "see_example3": "the following file",
+    "if_issues": "If you experience persistent issues, you may contact the producer of the schema",
+    "publish_anyway1": "Despite these errors, you may publish your file as-is (however it will not be connected to the schema)",
+    "publish_anyway2": "by clicking here."
+  },
+  "error": {
+    "general": "General errors",
+    "structure": "Structural errors",
+    "file_perfect": "Congrats! Your file is perfectly in compliance.",
+    "file_ok": "Your file is consistent.",
+    "file_warning": "Your file has passed the validation test despite not fulfilling all the specifications of the schema.",
+    "publish_anyway": "Despite recommandations, publish on data.gouv.fr",
+    "preview": "Preview your file",
+    "few_errors": "Your file contains errors.",
+    "many_errors": "Your file contains many errors.",
+    "list_errors1": "We have found ",
+    "list_errors2": " error(s). You can see the list of errors and amend the file.",
+    "correct_file": "Amend the file",
+    "see_documentation": "We advise you to check the documentation and download the template file."
   }
 }

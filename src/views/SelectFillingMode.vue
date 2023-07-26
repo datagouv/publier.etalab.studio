@@ -10,7 +10,7 @@
     <div v-if="schema" class="fr-container fr-pb-6w fr-pt-1w">
       <div style="display: flex">
         <div style="flex: 2">
-          <p class="title-page">Saisir ou charger mes données</p>
+          <p class="title-page">{{ $t("selected.title") }}</p>
 
           <p
             class="subtitle-page"
@@ -20,10 +20,10 @@
                 schema.schema_type == 'jsonschema')
             "
           >
-            Vos données sont-elles déjà structurées ?
+          {{ $t("selected.subtitle") }}
           </p>
-          <p>Si vous avez déjà un fichier en votre possession, répondez oui.</p>
-          <p>Si vous partez de zéro, répondez non ! <br /><br /></p>
+          <p>{{ $t("selected.already_yes") }}</p>
+          <p>{{ $t("selected.already_no") }}<br /><br /></p>
 
           <div
             class="choice-box"
@@ -33,59 +33,55 @@
                 schema.schema_type == 'jsonschema')
             "
           >
-            <span @click="goto('upload')" class="choice-no-selected">Oui</span>
+            <span @click="goto('upload')" class="choice-no-selected">{{ $t("global.yes") }}</span>
             <span
               @click="noDataChoice = !noDataChoice"
               v-if="noDataChoice && schema"
               class="choice-no-selected"
-              >Non</span
+              >{{ $t("global.no") }}</span
             >
             <span
               @click="noDataChoice = !noDataChoice"
               v-if="!noDataChoice && schema"
               class="choice-selected"
-              >Non</span
+              >{{ $t("global.no") }}</span
             >
             <div v-if="!noDataChoice && schema.schema_type == 'tableschema'">
               <br /><br />
-              <p>Notre outil vous aide à construire votre fichier !</p>
-              <p>Comment souhaitez-vous procéder ?</p>
+              <p>{{ $t("selected.tool_description") }}</p>
+              <p>{{ $t("selected.proceed_question") }}</p>
               <br />
               <span @click="goto('form')" class="choice-no-selected"
-                >Remplir un formulaire</span
+                >{{ $t("selected.fill_form") }}</span
               >
               <span @click="goto('table')" class="choice-no-selected"
-                >Utiliser l'outil de tableur</span
+                >{{ $t("selected.fill_spreadsheet") }}</span
               >
             </div>
             <div v-if="!noDataChoice && schema.schema_type != 'tableschema'">
               <br /><br />
               <p>
-                Nous ne proposons pas encore d'outils de saisie des données pour
-                les schémas de type jsonschema.
+                {{ $t("selected.json_unable") }}
               </p>
               <p>
-                Si vous avez déjà un fichier contenant des données en votre
-                possession, vous pouvez cependant charger vos données (en
-                cliquant "oui" ci-dessus).
+                {{ $t("selected.already_file") }}
               </p>
               <br />
             </div>
           </div>
           <p v-if="schema && schema.schema_type == 'other'">
-            Ce schéma obéit à un standard indépendant, notre outil ne propose
-            pas la saisie de ces données
+            {{ $t("selected.other_schema") }}
           </p>
         </div>
         <div style="flex: 1">
           <div class="infobox">
-            <div class="infobox-title">Ressources utiles</div>
+            <div class="infobox-title">{{ $t("selected.useful_resources") }}</div>
             <div class="infobox-content">
               <div class="infobox-content-item">
                 <p @click="btnDocClick()">
                   <img src="../static/images/foreign.png" width="12" />
                   &nbsp;
-                  <u>Lire la documentation</u> du schéma
+                  <u>{{ $t("selected.read_doc") }}</u>
                 </p>
               </div>
               <div v-for="item in this.schema.examples" v-bind:key="item.title">
@@ -101,7 +97,7 @@
                 <p @click="btnFilesClick()">
                   <img src="../static/images/view.png" width="15" />
                   &nbsp;
-                  <u>Explorer les fichiers</u> sur data.gouv.fr
+                  <u>{{ $t("selected.explore_files") }}</u>
                 </p>
               </div>
             </div>
