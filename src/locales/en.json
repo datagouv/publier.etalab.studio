@@ -5,12 +5,12 @@
     "publish_short": "Publish",
     "publish": "Publish on data.gouv.fr",
     "congrats": "Congratulations, your file has been successfully uploaded on data.gouv.fr!",
-    "see_datagouv": "See the dataset on data.gouv.fr",
+    "see_datagouv": "View the dataset on data.gouv.fr",
     "authorize_publier": "Autorize publier.etalab.studio",
     "access_forbidden": "You have not authorized publier.etalab.studio to access your data.gouv.fr account.",
     "publier_needs1": "To publish data, publier.etalab.studio requires:",
     "publier_needs2": "access to your profile and organizations on data.gouv.fr",
-    "publier_needs3": "to publish data in your name on data.gouv.fr",
+    "publier_needs3": "to publish data under your name on data.gouv.fr",
     "please_click": "Please click on the button below and accept these conditions if you wish to publish your data on data.gouv.fr.",
     "connect": "Log in",
     "not_datagouv": "I do not wish to publish my data on data.gouv.fr."
@@ -23,7 +23,7 @@
   },
   "footer": {
     "contribute": "The code is open source and contributions are most welcome.",
-    "see_code": "See source code",
+    "see_code": "View source code",
     "contact": "Contact us"
   },
   "home": {
@@ -53,10 +53,10 @@
   },
   "form": {
     "title": "Form",
-    "subtitle": "Enter your data with a form",
+    "subtitle": "Enter your data through a form",
     "description": "This tool helps you create a CSV file and make sure it is consistent with a schema (i.e. that its content is complete, valid, and structured):",
     "guideline1": "Fill in the form with the help field descriptions and the examples. Fields that have a red asterisk are mandatory,",
-    "guideline2": "The tool warns you if any validation error is detected, and lets you amend it if so,",
+    "guideline2": "The tool warns you if any validation error is detected, and allows you to amend it if so,",
     "guideline3": "Once the form is properly filled, the values will appear in a single row in a summary table,",
     "guideline4": "You can then choose to add one or more rows (repeat steps 1 to 4),",
     "guideline5": "Finally, you can download the CSV file or upload it directly on data.gouv.fr.",
@@ -94,7 +94,7 @@
     "few_errors": "Your file contains errors.",
     "many_errors": "Your file contains many errors.",
     "list_errors1": "We have found ",
-    "list_errors2": " error(s). You can see the list of errors and amend the file.",
+    "list_errors2": " error(s). You can check the list of errors and amend the file.",
     "correct_file": "Amend the file",
     "see_documentation": "We advise you to check the documentation and download the template file."
   }
