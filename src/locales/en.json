@@ -6,7 +6,7 @@
     "publish": "Publish on data.gouv.fr",
     "congrats": "Congratulations, your file has been successfully uploaded on data.gouv.fr!",
     "see_datagouv": "View the dataset on data.gouv.fr",
-    "authorize_publier": "Autorize publier.etalab.studio",
+    "authorize_publier": "Authorize publier.etalab.studio",
     "access_forbidden": "You have not authorized publier.etalab.studio to access your data.gouv.fr account.",
     "publier_needs1": "To publish data, publier.etalab.studio requires:",
     "publier_needs2": "access to your profile and organizations on data.gouv.fr",
