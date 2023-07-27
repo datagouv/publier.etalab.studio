@@ -37,7 +37,7 @@
   },
   "selected": {
     "title": "Enter or load data",
-    "subtitle": "Is you data already structured?",
+    "subtitle": "Is your data already structured?",
     "already_yes": "If you already have a file, answer yes.",
     "already_no": "If you are starting from scratch, answer no.",
     "tool_description": "Our tool helps you build your file!",
