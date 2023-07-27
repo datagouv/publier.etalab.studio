@@ -6,40 +6,33 @@
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
         <a @click="gotoSelectPage()" style="cursor: pointer;">{{ schema.title }}</a>
         &nbsp;&nbsp;&nbsp;>&nbsp;&nbsp;&nbsp;
-        Formulaire
+        {{ $t("form.title") }}
       </p>
     </div>
   <div class="fr-container fr-pb-6w fr-pt-2w">
 
       <div v-if="!publicationReady">
-        <h3>Saisir vos données via un formulaire</h3>
+        <h3>{{ $t("form.subtitle") }}</h3>
         <br />
         <div class="fr-callout fr-mb-3w">
           <p>
-            Cet outil vous permet de créer un fichier CSV en vous assurant qu'il est conforme
-            à un schéma, c'est-à-dire que ses données sont complètes, valides et structurées.
+            {{ $t("form.description") }}
           </p>
           <ol class="mb-0">
             <li>
-              Remplissez le formulaire à l'aide des descriptions des différents champs et des
-              valeurs d'exemples. Les champs indiqués par un astérisque rouge doivent
-              obligatoirement être renseignés au moment de la saisie,
+              {{ $t("form.guideline1") }}
             </li>
             <li>
-              L'outil vous prévient d'éventuelles erreurs de validation, le cas échéant vous
-              pouvez les corriger.
+              {{ $t("form.guideline2") }}
             </li>
             <li>
-              Une fois votre formulaire valide, les valeurs apparaissent sous la forme d'une
-              ligne dans un tableau récapitulatif.
+              {{ $t("form.guideline3") }}
             </li>
             <li>
-              Vous pouvez alors choisir d'ajouter une ou plusieurs lignes (répétez les étapes
-              1 à 4)
+              {{ $t("form.guideline4") }}
             </li>
             <li>
-              Vous pouvez ensuite choisir de télécharger le fichier CSV ou de le publier
-              directement sur la plateforme datagouv.
+              {{ $t("form.guideline5") }}
             </li>
             <li v-if="schemaMeta && schemaMeta.name === 'etalab/schema-lieux-covoiturage'">
               Une fois votre fichier complété et téléchargé, vous pouvez l'envoyer à
@@ -71,7 +64,7 @@
             @click="deleteLine(row.index)"
             class="mr-1"
           >
-            Supprimer
+          {{ $t("form.delete") }}
           </b-button>
         </template>
       </b-table>
@@ -81,7 +74,7 @@
         type="button"
         class="fr-btn"
         style="margin-right: 20px"
-        >Télécharger le CSV</b-button
+        >{{ $t("form.download_csv") }}</b-button
       >
       <b-button
         type="button"
@@ -90,7 +83,7 @@
         :disabled="!userLoggedInWithSomeOrganizations"
         :title="publishButtonTitle"
         @click="showPublishForm()"
-        >Publier sur data.gouv.fr</b-button
+        >{{ $t("global.publish") }}</b-button
       >
       <b-button
         @click.prevent="addLine"
@@ -98,7 +91,7 @@
         type="button"
         class="fr-btn"
         style="margin-right: 20px"
-        >Ajouter une ligne</b-button
+        >{{ $t("form.add_row") }}</b-button
       >
     </div>
     <b-form
@@ -114,13 +107,13 @@
         style="margin-right: 20px"
         :disabled="!hasValues"
       >
-        Valider la ligne
+      {{ $t("form.validate_row") }}
       </b-button>
     </b-form>
 
     <div>
       <div v-if="publicationReady && !publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
-         <p class="title-page">Publier vos données sur data.gouv.fr</p>
+         <p class="title-page">{{ $t("global.publish") }}</p>
         <publish-form-upload
             :filename="filename"
             v-model="dataToPublish"
@@ -134,27 +127,27 @@
             <button
               type="submit"
               class="fr-btn"
-              title="Publier sur datagouv"
+              :title="$t('global.publish')"
               @click="publishDataset()"
             >
-              Publier
+            {{ $t("global.publish_short") }}
             </button>
         </div>
         <div v-if="publishButtonDisabled">
-            <button type="submit" class="fr-btn-light" title="Publier sur datagouv">Publier</button>
+            <button type="submit" class="fr-btn-light" title="Publier sur datagouv">{{ $t("global.publish_short") }}</button>
         </div>
       </div>
 
       <div v-if="publicationOK" class="fr-container fr-pb-6w fr-pt-2w">
-          <h3>Félicitations, votre fichier a été uploadé sur datagouv avec succès !</h3>
+          <h3>{{ $t("global.congrats") }}</h3>
           <br/><br/><br/>
           <div style="text-align: center;">
               <button
                 @click="btnClick()"
                 class="fr-btn"
-                title="Voir le jeu de données sur Datagouv"
+                :title="$t('global.see_datagouv')"
               >
-                Voir le jeu de données sur Datagouv
+              {{ $t("global.see_datagouv") }}
               </button>
           </div>
       </div>
@@ -166,19 +159,19 @@
       ref="modalConnectLaunch"
       id="modalConnectLaunch"
       hide-footer
-      title="Autoriser publier.etalab.studio"
+      :title="$t('global.authorize_publier')"
     >
       <div>
         <br />
-        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;Vous n'avez pas autorisé <b>publier.etalab.studio</b> à accéder à votre compte <b>data.gouv.fr</b>.</p>
-        <p>Pour publier des données, publier.etalab.studio a besoin :<ul><li>d'accéder à votre profil et à vos organisations sur data.gouv.fr</li><li>de publier un jeu de données pour vous sur data.gouv.fr</li></ul></p>
-        <p>Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur dat.</p>
+        <p><img src="../static/images/cancel-mark.png" width="10"/>&nbsp;&nbsp;{{ $t("global.access_forbidden") }}</p>
+        <p>{{ $t("global.publier_needs1") }}<ul><li>{{ $t("global.publier_needs2") }}</li><li>{{ $t("global.publier_needs3") }}</li></ul></p>
+        <p>{{ $t("global.please_click") }}</p>
         <br />
         <b-button class="fr-btn" @click="submitLogin">
-          Je me connecte&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
+          {{ $t("global.connect") }}&nbsp;&nbsp;&nbsp;<img src="../static/images/check.png" width="10"/>
         </b-button>
         &nbsp;&nbsp;&nbsp;
-        <span @click="hideModal()" style="cursor: pointer;"><u>Je ne souhaite pas publier mes données sur data.gouv.fr</u></span>
+        <span @click="hideModal()" style="cursor: pointer;"><u>{{ $t("global.not_datagouv") }}</u></span>
       </div>
     </b-modal>
 

@@ -5,25 +5,19 @@
       <div class="boxes">
         <div class="homepage-box">
           <div style="text-align: left; font-size: 35px; line-height: 40px">
-            Saisissez, validez et publiez
-            <br />
-            vos données structurées
+            {{ $t("home.catchline") }}
           </div>
 
           <div class="sub-title">
             <p class="sub-title-p">
-              Vous utilisez un schéma de référence pour vos données ?
-              <br />
-              Validez et corriger vos fichiers en quelques clics
-              <br />
-              et publiez-les directement sur
+              {{ $t("home.description") }}
               <a href="http://www.data.gouv.fr">data.gouv.fr</a> !
             </p>
           </div>
 
           <div>
             <b-button href="#search-bar" class="sub-title-btn fr-btn">
-              Sélectionner un type de données&nbsp;&nbsp;
+              {{ $t("home.select_button") }}&nbsp;&nbsp;
               <img src="../static/images/down-arrow.png" width="15" />
             </b-button>
           </div>
@@ -39,7 +33,7 @@
       class="fr-container-fluid banner-title-background fr-centered fr-pb-6w fr-pt-2w"
     >
       <div class="title-banner">
-        <p>Produire des données de qualité, en 4 étapes !</p>
+        <p>{{ $t("home.process_caption") }}</p>
       </div>
       <div
         class="fr-grid-row fr-grid-row--center fr-grid-row--gutter"
@@ -51,7 +45,7 @@
 
     <div id="search-bar" class="fr-container fr-pb-6w fr-pt-2w">
       <br />
-      <h3>Sélectionner un type de jeu de données</h3>
+      <h3>{{ $t("home.select_title") }}</h3>
       <!--<br />
             <p>
                 Les types de jeux de données ci-dessous sont issues du référentiel de schéma de
@@ -60,19 +54,19 @@
       <br />
       <div class="fr-search-bar" id="header-search">
         <label class="fr-label" for="header-search-input">
-          Label de la barre de recherche
+          {{ $t("home.search_bar_label") }}
         </label>
         <input
           v-model="searchText"
           v-on:input="filterSchema()"
           class="fr-input"
-          placeholder="Rechercher un type de jeu de données"
+          :placeholder="$t('home.search_bar_placeholder')"
           type="search"
           id="header-search-input"
           name="header-search-input"
         />
         <button class="fr-btn" title="Rechercher un type de jeu de données">
-          <span> Rechercher un type de jeu de données </span>
+          <span> {{ $t("home.search_bar_placeholder") }} </span>
         </button>
       </div>
     </div>

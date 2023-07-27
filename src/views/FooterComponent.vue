@@ -12,13 +12,13 @@
         </div>
         <div class="fr-footer__content">
           <p class="fr-footer__content-desc">
-            Le code source est ouvert et les contributions sont bienvenues.
+            {{ $t("footer.contribute") }}
             <a
               title="Voir le code source"
               href="https://github.com/etalab/publier.etalab.studio"
               target="_blank"
               rel="noopener"
-              >Voir le code source</a
+              >{{ $t("footer.see_code") }}</a
             >
           </p>
           <ul class="fr-footer__content-list">
@@ -28,7 +28,7 @@
                 title="Contactez-nous"
                 href="#"
               >
-                Contactez-nous
+              {{ $t("footer.contact") }}
               </a>
             </li>
             <li class="fr-footer__content-item">

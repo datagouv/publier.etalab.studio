@@ -1,5 +1,104 @@
 {
+  "global": {
+    "yes": "Oui",
+    "no": "Non",
+    "publish_short": "Publier",
+    "publish": "Publier sur data.gouv.fr",
+    "congrats": "Félicitations, votre fichier a été uploadé sur data.gouv.fr avec succès !",
+    "see_datagouv": "Voir le jeu de données sur data.gouv.fr",
+    "authorize_publier": "Autoriser publier.etalab.studio",
+    "access_forbidden": "Vous n'avez pas autorisé publier.etalab.studio à accéder à votre compte data.gouv.fr.",
+    "publier_needs1": "Pour publier des données, publier.etalab.studio a besoin :",
+    "publier_needs2": "d'accéder à votre profil et à vos organisations sur data.gouv.fr",
+    "publier_needs3": "de publier un jeu de données pour vous sur data.gouv.fr",
+    "please_click": "Merci de cliquer sur le bouton ci-dessous et d'accepter ces autorisations si vous souhaitez publier vos données sur data.gouv.fr.",
+    "connect": "Je me connecte",
+    "not_datagouv": "Je ne souhaite pas publier mes données sur data.gouv.fr."
+  },
   "connect": {
     "label": "Se connecter"
+  },
+  "header": {
+    "description": "Pour la publication de données de qualité"
+  },
+  "footer": {
+    "contribute": "Le code source est ouvert et les contributions sont bienvenues.",
+    "see_code": "Voir le code source",
+    "contact": "Contactez-nous"
+  },
+  "home": {
+    "catchline": "Saisissez, validez et publiez vos données structurées",
+    "description": "Vous utilisez un schéma de référence pour vos données ? Validez et corriger vos fichiers en quelques clics et publiez-les directement sur",
+    "select_button": "Sélectionner un schéma de données",
+    "process_caption": "Produire des données de qualité, en 4 étapes !",
+    "select_title": "Sélectionner un schéma de données",
+    "search_bar_label": "Label de la barre de recherche",
+    "search_bar_placeholder": "Rechercher un schéma de données"
+  },
+  "selected": {
+    "title": "Saisir ou charger mes données",
+    "subtitle": "Vos données sont-elles déjà structurées ?",
+    "already_yes": "Si vous avez déjà un fichier en votre possession, répondez oui.",
+    "already_no": "Si vous partez de zéro, répondez non.",
+    "tool_description": "Notre outil vous aide à construire votre fichier !",
+    "proceed_question": "Comment souhaitez-vous procéder ?",
+    "fill_form": "Remplir un formulaire",
+    "fill_spreadsheet": "Utiliser l'outil de tableur",
+    "json_unable": "Nous ne proposons pas encore d'outils de saisie des données pour les schémas de type jsonschema.",
+    "already_file": "Si vous avez déjà un fichier contenant des données en votre possession, vous pouvez cependant charger vos données (en cliquant 'oui' ci-dessus).",
+    "other_schema": "Ce schéma obéit à un standard indépendant, notre outil ne propose pas la saisie de ces données",
+    "useful_resources": "Ressources utiles",
+    "read_doc": "Lire la documentation du schéma",
+    "explore_files": "Explorer les fichiers sur data.gouv.fr"
+  },
+  "form": {
+    "title": "Formulaire",
+    "subtitle": "Saisir vos données via un formulaire",
+    "description": "Cet outil vous permet de créer un fichier CSV en vous assurant qu'il est conforme à un schéma, c'est-à-dire que ses données sont complètes, valides et structurées ",
+    "guideline1": "Remplissez le formulaire à l'aide des descriptions des différents champs et des valeurs d'exemples. Les champs indiqués par un astérisque rouge doivent obligatoirement être renseignés au moment de la saisie,",
+    "guideline2": "L'outil vous prévient d'éventuelles erreurs de validation, le cas échéant vous pouvez les corriger.",
+    "guideline3": "Une fois votre formulaire valide, les valeurs apparaissent sous la forme d'une ligne dans un tableau récapitulatif.",
+    "guideline4": "Vous pouvez alors choisir d'ajouter une ou plusieurs lignes (répétez les étapes 1 à 4)",
+    "guideline5": "Vous pouvez ensuite choisir de télécharger le fichier CSV ou de le publier directement sur la plateforme datagouv.",
+    "delete": "Supprimer",
+    "download_csv": "Télécharger le CSV",
+    "add_row": "Ajouter une ligne",
+    "validate_row": "Valider la ligne"
+  },
+  "upload": {
+    "title": "Chargement des données",
+    "check_existing": "Vérifier et charger un fichier existant",
+    "file_name": "Nom du fichier",
+    "file_size": "Taille",
+    "upload_file": "Charger votre fichier",
+    "too_many_rows": "Votre fichier contient trop de lignes pour être édité dans cet outil.",
+    "edit_file": "Editer le fichier",
+    "see_report": "Voir le rapport d'erreur",
+    "read_doc": "Lire la documentation liée au schéma",
+    "delete": "Supprimer",
+    "download_csv": "Télécharger le CSV",
+    "publish": "Publier sur data.gouv.fr",
+    "publish_short": "Publier",
+    "see_example1": "Vous pouvez vous appuyer sur",
+    "see_example2": "les fichiers suivants",
+    "see_example3": "le fichier suivant",
+    "if_issues": "En cas de problèmes persistants, vous pouvez contacter les producteurs du schéma de données",
+    "publish_anyway1": "Malgré ces erreurs, vous pouvez publier votre fichier en l'état (cependant, il ne sera pas relié à un schéma)",
+    "publish_anyway2": "en cliquant ici."
+  },
+  "error": {
+    "general": "Erreurs de type général",
+    "structure": "Erreurs de structure",
+    "file_perfect": "Bravo ! Votre fichier est parfaitement conforme.",
+    "file_ok": "Votre fichier est conforme.",
+    "file_warning": "Votre fichier est conforme bien qu'il ne respecte pas totalement la spécification du schéma de données.",
+    "publish_anyway": "Malgré les recommandations, publier sur data.gouv.fr",
+    "preview": "Prévisualiser votre fichier",
+    "few_errors": "Votre fichier contient des erreurs.",
+    "many_errors": "Votre fichier contient de nombreuses erreurs.",
+    "list_errors1": "Nous avons trouvé ",
+    "list_errors2": " erreur(s). Vous pouvez voir la liste des erreurs et corriger le fichier.",
+    "correct_file": "Corriger le fichier",
+    "see_documentation": "Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier."
   }
 }

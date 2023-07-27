@@ -4,7 +4,7 @@
       <!-- Here you can use v-for to loop through items  -->
       <vsa-item v-if="reportGeneralErrors.length != 0">
         <vsa-heading class="section-report">
-          Erreurs de type général ({{ reportGeneralErrors.length }})
+          {{ $t("error.general") }} ({{ reportGeneralErrors.length }})
         </vsa-heading>
         <vsa-content>
           <ul v-bind:key="error.name" v-for="error in reportGeneralErrors">
@@ -19,7 +19,7 @@
       </vsa-item>
       <vsa-item v-if="reportStructureErrors.length != 0">
         <vsa-heading class="section-report">
-          Erreurs de structure ({{ reportStructureErrors.length }})
+          {{ $t("error.general") }} ({{ reportStructureErrors.length }})
         </vsa-heading>
         <vsa-content>
           <ul v-bind:key="error.name" v-for="error in reportStructureErrors">

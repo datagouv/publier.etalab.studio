@@ -34,7 +34,7 @@
               publier.etalab.studio
             </a>
             <p class="fr-service__tagline">
-              <i>Pour la publication de données de qualité</i>
+              <i>{{ $t("header.description") }}</i>
             </p>
           </div>
           <div class="fill-remaining-space"></div>
