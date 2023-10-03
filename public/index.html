@@ -1,36 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon-16X16.png">
-    <meta property="og:title" content="publier.etalab.studio" />
-    <meta property="og:description" content="publier.etalab.studio vous permet de saisir, valider et publier vos données structurées." />
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://publier.etalab.studio" />
-    <title>publier.etalab.studio</title>
-  </head>
-  <body>
-    <noscript>
-      <strong>We're sorry but validata-forms doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
-    <!-- Matomo -->
-    <script type="text/javascript">
-      var _paq = window._paq || [];
-      /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
-      _paq.push(['trackPageView']);
-      _paq.push(['enableLinkTracking']);
-      (function() {
-        var u="//stats.data.gouv.fr/";
-        _paq.push(['setTrackerUrl', u+'piwik.php']);
-        _paq.push(['setSiteId', '169']);
-        var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-        g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-      })();
-    </script>
-    <!-- End Matomo Code -->
-  </body>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <link rel='icon' href="<%= BASE_URL %>favicon-16X16.png">
+  <meta property="og:title" content="publier.etalab.studio" />
+  <meta property="og:description"
+    content="publier.etalab.studio vous permet de saisir, valider et publier vos données structurées." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://publier.etalab.studio" />
+  <title>publier.etalab.studio</title>
+</head>
+
+<body>
+  <noscript>
+    <strong>We're sorry but validata-forms doesn't work properly without JavaScript enabled. Please enable it to
+      continue.</strong>
+  </noscript>
+  <div id="app"></div>
+  <!-- built files will be auto injected -->
+  <!-- Matomo -->
+  <script type="text/javascript">
+    var _paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "//stats.data.gouv.fr/";
+      _paq.push(['setTrackerUrl', u + 'piwik.php']);
+      _paq.push(['setSiteId', '169']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.type = 'text/javascript'; g.async = true; g.defer = true; g.src = u + 'piwik.js'; s.parentNode.insertBefore(g, s);
+    })();
+  </script>
+  <!-- End Matomo Code -->
+</body>
+
 </html>
