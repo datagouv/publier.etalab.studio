@@ -26,7 +26,7 @@
               <a
                 class="fr-footer__content-link"
                 title="Contactez-nous"
-                href="#"
+                href="mailto:schema@data.gouv.fr"
               >
               {{ $t("footer.contact") }}
               </a>
