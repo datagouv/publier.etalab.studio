@@ -478,7 +478,7 @@ export default {
       infoboxType: 1,
       editButtonTitle: "Prévisualiser le fichier",
       editButtonImg: "checked.png",
-      showReport: false,
+      showReport: true,
       showInfobox: false,
       currentArrayItems: [],
       currentArrayValues: [],
