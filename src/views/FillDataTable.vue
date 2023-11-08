@@ -15,7 +15,7 @@
         &nbsp;&nbsp;
         Informations
       </div>
-      <div class="menuElement" @click="columnOperation('rename')">
+      <!-- <div class="menuElement" @click="columnOperation('rename')">
         <img src="../static/images/edit-white.png" width="15" />
         &nbsp;&nbsp;
         Renommer
@@ -24,7 +24,7 @@
         <img src="../static/images/trash-white.png" width="15" />
         &nbsp;&nbsp;
         Supprimer
-      </div>
+      </div> -->
     </div>
 
 
@@ -478,7 +478,7 @@ export default {
       infoboxType: 1,
       editButtonTitle: "Prévisualiser le fichier",
       editButtonImg: "checked.png",
-      showReport: false,
+      showReport: true,
       showInfobox: false,
       currentArrayItems: [],
       currentArrayValues: [],
