@@ -55,15 +55,16 @@
           <div class="fr-callout fr-mb-3w">
             <span  v-if="organizations.length == 0">Vous n'êtes pas rattaché à une organisation sur data.gouv.fr. </span>
             <span  v-else>Vous ne trouvez pas votre organisation.</span>
+            <br />En règle générale, peu de personnes ont vocation à publier en leur nom propre. Si vous publiez des données dans le cadre d'une mission (professionnelle, associative...), il est nécessaire de publier au nom de l'entité que vous représentez.
             <br />Pour publier vos données depuis votre organisation, suivez la procédure suivante :
             <ul>
               <li>Sauvegarder vos données sur votre ordinateur.</li>
               <li><a target="_blank" href="https://www.data.gouv.fr/fr/">Connectez-vous à votre compte data.gouv.fr</a></li>
               <li>Rendez-vous sur la <a target="_blank" href="https://www.data.gouv.fr/fr/admin/organization/new/">page de création d’une organisation</a>, en cliquant sur le lien <b>Créez ou trouvez votre organisation</b> dans le bandeau <b>Participez</b> en bas de page.</li>
             </ul>
-            Une fois ces étapes réalisées, cette page devrait se rafraîchir automatiquement et vous devriez être capable de sélectionner votre organisation.
+            Une fois ces étapes réalisées, cette page devrait se rafraîchir automatiquement et vous devriez pouvoir sélectionner votre organisation.
             <br /><br />
-            <div style="font-size: 12px">PS : Vous pouvez publier vos données <span style="cursor: pointer; text-decoration: underline" @click="radioclick('me')">en votre nom propre</span> mais ce mode de publication est <b>fortement déconseillé.</b></div>
+            <div style="font-size: 12px">PS : Vous pouvez publier vos données <span style="cursor: pointer; text-decoration: underline" @click="radioclick('me')">en votre nom propre</span> mais ce mode de publication est <b>fortement déconseillé.</b> Publier en votre nom des données produites par ou issues d'un organisme est extrêmement dommageable pour leur pérénité et leur accessibilité.</div>
           </div>
         </div>
       </b-form-group>
