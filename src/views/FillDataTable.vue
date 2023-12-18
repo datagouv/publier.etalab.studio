@@ -109,6 +109,16 @@
           </div>
           <div style="flex: 1; text-align: right;">
             <button
+              v-if="this.isEmptyRows()"
+              style="margin-right: 20px; background-color: #dddddd; line-height: 100%; padding-left: 15px;  padding-right: 15px;  padding-top: 7px;  padding-bottom: 7px;"
+              type="submit"
+            >
+              Vérifier le fichier
+              &nbsp;
+              <img src="../static/images/gauge.png" width="30" />
+            </button>
+            <button
+              v-else
               style="margin-right: 20px"
               @click="submit()"
               type="submit"
@@ -534,6 +544,17 @@ export default {
     window.addEventListener("scroll", this.handleScroll);
   },
   methods: {
+    isEmptyRows(){
+      let empty = true
+      this.rows.forEach((row) => {
+        for (const col in row) {
+          if (col != 'idRowVEG' && (row[col] != '' && row[col] != null)) {
+            empty = false
+          }
+        }
+      })
+      return empty
+    },
     addArrayValue(item) {
       if (!item.selected) {
         if (!this.rows[this.rowCurrentArray][this.colCurrentArray]) {
@@ -997,6 +1018,7 @@ export default {
           }
         }
       });
+      
       fetch(`${VALIDATA_API_URL}/validate`, {
         method: "POST",
         body: this.buildFormData(),
