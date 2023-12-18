@@ -382,11 +382,11 @@ export default {
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
       if (publishContent.existingResource !== "") {
-        this.updateDatasetUpdateResource(publishContent, this.csvBlob);
+        this.updateDatasetUpdateResource(publishContent, this.csvBlob, 'form');
       } else if (publishContent.existingDataset !== "") {
-        this.updateDatasetCreateResource(publishContent, this.csvBlob);
+        this.updateDatasetCreateResource(publishContent, this.csvBlob, 'form');
       } else {
-        this.createDatasetCreateResource(publishContent, this.csvBlob);
+        this.createDatasetCreateResource(publishContent, this.csvBlob, 'form');
       }
     },
   },

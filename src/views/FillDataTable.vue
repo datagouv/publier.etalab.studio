@@ -1346,17 +1346,17 @@ export default {
         // Mise à jour dataset
         // Ecrasement resource
         // Modification metadonnées
-        this.updateDatasetUpdateResource(publishContent, this.getCSVBlob());
+        this.updateDatasetUpdateResource(publishContent, this.getCSVBlob(), 'table');
       } else if (publishContent.existingDataset !== "") {
         // Mise à jour dataset
         // création nouvelle ressource
         // modiciation métaonnées
-        this.updateDatasetCreateResource(publishContent, this.getCSVBlob());
+        this.updateDatasetCreateResource(publishContent, this.getCSVBlob(), 'table');
       } else {
         // Création dataset
         // création ressource
         // modification métadonnées
-        this.createDatasetCreateResource(publishContent, this.getCSVBlob());
+        this.createDatasetCreateResource(publishContent, this.getCSVBlob(), 'table');
       }
     },
     saveRows() {

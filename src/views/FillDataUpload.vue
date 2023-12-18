@@ -308,11 +308,11 @@ export default {
       // Si pas de ressource id mais dataset id, on ajoute une ressource
       // Si pas de dataset id on créé un dataset avec ou sans orga avec la ressource
       if (publishContent.existingResource !== "") {
-        this.updateDatasetUpdateResource(publishContent, this.file, this.ext);
+        this.updateDatasetUpdateResource(publishContent, this.file, 'upload', this.ext);
       } else if (publishContent.existingDataset !== "") {
-        this.updateDatasetCreateResource(publishContent, this.file, this.ext);
+        this.updateDatasetCreateResource(publishContent, this.file, 'upload', this.ext);
       } else {
-        this.createDatasetCreateResource(publishContent, this.file, this.ext);
+        this.createDatasetCreateResource(publishContent, this.file, 'upload', this.ext);
       }
     },
     editFile() {

@@ -176,7 +176,7 @@ export default {
       }
       return version;
     },
-    updateDatasetUpdateResource(publishContent, dataBlob, ext = "csv") {
+    updateDatasetUpdateResource(publishContent, dataBlob, modeSaisie, ext = "csv") {
       $api
         .put(
           `datasets/${publishContent.existingDataset}`,
@@ -223,7 +223,8 @@ export default {
                       version: this.clean_version(this.schema.version),
                     },
                     extras: {
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
+                      
                     },
                   };
                 } else if (this.schemaUrl) {
@@ -232,7 +233,7 @@ export default {
                     extras: {
                       external_schema_url: this.schemaUrl,
                       external_schema_name: this.schema.name,
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
                     },
                   };
                 }
@@ -241,7 +242,7 @@ export default {
                   title: publishContent.resource.title,
                   extras: {
                     publication_schema_failed: this.schemaName,
-                    publish_source: "publier.etalab.studio",
+                    publish_source: "publier.etalab.studio:" + modeSaisie,
                   },
                 };
               }
@@ -263,7 +264,7 @@ export default {
             });
         });
     },
-    updateDatasetCreateResource(publishContent, dataBlob, ext = "csv") {
+    updateDatasetCreateResource(publishContent, dataBlob, modeSaisie, ext = "csv") {
       console.log(dataBlob);
       $api
         .put(
@@ -311,7 +312,7 @@ export default {
                       version: this.clean_version(this.schema.version),
                     },
                     extras: {
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
                     },
                   };
                 } else if (this.schemaUrl) {
@@ -320,7 +321,7 @@ export default {
                     extras: {
                       external_schema_url: this.schemaUrl,
                       external_schema_name: this.schema.name,
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
                     },
                   };
                 }
@@ -329,7 +330,7 @@ export default {
                   title: publishContent.resource.title,
                   extras: {
                     publication_schema_failed: this.schemaName,
-                    publish_source: "publier.etalab.studio",
+                    publish_source: "publier.etalab.studio:" + modeSaisie,
                   },
                 };
               }
@@ -352,7 +353,7 @@ export default {
             });
         });
     },
-    createDatasetCreateResource(publishContent, dataBlob, ext = "csv") {
+    createDatasetCreateResource(publishContent, dataBlob, modeSaisie, ext = "csv") {
       let body = {};
       if (publishContent.organizationId === "me") {
         body = {
@@ -405,7 +406,7 @@ export default {
                       version: this.clean_version(this.schema.version),
                     },
                     extras: {
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
                     },
                   };
                 } else if (this.schemaUrl) {
@@ -414,7 +415,7 @@ export default {
                     extras: {
                       external_schema_url: this.schemaUrl,
                       external_schema_name: this.schema.name,
-                      publish_source: "publier.etalab.studio",
+                      publish_source: "publier.etalab.studio:" + modeSaisie,
                     },
                   };
                 }
@@ -423,7 +424,7 @@ export default {
                   title: publishContent.resource.title,
                   extras: {
                     publication_schema_failed: this.schemaName,
-                    publish_source: "publier.etalab.studio",
+                    publish_source: "publier.etalab.studio:" + modeSaisie,
                   },
                 };
               }
