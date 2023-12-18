@@ -746,6 +746,11 @@ export default {
             myobj.field = field.name;
             myobj.headerName = field.name;
             myobj.editable = true;
+            if (field.constraints && field.constraints.required) {
+              myobj.optional = false
+            } else {
+              myobj.optional = true
+            }
 
             if (field.type == "geopoint") {
               this.emptyRow[field.name] = "";
@@ -805,7 +810,7 @@ export default {
               this.emptyRowInfo[field.name] = null;
               this.emptyRowError[field.name] = null;
             }
-
+            
             var lenCharacter = field.name.length * 10 + 70;
             myobj.size = lenCharacter.toString() + "px";
             this.columnDefs.push(myobj);
