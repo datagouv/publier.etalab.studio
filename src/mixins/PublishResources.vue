@@ -4,6 +4,8 @@ import { EventBus } from "../event-bus.js";
 import $api from "../services/Api";
 
 import Auth from "../services/Auth";
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
 
 const $auth = new Auth();
 
@@ -186,7 +188,7 @@ export default {
           },
           (err) => {
             // eslint-disable-next-line no-alert
-            alert(`Erreur lors de la publication du jeu de données : ${err}`);
+            alert(`Erreur lors de la mise à jour du jeu de données : ${err}`);
           }
         )
         .then((response) => {
@@ -275,7 +277,7 @@ export default {
           },
           (err) => {
             // eslint-disable-next-line no-alert
-            alert(`Erreur lors de la publication du jeu de données : ${err}`);
+            alert(`Erreur lors de la mise à jour du jeu de données : ${err}`);
           }
         )
         .then((response) => {
@@ -388,6 +390,15 @@ export default {
                 console.log(
                   `Erreur lors du téléversement de la ressource : ${err}`
                 );
+                // deleting dataset to prevent creating multiple empty datasets
+                $api
+                  .delete(
+                    `datasets/${datasetId}`
+                  );
+                  console.log(
+                    `Suppression du dataset vide : ${datasetId}`
+                  );
+                  this.makeToast();
               },
               { "Content-Type": "multipart/form-data" }
             )
@@ -493,7 +504,14 @@ export default {
         });
       }
     },
+    makeToast(append = false) {
+        this.$bvToast.toast(`Le jeu de données n'a pas été créé.`, {
+          title: 'Erreur de téléversement',
+          autoHideDelay: 5000,
+          appendToast: append,
+          variant: "danger",
+        });
+      },
   },
 };
 </script>
-
