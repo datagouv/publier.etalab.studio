@@ -9,30 +9,14 @@
 
     <div v-if="schema" class="fr-container fr-pb-6w fr-pt-1w">
       <div style="display: flex">
-        <div style="flex: 2">
+        <div v-if="schema && schema.schema_type == 'tableschema'" style="flex: 2">
           <p class="title-page">{{ $t("selected.title") }}</p>
 
-          <p
-            class="subtitle-page"
-            v-if="
-              schema &&
-              (schema.schema_type == 'tableschema' ||
-                schema.schema_type == 'jsonschema')
-            "
-          >
-          {{ $t("selected.subtitle") }}
-          </p>
+          <p class="subtitle-page">{{ $t("selected.subtitle") }}</p>
           <p>{{ $t("selected.already_yes") }}</p>
           <p>{{ $t("selected.already_no") }}<br /><br /></p>
 
-          <div
-            class="choice-box"
-            v-if="
-              schema &&
-              (schema.schema_type == 'tableschema' ||
-                schema.schema_type == 'jsonschema')
-            "
-          >
+          <div class="choice-box">
             <span @click="goto('upload')" class="choice-no-selected">{{ $t("global.yes") }}</span>
             <span
               @click="noDataChoice = !noDataChoice"
@@ -46,7 +30,7 @@
               class="choice-selected"
               >{{ $t("global.no") }}</span
             >
-            <div v-if="!noDataChoice && schema.schema_type == 'tableschema'">
+            <div v-if="!noDataChoice">
               <br /><br />
               <p>{{ $t("selected.tool_description") }}</p>
               <p>{{ $t("selected.proceed_question") }}</p>
@@ -58,20 +42,12 @@
                 >{{ $t("selected.fill_spreadsheet") }}</span
               >
             </div>
-            <div v-if="!noDataChoice && schema.schema_type != 'tableschema'">
-              <br /><br />
-              <p>
-                {{ $t("selected.json_unable") }}
-              </p>
-              <p>
-                {{ $t("selected.already_file") }}
-              </p>
-              <br />
-            </div>
           </div>
-          <p v-if="schema && schema.schema_type == 'other'">
-            {{ $t("selected.other_schema") }}
-          </p>
+        </div>
+        <div v-else :style="{ 'padding-right': '200px' }">
+          {{ $t("selected.unsupported_schema") }} ({{ schema.schema_type }}).
+          <br />
+          {{ $t("selected.publish_directly")}} <a href="https://www.data.gouv.fr/fr/admin/dataset/new/">data.gouv.fr</a>.
         </div>
         <div style="flex: 1">
           <div class="infobox">
