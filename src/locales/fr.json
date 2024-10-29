@@ -33,7 +33,8 @@
     "process_caption": "Produire des données de qualité, en 4 étapes !",
     "select_title": "Sélectionner un schéma de données",
     "search_bar_label": "Label de la barre de recherche",
-    "search_bar_placeholder": "Rechercher un schéma de données"
+    "search_bar_placeholder": "Rechercher un schéma de données",
+    "external_schema_url": "Entrer l'URL d'un schéma pour publier"
   },
   "selected": {
     "title": "Saisir ou charger mes données",

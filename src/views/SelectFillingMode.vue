@@ -69,7 +69,7 @@
                   </span>
                 </div>
               </div>
-              <div class="infobox-content-item">
+              <div v-if="this.schemaName != undefined" class="infobox-content-item">
                 <p @click="btnFilesClick()">
                   <img src="../static/images/view.png" width="15" />
                   &nbsp;
@@ -131,7 +131,7 @@ export default {
                 var obj = {};
                 obj["contact"] = "";
                 obj["description"] = "";
-                obj["examples"] = [];
+                obj["examples"] = data2.resources;
                 obj["name"] = data2.name;
                 obj["schema_type"] = "tableschema";
                 obj["schema_url"] = this.schemaUrl;
@@ -171,7 +171,20 @@ export default {
       });
     },
     btnDocClick() {
-      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      if (this.schemaName != undefined) {
+        window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      }
+      else {
+        fetch(this.schemaUrl)
+        .then((response) => {
+          return response.text();
+        })
+        .then((text) => {
+            const json = JSON.parse(text);
+            window.open(json.homepage);
+          }
+      )
+      }
     },
     btnFilesClick() {
       window.open(`${DGV_BASE_URL}/datasets/?schema=${this.schemaName}`);

@@ -33,7 +33,8 @@
     "process_caption": "Produce quality data in 4 steps!",
     "select_title": "Select a schema",
     "search_bar_label": "Search bar label",
-    "search_bar_placeholder": "Look up a schema"
+    "search_bar_placeholder": "Look up a schema",
+    "external_schema_url": "Enter the URL of an external schema to publish data"
   },
   "selected": {
     "title": "Enter or load data",
