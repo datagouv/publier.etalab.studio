@@ -821,7 +821,7 @@ export default {
           this.emptyRowError.idRowVEG = uniqueid;
           this.emptyRowColor.idRowVEG = "#ebebeb";
 
-          for (var i = 0; i < 25; i++) {
+          for (var i = 0; i < 7; i++) {
             this.addEmptyRow();
           }
 
