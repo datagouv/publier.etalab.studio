@@ -369,7 +369,20 @@ export default {
       reader.readAsText(this.$refs.file.files[0]);
     },
     btnDocClick() {
-      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      if (this.schemaName != undefined) {
+        window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      }
+      else {
+        fetch(this.schemaUrl)
+        .then((response) => {
+          return response.text();
+        })
+        .then((text) => {
+            const json = JSON.parse(text);
+            window.open(json.homepage);
+          }
+      )
+      }
     },
     gotoExemple(url) {
       window.open(url);
