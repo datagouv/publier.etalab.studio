@@ -1531,15 +1531,13 @@ export default {
         window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
       }
       else {
+        // we have already made sure that the following won't crash
         fetch(this.schemaUrl)
         .then((response) => {
-          return response.text();
+          return response.json();
+        }).then((data) => {
+          window.open(data.homepage);
         })
-        .then((text) => {
-            const json = JSON.parse(text);
-            window.open(json.homepage);
-          }
-      )
       }
     },
     moveHeaderMenu(event, column) {
