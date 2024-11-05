@@ -101,7 +101,7 @@
           <button
             class="fr-btn"
             title="Entrer l'URL d'un schéma de données externe"
-            @click="handleEnter"
+            @click="submitExternal"
           ></button>
         </div>
         <br /><br />
@@ -189,11 +189,8 @@ export default {
         "https://guides.data.gouv.fr/publier-des-donnees/guide-qualite/maitriser-les-schemas-de-donnees"
       );
     },
-    handleEnter() {
+    submitExternal() {
       const url = this.externalSchemaUrl;
-      this.fetchExternalUrl(url);
-    },
-    fetchExternalUrl(url) {
       const expectedProperties = ['$schema', 'name', 'homepage', 'fields'];
       fetch(url)
         .then((response) => {
