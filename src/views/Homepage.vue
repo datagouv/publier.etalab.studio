@@ -60,7 +60,7 @@
           id="header-search-input"
           name="header-search-input"
         />
-        <button class="fr-btn" title="Rechercher un type de jeu de données">
+        <button class="fr-btn" title="Rechercher un schéma de données">
           <span> {{ $t("home.search_bar_placeholder") }} </span>
         </button>
       </div>
@@ -94,11 +94,15 @@
           Vous pouvez renseigner l'URL d'un schéma qui n'est pas référencé pour publier des données :
           <input
             v-model="externalSchemaUrl"
-            @keyup.enter="handleEnter"
             class="fr-input"
             :placeholder="$t('home.external_schema_url')"
             type="search"
           />
+          <button
+            class="fr-btn"
+            title="Entrer l'URL d'un schéma de données externe"
+            @click="handleEnter"
+          ></button>
         </div>
         <br /><br />
         <p><b>{{ invalidUrlEntered }}</b></p>
@@ -203,7 +207,7 @@ export default {
             const json = JSON.parse(text);
             this.missingProperties = expectedProperties.filter(property => !json.hasOwnProperty(property));
             if (this.missingProperties.length > 0) {
-              this.invalidUrlEntered = 'Le schéma ne contient pas tous les champs requis.';;
+              this.invalidUrlEntered = 'Le schéma ne contient pas tous les champs requis.';
             }
             else {
               this.$router.push({
