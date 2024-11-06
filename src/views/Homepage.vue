@@ -46,11 +46,6 @@
     <div id="search-bar" class="fr-container fr-pb-6w fr-pt-2w">
       <br />
       <h3>{{ $t("home.select_title") }}</h3>
-      <!--<br />
-            <p>
-                Les types de jeux de données ci-dessous sont issues du référentiel de schéma de
-                la plateforme schema.data.gouv.fr.
-            </p>-->
       <br />
       <div class="fr-search-bar" id="header-search">
         <label class="fr-label" for="header-search-input">
@@ -65,7 +60,7 @@
           id="header-search-input"
           name="header-search-input"
         />
-        <button class="fr-btn" title="Rechercher un type de jeu de données">
+        <button class="fr-btn" title="Rechercher un schéma de données">
           <span> {{ $t("home.search_bar_placeholder") }} </span>
         </button>
       </div>
@@ -95,6 +90,23 @@
             </div>
           </div>
         </div>
+        <div v-if ="schemasToShow.length === 0" class="fr-search-bar">
+          Vous pouvez renseigner l'URL d'un schéma qui n'est pas référencé pour publier des données :
+          <input
+            v-model="externalSchemaUrl"
+            class="fr-input"
+            :placeholder="$t('home.external_schema_url')"
+            type="search"
+          />
+          <button
+            class="fr-btn"
+            title="Entrer l'URL d'un schéma de données externe"
+            @click="submitExternal"
+          ></button>
+        </div>
+        <br /><br />
+        <p><b>{{ invalidUrlEntered }}</b></p>
+        <p v-if="missingProperties.length > 0">Propriétés manquantes : {{ missingProperties.join(', ') }}</p>
       </div>
     </div>
   </div>
@@ -117,6 +129,9 @@ export default {
       schemasToShow: null,
       searchText: "",
       messageSchema: "",
+      externalSchemaUrl: "",
+      invalidUrlEntered: "",
+      missingProperties: [],
     };
   },
   mounted() {
@@ -163,7 +178,7 @@ export default {
         });
         this.schemasToShow = obj;
         if (this.schemasToShow.length === 0) {
-          this.messageSchema = "Aucun schéma trouvé";
+          this.messageSchema = "Aucun schéma ne correspond à cette recherche.";
         }
       } else {
         this.schemasToShow = this.schemas;
@@ -174,6 +189,35 @@ export default {
         "https://guides.data.gouv.fr/publier-des-donnees/guide-qualite/maitriser-les-schemas-de-donnees"
       );
     },
+    submitExternal() {
+      const url = this.externalSchemaUrl;
+      const expectedProperties = ['$schema', 'name', 'homepage', 'fields'];
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            this.invalidUrlEntered = "La récupération du schéma a échoué. Assurez-vous que le lien est bien correct.";
+          }
+          return response.text();
+        })
+        .then((text) => {
+          try {
+            const json = JSON.parse(text);
+            this.missingProperties = expectedProperties.filter(property => !json.hasOwnProperty(property));
+            if (this.missingProperties.length > 0) {
+              this.invalidUrlEntered = 'Le schéma ne contient pas tous les champs requis.';
+            }
+            else {
+              this.$router.push({
+                name: "select",
+                params: { lang: this.$route.params.lang },
+                query: { schema_url: url },
+              });
+            }
+          } catch (e) {
+            this.invalidUrlEntered = 'La récupération du schéma a échoué. Assurez-vous que le lien est bien correct.';
+          }
+        });
+    }
   },
 };
 </script>

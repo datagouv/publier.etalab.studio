@@ -1527,7 +1527,18 @@ export default {
       newNameHeader = "";
     },
     btnDocClick() {
-      window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      if (this.schemaName != undefined) {
+        window.open(`https://schema.data.gouv.fr/${this.schemaName}/latest.html`);
+      }
+      else {
+        // we have already made sure that the following won't crash
+        fetch(this.schemaUrl)
+        .then((response) => {
+          return response.json();
+        }).then((data) => {
+          window.open(data.homepage);
+        })
+      }
     },
     moveHeaderMenu(event, column) {
       this.operationHeaderColumn = column;
