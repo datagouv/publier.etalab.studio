@@ -49,11 +49,9 @@ export default {
                 }
                 else if (error.tags.length == 0 || ((error.tags.length > 0) && ((error.tags.includes('#table')) ||(error.tags.includes('#label')) || (error.tags.includes('#header'))))) {
                     this.reportStructureErrors.push(error);
-                    this.reportGeneralErrors.push(error);
                 }
                 else if (error.tags.includes('#file')) {
                     this.reportIntegrityErrors.push(error);
-                    this.reportGeneralErrors.push(error);
                 }
             });
 
