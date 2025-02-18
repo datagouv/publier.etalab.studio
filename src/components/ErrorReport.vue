@@ -56,10 +56,12 @@
             <li>
               <b>{{ error.title }}</b> :
               <span v-if="error.fieldName">
-                colonne <i>{{ error.fieldName }}</i
-                >,
+                colonne <i>{{ error.fieldName }}</i>,
               </span>
-              ligne {{ error.rowNumber }}, valeur : `{{ error.cell }}`
+              ligne {{ error.rowNumber }}
+              <span v-if="error.cell">
+                , valeur : `{{ error.cell }}`
+              </span>
               <span v-if="error.message"
                 ><vue-markdown :source="error.message.replace('##', '')"
               /></span>
