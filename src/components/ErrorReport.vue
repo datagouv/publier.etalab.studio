@@ -7,9 +7,9 @@
           {{ $t("error.general") }} ({{ reportGeneralErrors.length }})
         </vsa-heading>
         <vsa-content>
-          <ul v-bind:key="error.name" v-for="error in reportGeneralErrors">
+          <ul v-bind:key="error.title" v-for="error in reportGeneralErrors">
             <li>
-              <b>{{ error.name }}</b> : {{ error.note }}
+              <b>{{ error.title }}</b> : {{ error.note }}
             </li>
             <span v-if="error.message"
               ><vue-markdown :source="error.message.replace('##', '')"
@@ -22,9 +22,9 @@
           {{ $t("error.general") }} ({{ reportStructureErrors.length }})
         </vsa-heading>
         <vsa-content>
-          <ul v-bind:key="error.name" v-for="error in reportStructureErrors">
+          <ul v-bind:key="error.title" v-for="error in reportStructureErrors">
             <li>
-              <b>{{ error.name }}</b> :
+              <b>{{ error.title }}</b> :
             </li>
             <span v-if="error.message"
               ><vue-markdown :source="error.message.replace('##', '')"
@@ -37,9 +37,9 @@
           Erreurs d'intégrité ({{ reportIntegrityErrors.length }})
         </vsa-heading>
         <vsa-content>
-          <ul v-bind:key="error.name" v-for="error in reportIntegrityErrors">
+          <ul v-bind:key="error.title" v-for="error in reportIntegrityErrors">
             <li>
-              <b>{{ error.name }}</b> : {{ error.note }}
+              <b>{{ error.title }}</b> : {{ error.note }}
             </li>
             <span v-if="error.message"
               ><vue-markdown :source="error.message.replace('##', '')"
@@ -52,14 +52,16 @@
           Erreurs de contenu ({{ reportContentErrors.length }})
         </vsa-heading>
         <vsa-content>
-          <ul v-bind:key="error.name" v-for="error in reportContentErrors">
+          <ul v-bind:key="error.title" v-for="error in reportContentErrors">
             <li>
-              <b>{{ error.name }}</b> :
+              <b>{{ error.title }}</b> :
               <span v-if="error.fieldName">
-                colonne <i>{{ error.fieldName }}</i
-                >,
+                colonne <i>{{ error.fieldName }}</i>,
               </span>
-              ligne {{ error.rowPosition }}
+              ligne {{ error.rowNumber }}
+              <span v-if="error.cell">
+                , valeur : `{{ error.cell }}`
+              </span>
               <span v-if="error.message"
                 ><vue-markdown :source="error.message.replace('##', '')"
               /></span>
@@ -72,9 +74,9 @@
           Recommandations ({{ reportRecos.length }})
         </vsa-heading>
         <vsa-content>
-          <ul v-bind:key="error.name" v-for="error in reportRecos">
+          <ul v-bind:key="error.title" v-for="error in reportRecos">
             <li>
-              <b>{{ error.name }}</b> : {{ error.message }}
+              <b>{{ error.title }}</b> : {{ error.message }}
             </li>
           </ul>
         </vsa-content>
