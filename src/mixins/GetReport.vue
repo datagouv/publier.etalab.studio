@@ -42,41 +42,23 @@ export default {
             this.validBox = false;
             this.infoboxType = 4;
             this.badgeUrl = lkInvalide;
-        }
-        if (data.report.errors.length > 0) {
-            
-            this.reportValidStatus = 'Votre fichier contient des erreurs bloquantes.'
-            this.infoboxContent = 'Nous vous conseillons de vous référer à la documentation du schéma de données ou de télécharger un modèle de fichier.'
-            this.editButtonTitle = 'Corriger le fichier';
-            this.validBox = false;
-            this.infoboxType = 4;
-            this.badgeUrl = lkInvalide;
-            this.reportErrorInfo = data.report.errors[0].note;
-
-            data.report.errors.forEach((error) => {
-                if (error.tags.includes('#general')) {
-                    this.reportGeneralErrors.push(error);
-                }
-            });
-
-
-        } else if (data.report.tasks[0].errors) {
-            if (data.report.tasks[0].errors.length > 0) {
+        } else if (data.report.errors | data.report.warnings) {
+            if (data.report.errors.length > 0) {
                 this.reportValidStatus = this.$t('error.few_errors');
-                this.infoboxContent = this.$t('error.list_errors1')+data.report.tasks[0].errors.length+this.$t('error.list_errors2')
+                this.infoboxContent = this.$t('error.list_errors1')+data.report.errors.length+this.$t('error.list_errors2')
                 this.editButtonTitle = this.$t('error.correct_file');
                 this.validBox = false;
                 this.infoboxType = 3;
                 this.ext = "csv"
-                if(data.report.tasks[0].errors.length+data.report.tasks[0].structure_warnings.length > 20){
+                if(data.report.errors.length+data.report.warnings.length > 20){
                     this.reportValidStatus = this.$t('error.many_errors')
                     this.infoboxContent = this.$t('error.see_documentation')
                     this.infoboxType = 4;
                 }
                 this.badgeUrl = lkInvalide;
-                this.reportErrors = data.report.tasks[0].errors;
+                this.reportErrors = data.report.errors;
 
-                data.report.tasks[0].errors.forEach((error) => {
+                data.report.errors.forEach((error) => {
                 if ((error.tags.length > 0) && ((!error.tags.includes('#integrity')) && (!error.tags.includes('#structure')))) {
                     this.reportContentErrors.push(error);
                 }
@@ -88,16 +70,16 @@ export default {
                 }
                 });
 
-                if (data.report.tasks[0].structure_warnings.length > 0) {
-                this.reportRecos = data.report.tasks[0].structure_warnings;
+                if (data.report.warnings.length > 0) {
+                this.reportRecos = data.report.warnings;
                 }
-            } else if (data.report.tasks[0].structure_warnings.length > 0) {
+            } else if (data.report.warnings.length > 0) {
                 this.reportValidStatus = this.$t('error.file_ok');
                 this.infoboxContent = this.$t('error.file_warning')
                 this.infoboxType = 2;
                 this.validBox = true;
                 this.badgeUrl = lkPartiellementValide;
-                this.reportRecos = data.report.tasks[0].structure_warnings;
+                this.reportRecos = data.report.warnings;
                 this.publication = true;
                 this.publicationMessage = this.$t('error.publish_anyway');
                 this.ext = "csv"

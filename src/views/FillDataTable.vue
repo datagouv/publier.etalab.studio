@@ -1031,9 +1031,7 @@ export default {
         .then((r) => r.json())
         .then((data) => {
           this.faultyFields = [];
-          const errors = data.report.tasks
-            ? data.report.tasks[0].errors // new validation report
-            : data.report.tables[0].errors; // legacy validation report
+          const errors = data.report.errors;
           if (errors && errors.length > 0) {
             this.validInfo = "Il y a des erreurs TBC...";
             this.publicationReady = false;
