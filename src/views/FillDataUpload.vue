@@ -317,12 +317,19 @@ export default {
     },
     editFile() {
       console.log("begin");
+      function detectDelimiter(content) {
+          var commaCount = (content.match(/,/g) || []).length;
+          var semicolonCount = (content.match(/;/g) || []).length;
+          return commaCount > semicolonCount ? ',' : ';';
+      }
       const Papa = require("papaparse");
-
       var reader = new FileReader();
       reader.onloadend = () => {
         var content = reader.result;
-        var csvdata = Papa.parse(content);
+        var delimiter = detectDelimiter(content);
+        // console.log(delimiter);
+        var csvdata = Papa.parse(content, {delimiter: delimiter});
+        console.log(csvdata);
 
         var prepareRows = [];
         var prepareHeaders = [];
